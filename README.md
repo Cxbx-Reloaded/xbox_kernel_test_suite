@@ -5,6 +5,7 @@ This is a tool for testing xbox kernel apis, in particular CxBx-Reloaded kernel 
 
 # HOW TO BUILD:
 All you need is nxdk. You can get it here: https://github.com/xqemu/nxdk
+
 Here is a setup guide: https://github.com/Cxbx-Reloaded/Cxbx-Reloaded/wiki/Installing-the-nxdk
 
 # USEFUL LINKS:
