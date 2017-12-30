@@ -13,7 +13,7 @@
 #include "ke_tests.h"
 #include "kf_tests.h"
 #include "ki_tests.h"
-#include "mn_tests.h"
+#include "mm_tests.h"
 #include "nt_tests.h"
 #include "ob_tests.h"
 #include "obf_tests.h"
