@@ -1,110 +1,74 @@
 #include <xboxrt/debug.h>
 #include <pbkit/pbkit.h>
 #include <hal/xbox.h>
-#include "stdio.h"
-#include "output.h"
-#include "global.h"
-#include "func_table.h"
-
+#include <hal/fileio.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "utils.h"
+#include "output.h"
+#include "global.h"
+#include "func_table.h"
+#include "vector.h"
 
+int load_conf_file() {
+    char file_path[200];
+    int handle;
+    unsigned int file_size = 0;
+    char *buffer;
+    unsigned int read = 0;
+    int result;
 
-char *getCurrentDirString()
-{
-	char *tmp;
-    char *currentDirString = NULL;
+    strcpy(file_path, getCurrentDirString());
+    strcat(file_path, "config.txt");
+    print(file_path);
 
-    currentDirString = malloc(XeImageFileName->Length + 1);
-	strcpy(currentDirString, XeImageFileName->Buffer);
-	// Remove XBE name, leaving the path
-	tmp = strrchr(currentDirString, '\\');
-	if (tmp) {
-		*(tmp + 1) = '\0';
-	} else {
-		free(currentDirString);
-		currentDirString = NULL;
-	}
-	return currentDirString;
-}
-
-int open_conf_file(){
-    /*HANDLE handle;
-    NTSTATUS status;
-    OBJECT_ATTRIBUTES obj;
-    IO_STATUS_BLOCK isb;
-    ANSI_STRING obj_name;
-    char filepath[200];
-
-
-    ULONG uSize = 200;
-    char readed[200];
-    strcpy(filepath, getCurrentDirString());
-    strcat(filepath, "config.txt");
-    print(filepath);
-
-    RtlInitAnsiString(&obj_name, filepath);
-
-    obj.RootDirectory = NULL;
-    obj.Attributes =  OBJ_CASE_INSENSITIVE;
-    obj.ObjectName = &obj_name;
-
-    status = NtCreateFile(
-   		&handle,
+    result = XCreateFile(&handle,
+        file_path,
         GENERIC_READ,
-   		&obj,
-   		&isb,
-   		NULL,
-   		FILE_ATTRIBUTE_NORMAL,
-   		0,
-   		FILE_OPEN,
-   		FILE_SYNCHRONOUS_IO_NONALERT);
-
-    if (!NT_SUCCESS(status)) {
-        print("Error opening config file: %s not found", filepath);
-        NtClose(handle);
+        FILE_SHARE_READ,
+        OPEN_EXISTING,
+        FILE_ATTRIBUTE_NORMAL);
+    if(result != 0)
         return -1;
+
+    XGetFileSize(handle, &file_size);
+
+    buffer = malloc(file_size);
+    if(buffer == NULL)
+        return -1;
+
+    result = XReadFile(handle, buffer, file_size, &read);
+    if(result == 0 || read != file_size)
+        return -1;
+
+    XCloseHandle(handle);
+
+    vector_init(&tests_to_run);
+
+    char *line;
+    char *rest = buffer;
+    while ((line = strtok_r(rest, "\n", &rest))){
+        char *current_key = strtok(line, "=");
+        if(strcmp("is_emu", current_key) == 0){
+            is_emu = strtol(strtok(NULL, "\n"), NULL, 16);
+        }
+        if(strcmp("tests", current_key) == 0){
+            char *current_test;
+            char *tests = strtok(NULL, "\n");
+            while((current_test = strtok_r(tests, ",", &tests))) {
+                vector_append(&tests_to_run, strtol(current_test, NULL, 16));
+            }
+        }
     }
 
-    status = NtReadFile(
-	    handle,
-		NULL,
-		NULL,
-		NULL,
-		&isb,
-		readed,
-		uSize,
-		NULL);
-
-    if (status == STATUS_PENDING)
-		status = NtWaitForSingleObject((void*)handle, FALSE, (void*)NULL);
-
-    if (!NT_SUCCESS(status)) {
-        print("Error reading config file");
-        NtClose(handle);
-        return -1;
-    }
-
-    NtClose(handle);
-    print(readed);
-
-    char *token;
-    char *saveptr;
-    token = strtok_r(readed, ",", &saveptr);
-    while(token != NULL){
-        print("CALL TO TEST: %d", atoi(token));
-        token = strtok_r(readed, ",", &saveptr);
-    }*/
-
+    free(buffer);
     return 0;
 }
 
-void main(void)
-{
+void main(void){
 
-    switch(pb_init())
-    {
+    switch(pb_init()){
         case 0: break;
         default:
             XSleep(2000);
@@ -116,26 +80,27 @@ void main(void)
 
     print("Kernel Test Suite");
 
-    if(open_conf_file()==0){ // FIXME this check is currently WIP
+    if(load_conf_file() == 0){
         print("Config File Loaded");
+        print("is_emu: %d", is_emu);
+        print("---------------");
+        for(int k=0; k<tests_to_run.size; k++){
+            kernel_thunk_table[vector_get(&tests_to_run, k)]();
+        }
     }
     else{
         print("Config File Not Found");
-        print("Testing Everything (Single Pass)");
+        print("Testing Everything (Single Pass And Assuming Running on Emulator)");
+        print("---------------");
+        int table_size = sizeof(kernel_thunk_table) / sizeof(*kernel_thunk_table);
+    	for(int k=0;k<table_size;k++){
+    		kernel_thunk_table[k]();
+    	}
     }
 
-	is_real_hw = 0; // FIXME check if we are using an emu or real hw
+    XSleep(10000);
 
-	int table_size = sizeof(kernel_thunk_table) / sizeof(*kernel_thunk_table);
-	for(int k=1;k<table_size;k++){
-		kernel_thunk_table[k]();
-	}
-
-    while(1){
-        XSleep(10000);
-        pb_kill();
-        return;
-    }
+    vector_free(&tests_to_run);
 
     pb_kill();
     XReboot();

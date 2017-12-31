@@ -1,6 +1,7 @@
 #ifndef MISC_TESTS_H
 #define MISC_TESTS_H
 
+void test_panic();
 void test_LaunchDataPage();
 void test_READ_PORT_BUFFER_UCHAR();
 void test_READ_PORT_BUFFER_USHORT();

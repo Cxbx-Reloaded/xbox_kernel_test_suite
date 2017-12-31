@@ -1,3 +1,7 @@
+void test_panic(){
+    /* FIXME: This is a stub! implement this function! */
+}
+
 void test_LaunchDataPage(){
     /* FIXME: This is a stub! implement this function! */
 }

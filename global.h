@@ -1,6 +1,9 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-extern int is_real_hw;
+#include "vector.h"
+
+extern int is_emu;
+extern vector tests_to_run;
 
 #endif

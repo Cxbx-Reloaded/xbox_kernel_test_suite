@@ -4,7 +4,7 @@
 
 
 void test_AvGetSavedDataAddress(){
-    if(is_real_hw){
+    if(!is_emu){
          print("0x0001 - AvGetSavedDataAddress: Skipped (due to real hadrware) / value: %x",AvGetSavedDataAddress());
          return;
     }
@@ -20,7 +20,7 @@ void test_AvSendTVEncoderOption(){
 }
 
 void test_AvSetDisplayMode(){
-    if(is_real_hw){
+    if(!is_emu){
          print("0x0003 - AvSetDisplayMode: Skipped (due to real hadrware)");
          return;
     }
@@ -28,7 +28,7 @@ void test_AvSetDisplayMode(){
 }
 
 void test_AvSetSavedDataAddress(){
-    if(is_real_hw){
+    if(!is_emu){
          print("0x0004 - AvSetSavedDataAddress: Skipped (due to real hadrware)");
          return;
     }
