@@ -9,7 +9,7 @@ All you need is nxdk. You can get it here: https://github.com/xqemu/nxdk
 Here is a setup guide: https://github.com/Cxbx-Reloaded/Cxbx-Reloaded/wiki/Installing-the-nxdk
 
 # CONFIGURATION FILE:
-The configuration file should be called _*"config.txt"*_ and should be placed in the same directory of the xbe.
+The configuration file should be called _**"config.txt"**_ and should be placed in the same directory of the xbe.
 
 This is an example of config.txt:
 
