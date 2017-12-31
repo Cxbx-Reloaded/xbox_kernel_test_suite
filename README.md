@@ -9,13 +9,15 @@ All you need is nxdk. You can get it here: https://github.com/xqemu/nxdk
 Here is a setup guide: https://github.com/Cxbx-Reloaded/Cxbx-Reloaded/wiki/Installing-the-nxdk
 
 # CONFIGURATION FILE:
-The configuration file should be called "config.txt" and should be placed in the same directory of the xbe.
+The configuration file should be called _*"config.txt"*_ and should be placed in the same directory of the xbe.
 
 This is an example of config.txt:
 
-```is_emu=1
+```
+is_emu=1
 
-tests=1,25,3,F```
+tests=1,25,3,F
+```
 
 **PAY ATTENTION:** Every value is treated as hex (eg. 25 is 37 in decimal)
 
