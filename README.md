@@ -14,6 +14,7 @@ The configuration file should be called "config.txt" and should be placed in the
 This is an example of config.txt:
 
 >is_emu=1
+
 >tests=1,25,3,F
 
 **PAY ATTENTION:** Every value is treated as hex (eg. 25 is 37 in decimal)
