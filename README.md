@@ -26,6 +26,7 @@ tests=1,25,3,F
 * https://github.com/wine-mirror/wine/tree/master/dlls/kernel32/tests
 * https://github.com/mirror/reactos/tree/master/rostests/apitests/kernel32
 * https://github.com/mborgerson/xbtests?files=1
+* https://github.com/wine-mirror/wine/blob/master/include/wine/test.h
 
 # TODO:
 * Complete the test suite with all xbox kernel APIs (fill the stubs)
