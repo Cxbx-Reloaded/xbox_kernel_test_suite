@@ -114,12 +114,12 @@ void test_RtlEnterCriticalSection(){
     const char* func_num = "0x0115";
     const char* func_name = "RtlEnterCriticalSection";
     RTL_CRITICAL_SECTION crit_section;
-    BOOL tests_passed = 0;
+    BOOL tests_passed = 1;
     print_test_header(func_num, func_name);
 
     RtlInitializeCriticalSection(&crit_section);
     RtlEnterCriticalSection(&crit_section);
-    tests_passed |= assert_critical_section_equals(
+    tests_passed &= assert_critical_section_equals(
         &crit_section,
         0,
         1,
@@ -128,7 +128,7 @@ void test_RtlEnterCriticalSection(){
     );
 
     RtlEnterCriticalSection(&crit_section);
-    tests_passed |= assert_critical_section_equals(
+    tests_passed &= assert_critical_section_equals(
         &crit_section,
         1,
         2,
@@ -141,7 +141,7 @@ void test_RtlEnterCriticalSection(){
     RtlLeaveCriticalSection(&crit_section);
 
     RtlEnterCriticalSection(&crit_section);
-    tests_passed |= assert_critical_section_equals(
+    tests_passed &= assert_critical_section_equals(
         &crit_section,
         0,
         1,
@@ -208,11 +208,11 @@ void test_RtlInitializeCriticalSection(){
     const char* func_num = "0x0123";
     const char* func_name = "RtlInitializeCriticalSection";
     RTL_CRITICAL_SECTION crit_section;
-    BOOL tests_passed = 0;
+    BOOL tests_passed = 1;
     print_test_header(func_num, func_name);
 
     RtlInitializeCriticalSection(&crit_section);
-    tests_passed |= assert_critical_section_equals(
+    tests_passed &= assert_critical_section_equals(
         &crit_section,
         -1,
         0,
@@ -222,7 +222,7 @@ void test_RtlInitializeCriticalSection(){
 
     memset(&crit_section, 0x11, sizeof(crit_section));
     RtlInitializeCriticalSection(&crit_section);
-    tests_passed |= assert_critical_section_equals(
+    tests_passed &= assert_critical_section_equals(
         &crit_section,
         -1,
         0,
@@ -242,7 +242,43 @@ void test_RtlIntegerToUnicodeString(){
 }
 
 void test_RtlLeaveCriticalSection(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x0126";
+    const char* func_name = "RtlLeaveCriticalSection";
+    RTL_CRITICAL_SECTION crit_section;
+    BOOL tests_passed = 1;
+    print_test_header(func_num, func_name);
+
+    RtlInitializeCriticalSection(&crit_section);
+    RtlEnterCriticalSection(&crit_section);
+    RtlEnterCriticalSection(&crit_section);
+    RtlLeaveCriticalSection(&crit_section);
+    tests_passed &= assert_critical_section_equals(
+        &crit_section,
+        0,
+        1,
+        (HANDLE)KeGetCurrentThread(),
+        "Leave critical section once"
+    );
+
+    RtlLeaveCriticalSection(&crit_section);
+    tests_passed &= assert_critical_section_equals(
+        &crit_section,
+        -1,
+        0,
+        NULL,
+        "Leave critical section twice"
+    );
+
+    RtlEnterCriticalSection(&crit_section);
+    tests_passed &= assert_critical_section_equals(
+        &crit_section,
+        0,
+        1,
+        (HANDLE)KeGetCurrentThread(),
+        "Re-Enter Critical Section"
+    );
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlLeaveCriticalSectionAndRegion(){
