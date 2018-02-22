@@ -3,6 +3,45 @@
 
 #include "output.h"
 
+static BOOL assert_critical_section_equals(
+    PRTL_CRITICAL_SECTION crit_section,
+    LONG expected_LockCount,
+    LONG expected_RecursionCount,
+    HANDLE expected_OwningThread,
+    const char* test_name
+)
+{
+    BOOL test_passed = 1;
+    if(crit_section->LockCount != expected_LockCount) {
+        print(
+            "Expected LockCount = 0x%x, Got LockCount = 0x%x",
+            expected_LockCount, crit_section->LockCount
+        );
+        test_passed = 0;
+    }
+    if(crit_section->RecursionCount != expected_RecursionCount) {
+        print(
+            "Expected RecursionCount = 0x%x, Got RecursionCount = 0x%x",
+            expected_RecursionCount, crit_section->RecursionCount
+        );
+        test_passed = 0;
+    }
+    if(crit_section->OwningThread != expected_OwningThread) {
+        print(
+            "Expected OwningThread = 0x%x, Got OwningThread = 0x%x",
+            expected_OwningThread, crit_section->OwningThread
+        );
+        test_passed = 0;
+    }
+    if(test_passed) {
+        print("Test '%s' PASSED", test_name);
+    }
+    else {
+        print("Test '%s' FAILED", test_name);
+    }
+    return test_passed;
+}
+
 void test_RtlAnsiStringToUnicodeString(){
     /* FIXME: This is a stub! implement this function! */
 }
@@ -72,7 +111,45 @@ void test_RtlDowncaseUnicodeString(){
 }
 
 void test_RtlEnterCriticalSection(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x0115";
+    const char* func_name = "RtlEnterCriticalSection";
+    RTL_CRITICAL_SECTION crit_section;
+    BOOL tests_passed = 0;
+    print_test_header(func_num, func_name);
+
+    RtlInitializeCriticalSection(&crit_section);
+    RtlEnterCriticalSection(&crit_section);
+    tests_passed |= assert_critical_section_equals(
+        &crit_section,
+        0,
+        1,
+        (HANDLE)KeGetCurrentThread(),
+        "Enter an unused critical section"
+    );
+
+    RtlEnterCriticalSection(&crit_section);
+    tests_passed |= assert_critical_section_equals(
+        &crit_section,
+        1,
+        2,
+        (HANDLE)KeGetCurrentThread(),
+        "Enter the critical section twice"
+    );
+
+    // Leave three times
+    RtlLeaveCriticalSection(&crit_section);
+    RtlLeaveCriticalSection(&crit_section);
+
+    RtlEnterCriticalSection(&crit_section);
+    tests_passed |= assert_critical_section_equals(
+        &crit_section,
+        0,
+        1,
+        (HANDLE)KeGetCurrentThread(),
+        "Re-Enter critical section after leaving twice"
+    );
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlEnterCriticalSectionAndRegion(){
@@ -125,45 +202,6 @@ void test_RtlInitAnsiString(){
 
 void test_RtlInitUnicodeString(){
     /* FIXME: This is a stub! implement this function! */
-}
-
-static BOOL assert_critical_section_equals(
-    PRTL_CRITICAL_SECTION crit_section,
-    LONG expected_LockCount,
-    LONG expected_RecursionCount,
-    HANDLE expected_OwningThread,
-    const char* test_name
-)
-{
-    BOOL test_passed = 1;
-    if(crit_section->LockCount != expected_LockCount) {
-        print(
-            "Expected LockCount = 0x%x, Got LockCount = 0x%x",
-            expected_LockCount, crit_section->LockCount
-        );
-        test_passed = 0;
-    }
-    if(crit_section->RecursionCount != expected_RecursionCount) {
-        print(
-            "Expected RecursionCount = 0x%x, Got RecursionCount = 0x%x",
-            expected_RecursionCount, crit_section->RecursionCount
-        );
-        test_passed = 0;
-    }
-    if(crit_section->OwningThread != expected_OwningThread) {
-        print(
-            "Expected OwningThread = 0x%x, Got OwningThread = 0x%x",
-            expected_OwningThread, crit_section->OwningThread
-        );
-        test_passed = 0;
-    }
-    if(test_passed) {
-        print("Test %s PASSED", test_name);
-    }
-    else {
-        print("Test %s FAILED", test_name);
-    }
-    return test_passed;
 }
 
 void test_RtlInitializeCriticalSection(){
