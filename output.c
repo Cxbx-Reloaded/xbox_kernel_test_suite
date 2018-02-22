@@ -15,6 +15,6 @@ void print(char* str, ...){
     /*******************************/
 
     /*** PRINT ON CONSOLE (CXBX) ***/
-    DbgPrint(buffer);
+    DbgPrint("%s\n", buffer);
     /*******************************/
 }
