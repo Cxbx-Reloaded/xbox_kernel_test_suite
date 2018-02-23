@@ -1,3 +1,29 @@
+#include <xboxkrnl/xboxkrnl.h>
+
+#include "output.h"
+
+static BOOL assert_critical_region(
+    PKTHREAD thread, 
+    ULONG expected_Apc,
+    const char* test_name
+) {
+    BOOL test_passed = 1;
+    if(thread->KernelApcDisable != expected_Apc) {
+        print(
+            "Expected KernelApcDisable = 0x%x, Got KernelApcDisable = 0x%x",
+            thread->KernelApcDisable, expected_Apc
+        );
+        test_passed = 0;
+    }
+    if(test_passed) {
+        print("Test '%s' PASSED", test_name);
+    }
+    else {
+        print("Test '%s' FAILED", test_name);
+    }
+    return test_passed;
+}
+
 void test_KeAlertResumeThread(){
     /* FIXME: This is a stub! implement this function! */
 }
@@ -34,8 +60,27 @@ void test_KeDisconnectInterrupt(){
     /* FIXME: This is a stub! implement this function! */
 }
 
+// FIXME - Passes on real hardware but fails on emulator
 void test_KeEnterCriticalRegion(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x0065";
+    const char* func_name = "KeEnterCriticalRegion";
+    BOOL tests_passed = 1;
+    print_test_header(func_num, func_name);
+
+    PKTHREAD thread = KeGetCurrentThread();
+    tests_passed &= assert_critical_region(thread, 0, "Before entering critical region");
+
+    KeEnterCriticalRegion();
+    tests_passed &= assert_critical_region(thread, -1, "In critical region");
+
+    KeEnterCriticalRegion();
+    tests_passed &= assert_critical_region(thread, -2, "Entered critical region again");
+
+    KeLeaveCriticalRegion();
+    KeLeaveCriticalRegion();
+    tests_passed &= assert_critical_region(thread, 0, "Leave critical region twice");
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_KeGetCurrentIrql(){
@@ -115,7 +160,22 @@ void test_KeIsExecutingDpc(){
 }
 
 void test_KeLeaveCriticalRegion(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x007A";
+    const char* func_name = "KeLeaveCriticalRegion";
+    BOOL tests_passed = 1;
+    print_test_header(func_num, func_name);
+
+    PKTHREAD thread = KeGetCurrentThread();
+    KeEnterCriticalRegion();
+    KeEnterCriticalRegion();
+
+    KeLeaveCriticalRegion();
+    tests_passed &= assert_critical_region(thread, -1, "Leave critical region after entering twice");
+
+    KeLeaveCriticalRegion();
+    tests_passed &= assert_critical_region(thread, 0, "Leave critical region twice");
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_KePulseEvent(){
