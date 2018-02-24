@@ -1,28 +1,7 @@
 #include <xboxkrnl/xboxkrnl.h>
 
+#include "ke_assertions.h"
 #include "output.h"
-
-static BOOL assert_critical_region(
-    PKTHREAD thread, 
-    ULONG expected_Apc,
-    const char* test_name
-) {
-    BOOL test_passed = 1;
-    if(thread->KernelApcDisable != expected_Apc) {
-        print(
-            "Expected KernelApcDisable = 0x%x, Got KernelApcDisable = 0x%x",
-            thread->KernelApcDisable, expected_Apc
-        );
-        test_passed = 0;
-    }
-    if(test_passed) {
-        print("Test '%s' PASSED", test_name);
-    }
-    else {
-        print("Test '%s' FAILED", test_name);
-    }
-    return test_passed;
-}
 
 void test_KeAlertResumeThread(){
     /* FIXME: This is a stub! implement this function! */
@@ -173,7 +152,7 @@ void test_KeLeaveCriticalRegion(){
     tests_passed &= assert_critical_region(thread, -1, "Leave critical region after entering twice");
 
     KeLeaveCriticalRegion();
-    tests_passed &= assert_critical_region(thread, 0, "Leave critical region twice");
+    tests_passed &= assert_critical_region(thread, 0, "Leave critical region again");
 
     print_test_footer(func_num, func_name, tests_passed);
 }
