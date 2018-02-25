@@ -42,5 +42,6 @@ void vector_double_capacity_if_full(vector *vec) {
 }
 
 void vector_free(vector *vec) {
-    free(vec->data);
+    if(vec!=NULL)
+        free(vec->data);
 }
