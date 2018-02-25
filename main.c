@@ -44,8 +44,6 @@ int load_conf_file() {
 
     XCloseHandle(handle);
 
-    vector_init(&tests_to_run);
-
     char *line;
     char *rest = buffer;
     while ((line = strtok_r(rest, "\n", &rest))){
@@ -82,6 +80,8 @@ void main(void){
 
     open_output_file("kernel_tests.log");
 
+    vector_init(&tests_to_run);
+
     if(load_conf_file() == 0){
         print("Config File Loaded");
         print("is_emu: %d", is_emu);
@@ -100,11 +100,12 @@ void main(void){
     	}
     }
 
-    XSleep(10000);
 
     vector_free(&tests_to_run);
+
     close_output_file();
 
+    XSleep(10000);
     pb_kill();
     XReboot();
 
