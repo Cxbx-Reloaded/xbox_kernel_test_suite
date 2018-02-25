@@ -100,11 +100,17 @@ void main(void){
     	}
     }
 
-    XSleep(10000);
+    if(tests_to_run.data!=NULL){
+        print("Cleaning vector");
+        vector_free(&tests_to_run);
+    }
+    else{
+        print("Not cleaning vector");
+    }
 
-    vector_free(&tests_to_run);
     close_output_file();
 
+    XSleep(10000);
     pb_kill();
     XReboot();
 
