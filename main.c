@@ -19,9 +19,16 @@ int load_conf_file() {
     unsigned int read = 0;
     int result;
 
-    strcpy(file_path, getCurrentDirString());
-    strcat(file_path, "config.txt");
-    print(file_path);
+    // FIXME - On my computer, file_path = "" when I run this code
+    //strcpy(file_path, getCurrentDirString());
+    //strcat(file_path, "config.txt");
+
+    // FIXME - As a temporary workaround, this works on real hardware to
+    // look for config.txt in the same directory as the .xbe file. Which
+    // means that we need to set is_emu to 1 by default and use the config.txt
+    // file on real hardware to set is_emu=0
+    strcpy(file_path, "config.txt");
+    print("Trying to open config file: %s", file_path);
 
     result = XCreateFile(&handle,
         file_path,
@@ -29,18 +36,24 @@ int load_conf_file() {
         FILE_SHARE_READ,
         OPEN_EXISTING,
         FILE_ATTRIBUTE_NORMAL);
-    if(result != 0)
+    if(result != 0) {
+        print("Could not open config file '%s' for read", file_path);
         return -1;
+    }
 
     XGetFileSize(handle, &file_size);
 
     buffer = malloc(file_size);
-    if(buffer == NULL)
+    if(buffer == NULL) {
+        print("Malloc failed for file_size %u", file_size);
         return -1;
+    }
 
     result = XReadFile(handle, buffer, file_size, &read);
-    if(result == 0 || read != file_size)
+    if(result == 0 || read != file_size) {
+        print("Read failed for config file. result = %d, read = %u", file_size, read);
         return -1;
+    }
 
     XCloseHandle(handle);
 
@@ -64,6 +77,30 @@ int load_conf_file() {
     return 0;
 }
 
+static void run_tests() {
+    if(is_emu) {
+        print("Running tests in emulator mode");
+    }
+    else {
+        print("Running tests in real hardware mode");
+    }
+    if(tests_to_run.size == 0) {
+        print("No Specific tests specified. Running all tests (Single Pass).");
+        print("-------------------------------------------------------------");
+        int table_size = sizeof(kernel_thunk_table) / sizeof(*kernel_thunk_table);
+        for(int k=0;k<table_size;k++){
+            kernel_thunk_table[k]();
+        }
+    }
+    else{
+        print("Config File Was Loaded. Only running requested tests.");
+        print("-----------------------------------------------------");
+        for(int k=0; k<tests_to_run.size; k++){
+            kernel_thunk_table[vector_get(&tests_to_run, k)]();
+        }
+    }
+}
+
 void main(void){
 
     switch(pb_init()){
@@ -76,37 +113,18 @@ void main(void){
 
     pb_show_debug_screen();
 
-    print("Kernel Test Suite");
-
+    vector_init(&tests_to_run);
+    load_conf_file();
     open_output_file("kernel_tests.log");
 
-    vector_init(&tests_to_run);
-
-    if(load_conf_file() == 0){
-        print("Config File Loaded");
-        print("is_emu: %d", is_emu);
-        print("---------------");
-        for(int k=0; k<tests_to_run.size; k++){
-            kernel_thunk_table[vector_get(&tests_to_run, k)]();
-        }
-    }
-    else{
-        print("Config File Not Found");
-        print("Testing Everything (Single Pass And Assuming Running on Emulator)");
-        print("---------------");
-        int table_size = sizeof(kernel_thunk_table) / sizeof(*kernel_thunk_table);
-    	for(int k=0;k<table_size;k++){
-    		kernel_thunk_table[k]();
-    	}
-    }
+    print("Kernel Test Suite");
+    run_tests();
 
 
     vector_free(&tests_to_run);
-
     close_output_file();
 
     XSleep(10000);
     pb_kill();
     XReboot();
-
 }

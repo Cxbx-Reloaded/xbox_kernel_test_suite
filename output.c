@@ -51,7 +51,7 @@ void print_test_footer(
 
 int open_output_file(char* file_name) {
     if(is_emu) {
-        print("Skipping creating %s because on emulator", file_name);
+        print("Kernel Test Suite: Skipping creating %s because on emulator", file_name);
         return 0;
     }
 
