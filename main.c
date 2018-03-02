@@ -126,5 +126,4 @@ void main(void){
 
     XSleep(10000);
     pb_kill();
-    XReboot();
 }
