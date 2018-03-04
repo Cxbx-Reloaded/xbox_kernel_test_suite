@@ -6,6 +6,7 @@ before_install:
     # add LLVM repository
     - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -
     - echo "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty main" | sudo tee -a /etc/apt/sources.list
+    - wget -O - http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu/dists/trusty/Release.gpg|sudo apt-key add -
     - echo "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty main" | sudo tee -a /etc/apt/sources.list
     - sudo apt-get update -qq
     # clone NXDK repository
