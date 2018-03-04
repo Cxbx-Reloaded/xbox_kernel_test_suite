@@ -1,0 +1,29 @@
+language: c
+compiler: gcc
+dist: trusty
+
+before_install:
+    # add LLVM repository
+    - sudo echo "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty main" > /etc/apt/sources.list
+    - sudo apt-get update -qq
+    # clone NXDK repository
+    - git clone https://github.com/xqemu/nxdk.git
+    - cd nxdk
+    - git submodule init && git submodule update --recursive
+
+install:
+    # install required packages
+    - sudo apt-get install -qq build-essential flex bison clang git clang-4.0 lldb-4.0 llvm-4.0 llvm-4.0-dev
+    # create an alias for lld-link
+    - alias lld-link=lld-link-6.0
+
+script:
+    # debug infos
+    - uname -a
+    - $CXX --version
+    - pwd
+    # try to compile
+    - mkdir project
+    - cd ..
+    - pwd
+    # TODO....
