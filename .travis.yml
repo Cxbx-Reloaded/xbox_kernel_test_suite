@@ -4,7 +4,8 @@ dist: trusty
 
 before_install:
     # add LLVM repository
-    - sudo echo "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty main" > /etc/apt/sources.list
+    - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -
+    - echo "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty main" | sudo tee -a /etc/apt/sources.list
     - sudo apt-get update -qq
     # clone NXDK repository
     - git clone https://github.com/xqemu/nxdk.git
