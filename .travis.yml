@@ -14,7 +14,7 @@ before_install:
 
 install:
     # install required packages
-    - sudo apt-get install -qq build-essential flex bison clang git clang-7 lldb-7 llvm-7 llvm-7-dev
+    - sudo apt-get install build-essential flex bison clang git clang-7 lldb-7 llvm-7 llvm-7-dev -y
     # create an alias for lld-link
     - alias lld-link=lld-link-7.0
 
