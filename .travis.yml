@@ -1,6 +1,9 @@
 language: c
 compiler: gcc
 dist: trusty
+os: linux
+notifications:
+    email: false
 
 before_install:
     # add LLVM repository
@@ -21,7 +24,7 @@ before_script:
     - git clone https://github.com/xqemu/nxdk.git
     - cd nxdk # now we are in /home/travis/build/Cxbx-Reloaded/nxdk
     - git submodule init && git submodule update --recursive
-    - mkdir project
+    - mkdir projects
     - cd projects # we are now in /home/travis/build/Cxbx-Reloaded/nxdk/projects/
     - mv ./../../xbox_kernel_test_suite ./ # move here the xbox_kernel_test_suite folder
     - cd xbox_kernel_test_suite # change current dir to /home/travis/build/Cxbx-Reloaded/nxdk/projects/xbox_kernel_test_suite
