@@ -11,33 +11,23 @@
 #include "func_table.h"
 #include "vector.h"
 
-int load_conf_file() {
-    char file_path[200];
+int load_conf_file(char *config_file_path) {
     int handle;
     unsigned int file_size = 0;
     char *buffer;
     unsigned int read = 0;
     int result;
 
-    // FIXME - On my computer, file_path = "" when I run this code
-    //strcpy(file_path, getCurrentDirString());
-    //strcat(file_path, "config.txt");
-
-    // FIXME - As a temporary workaround, this works on real hardware to
-    // look for config.txt in the same directory as the .xbe file. Which
-    // means that we need to set is_emu to 1 by default and use the config.txt
-    // file on real hardware to set is_emu=0
-    strcpy(file_path, "config.txt");
-    print("Trying to open config file: %s", file_path);
+    print("Trying to open config file: %s", config_file_path);
 
     result = XCreateFile(&handle,
-        file_path,
+        config_file_path,
         GENERIC_READ,
         FILE_SHARE_READ,
         OPEN_EXISTING,
         FILE_ATTRIBUTE_NORMAL);
     if(result != 0) {
-        print("Could not open config file '%s' for read", file_path);
+        print("Could not open config file '%s' for read", config_file_path);
         return -1;
     }
 
@@ -114,7 +104,7 @@ void main(void){
     pb_show_debug_screen();
 
     vector_init(&tests_to_run);
-    load_conf_file();
+    load_conf_file("config.txt");
     open_output_file("kernel_tests.log");
 
     print("Kernel Test Suite");
