@@ -21,6 +21,9 @@ tests=1,25,3,F
 
 **PAY ATTENTION:** Every value is treated as hex (eg. 25 is 37 in decimal)
 
+# BINARIES:
+You can download pre-built bins from here: https://github.com/Cxbx-Reloaded/xbox_kernel_test_suite/releases
+
 # USEFUL LINKS:
 * https://github.com/wine-mirror/wine/tree/master/dlls/ntdll/tests
 * https://github.com/wine-mirror/wine/tree/master/dlls/kernel32/tests
@@ -30,6 +33,6 @@ tests=1,25,3,F
 
 # TODO:
 * Complete the test suite with all xbox kernel APIs (fill the stubs)
-* Every functions in utils.c should be ported to nxdk (I'll do that later)
+* Organize the code, maybe using folders etc.
 
 ANY HELP IS REALLY WELCOME!
