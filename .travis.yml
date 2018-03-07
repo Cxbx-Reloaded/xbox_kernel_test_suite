@@ -37,11 +37,9 @@ script:
     - make
 
 deploy:
-  provider: pages
-  local-dir: bins
-  verbose: true
-  skip-cleanup: true
-  github-token: $GITHUB_TOKEN
-  keep-history: true
-  on:
-    branch: master
+  provider: releases
+  api_key:
+    secure: $GITHUB_TOKEN
+  file: "bin/default.xbe"
+  overwrite: true
+  skip_cleanup: true
