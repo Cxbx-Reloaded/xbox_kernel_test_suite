@@ -68,7 +68,27 @@ void test_RtlCompareMemoryUlong(){
 }
 
 void test_RtlCompareString(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x010E";
+    const char* func_name = "RtlCompareString";
+    BOOL tests_passed = 1;
+    print_test_header(func_num, func_name);
+
+    ANSI_STRING lower_case_string;
+    ANSI_STRING upper_case_string;
+    ANSI_STRING long_string;
+
+    RtlInitAnsiString(&lower_case_string, "test_string");
+    RtlInitAnsiString(&upper_case_string, "TEST_STRING");
+    RtlInitAnsiString(&long_string, "this_is_a_long_string");
+
+    tests_passed &= RtlCompareString(&lower_case_string, &upper_case_string, 1) == 0 ? 1 : 0;
+    tests_passed &= RtlCompareString(&lower_case_string, &upper_case_string, 0) != 0 ? 1 : 0;
+    tests_passed &= RtlCompareString(&lower_case_string, &lower_case_string, 1) == 0 ? 1 : 0;
+    tests_passed &= RtlCompareString(&lower_case_string, &lower_case_string, 0) == 0 ? 1 : 0;
+    tests_passed &= RtlCompareString(&lower_case_string, &long_string, 1) < 0 ? 1 : 0;
+    tests_passed &= RtlCompareString(&long_string, &lower_case_string, 1) > 0 ? 1 : 0;
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlCompareUnicodeString(){
