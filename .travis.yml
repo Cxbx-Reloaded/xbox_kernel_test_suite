@@ -38,6 +38,8 @@ script:
 
 deploy:
   provider: pages
+  local-dir: bins
+  verbose: true
   skip-cleanup: true
   github-token: $GITHUB_TOKEN
   keep-history: true
