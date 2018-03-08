@@ -41,11 +41,54 @@ void test_RtlCompareMemory(){
 }
 
 void test_RtlCompareMemoryUlong(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x010D";
+    const char* func_name = "RtlCompareMemoryUlong";
+    BOOL tests_passed = 1;
+    print_test_header(func_num, func_name);
+
+    ULONG mem[4];
+    ULONG res;
+    mem[0]= 0x0123;
+    mem[1]= 0x4567;
+    mem[2]= 0x89ab;
+    mem[3]= 0xcdef;
+
+    tests_passed &= RtlCompareMemoryUlong(mem, 0, 0x0123) == 0 ? 1 : 0;
+    tests_passed &= RtlCompareMemoryUlong(mem, 3, 0x0123) == 0 ? 1 : 0;
+    tests_passed &= RtlCompareMemoryUlong(mem, 4, 0x0123) == 4 ? 1 : 0;
+    tests_passed &= RtlCompareMemoryUlong(mem, 5, 0x0123) == 4 ? 1 : 0;
+    tests_passed &= RtlCompareMemoryUlong(mem, 7, 0x0123) == 4 ? 1 : 0;
+    tests_passed &= RtlCompareMemoryUlong(mem, 8, 0x0123) == 4 ? 1 : 0;
+    tests_passed &= RtlCompareMemoryUlong(mem, 9, 0x0123) == 4 ? 1 : 0;
+    tests_passed &= RtlCompareMemoryUlong(mem, 4, 0x0127) == 0 ? 1 : 0;
+    tests_passed &= RtlCompareMemoryUlong(mem, 4, 0x7123) == 0 ? 1 : 0;
+    tests_passed &= RtlCompareMemoryUlong(mem, 16, 0x4567) == 0 ? 1 : 0;
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlCompareString(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x010E";
+    const char* func_name = "RtlCompareString";
+    BOOL tests_passed = 1;
+    print_test_header(func_num, func_name);
+
+    ANSI_STRING lower_case_string;
+    ANSI_STRING upper_case_string;
+    ANSI_STRING long_string;
+
+    RtlInitAnsiString(&lower_case_string, "test_string");
+    RtlInitAnsiString(&upper_case_string, "TEST_STRING");
+    RtlInitAnsiString(&long_string, "this_is_a_long_string");
+
+    tests_passed &= RtlCompareString(&lower_case_string, &upper_case_string, 1) == 0 ? 1 : 0;
+    tests_passed &= RtlCompareString(&lower_case_string, &upper_case_string, 0) != 0 ? 1 : 0;
+    tests_passed &= RtlCompareString(&lower_case_string, &lower_case_string, 1) == 0 ? 1 : 0;
+    tests_passed &= RtlCompareString(&lower_case_string, &lower_case_string, 0) == 0 ? 1 : 0;
+    tests_passed &= RtlCompareString(&lower_case_string, &long_string, 1) < 0 ? 1 : 0;
+    tests_passed &= RtlCompareString(&long_string, &lower_case_string, 1) > 0 ? 1 : 0;
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlCompareUnicodeString(){
