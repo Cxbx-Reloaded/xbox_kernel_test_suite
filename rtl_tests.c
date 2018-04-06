@@ -1,11 +1,49 @@
 #include <xboxkrnl/xboxkrnl.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "output.h"
+#include "common_assertions.h"
 #include "rtl_assertions.h"
 
+// TODO - Move into nxdk
+#define STATUS_INVALID_PARAMETER_2 0xC00000F0
+#define STATUS_BUFFER_OVERFLOW 0x80000005
+
 void test_RtlAnsiStringToUnicodeString(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x0104";
+    const char* func_name = "RtlAnsiStringToUnicodeString";
+    BOOL tests_passed = 1;
+
+    print_test_header(func_num, func_name);
+
+    const uint32_t long_str_size = 0x10000;
+    UNICODE_STRING dest_str;
+    ANSI_STRING src_str;
+    CHAR* long_str = malloc(sizeof(CHAR) * long_str_size);
+    if(long_str == NULL) {
+        print("ERROR: Could not malloc long_str");
+    }
+
+    NTSTATUS ret = RtlAnsiStringToUnicodeString(&dest_str, &src_str, 0);
+    tests_passed &= assert_NTSTATUS(
+        ret,
+        STATUS_BUFFER_OVERFLOW,
+        "RtlAnsiStringToUnicodeString"
+    );
+
+    memset(long_str, 'a', long_str_size);
+    long_str[long_str_size - 1] = '\0';
+    RtlInitAnsiString(&src_str, long_str);
+    ret = RtlAnsiStringToUnicodeString(&dest_str, &src_str, 0);
+    tests_passed &= assert_NTSTATUS(
+        ret,
+        STATUS_INVALID_PARAMETER_2,
+        "RtlAnsiStringToUnicodeString"
+    );
+    free(long_str);
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlAppendStringToString(){
