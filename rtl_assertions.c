@@ -17,7 +17,7 @@ BOOL assert_critical_section_equals(
     ASSERT_FOOTER(test_name)
 }
 
-static BOOL assert_ansi_string(
+BOOL assert_ansi_string(
     PANSI_STRING string,
     USHORT expected_Length,
     USHORT expected_MaximumLength,
