@@ -19,4 +19,12 @@ BOOL assert_ansi_string(
     const char*
 );
 
+BOOL assert_unicode_string(
+    PUNICODE_STRING,
+    USHORT,
+    USHORT,
+    PWSTR,
+    const char*
+);
+
 #endif // RTL_ASSERTIONS_H
