@@ -21,7 +21,7 @@ void test_AvSendTVEncoderOption(){
 }
 
 void test_AvSetDisplayMode(){
-    /*if(!is_emu){
+    if(!is_emu){
          print("0x0003 - AvSetDisplayMode: Skipped (due to real hadrware)");
          return;
     }
