@@ -48,3 +48,15 @@ static BOOL assert_unicode_string(
 
     ASSERT_FOOTER(test_name)
 }
+
+BOOL assert_rtl_compared_bytes(
+    SIZE_T num_matching_bytes,
+    SIZE_T expected_matching_bytes,
+    const char* test_name
+) {
+    ASSERT_HEADER
+
+    GEN_CHECK(num_matching_bytes, expected_matching_bytes, "num_matching_bytes");
+
+    ASSERT_FOOTER(test_name)
+}
