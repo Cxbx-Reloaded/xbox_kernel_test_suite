@@ -156,7 +156,36 @@ void test_RtlCharToInteger(){
 }
 
 void test_RtlCompareMemory(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x010C";
+    const char* func_name = "RtlCompareMemory";
+    BOOL tests_passed = 1;
+    print_test_header(func_num, func_name);
+
+    uint32_t num1 = 0;
+    uint32_t num2 = 0;
+    VOID* num1_ptr = (VOID*)&num1;
+    VOID* num2_ptr = (VOID*)&num2;
+
+    SIZE_T bytes_matching = RtlCompareMemory(num1_ptr, num2_ptr, 0);
+    assert_rtl_compared_bytes(bytes_matching, 0, "Check 0 bytes of memory");
+
+    bytes_matching = RtlCompareMemory(num1_ptr, num2_ptr, sizeof(num1));
+    assert_rtl_compared_bytes(bytes_matching, sizeof(num1), "Both nums 0, should match");
+
+    num1 |= 0x80000000;
+    bytes_matching = RtlCompareMemory(num1_ptr, num2_ptr, sizeof(num1));
+    assert_rtl_compared_bytes(bytes_matching, sizeof(num1) - 1, "Only 3 bytes should match");
+
+    num2 |= 0x4000;
+    bytes_matching = RtlCompareMemory(num1_ptr, num2_ptr, sizeof(num1));
+    assert_rtl_compared_bytes(bytes_matching, sizeof(num1) - 3, "Only 1 byte should match");
+
+    num2 |= 0x80000000;
+    num1 |= 0x4000;
+    bytes_matching = RtlCompareMemory(num1_ptr, num2_ptr, sizeof(num1));
+    assert_rtl_compared_bytes(bytes_matching, sizeof(num1), "All bytes should match again");
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlCompareMemoryUlong(){

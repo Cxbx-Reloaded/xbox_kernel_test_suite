@@ -27,4 +27,6 @@ BOOL assert_unicode_string(
     const char*
 );
 
+BOOL assert_rtl_compared_bytes(SIZE_T, SIZE_T, const char*);
+
 #endif // RTL_ASSERTIONS_H
