@@ -30,7 +30,7 @@ void test_RtlAnsiStringToUnicodeString(){
     tests_passed &= assert_NTSTATUS(
         ret,
         STATUS_BUFFER_OVERFLOW,
-        "RtlAnsiStringToUnicodeString"
+        func_name
     );
 
     memset(long_str, 'a', long_str_size);
@@ -40,7 +40,7 @@ void test_RtlAnsiStringToUnicodeString(){
     tests_passed &= assert_NTSTATUS(
         ret,
         STATUS_INVALID_PARAMETER_2,
-        "RtlAnsiStringToUnicodeString"
+        func_name
     );
     free(long_str);
 
