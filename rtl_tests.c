@@ -7,8 +7,9 @@
 #include "rtl_assertions.h"
 
 // TODO - Move into nxdk
-#define STATUS_INVALID_PARAMETER_2 0xC00000F0
-#define STATUS_BUFFER_OVERFLOW 0x80000005
+#define STATUS_INVALID_PARAMETER_2  0xC00000F0
+#define STATUS_BUFFER_OVERFLOW      0x80000005
+#define STATUS_BUFFER_TOO_SMALL     0xC0000023
 
 void test_RtlAnsiStringToUnicodeString(){
     const char* func_num = "0x0104";
@@ -47,7 +48,45 @@ void test_RtlAnsiStringToUnicodeString(){
 }
 
 void test_RtlAppendStringToString(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x0105";
+    const char* func_name = "RtlAppendStringToString";
+    BOOL tests_passed = 1;
+    print_test_header(func_num, func_name);
+
+    const uint8_t buf_size = 8;
+    const CHAR src_text[] = "Xbox";
+    ANSI_STRING src_str, dest_str;
+    CHAR buffer[buf_size];
+
+    RtlInitAnsiString(&src_str, src_text);
+    dest_str.Length = 0;
+    dest_str.MaximumLength = buf_size;
+    dest_str.Buffer = buffer;
+
+    NTSTATUS ret = RtlAppendStringToString(&dest_str, &src_str);
+    tests_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, func_name);
+    tests_passed &= assert_ansi_string(
+        &dest_str,
+        strlen(src_text),
+        buf_size,
+        buffer,
+        "Append src str to empty dest str"
+    );
+
+    ret = RtlAppendStringToString(&dest_str, &src_str);
+    tests_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, func_name);
+    tests_passed &= assert_ansi_string(
+        &dest_str,
+        strlen(src_text) * 2,
+        buf_size,
+        buffer,
+        "Append src str to dest str again"
+    );
+
+    ret = RtlAppendStringToString(&dest_str, &src_str);
+    tests_passed &= assert_NTSTATUS(ret, STATUS_BUFFER_TOO_SMALL, func_name);
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlAppendUnicodeStringToString(){
