@@ -358,7 +358,62 @@ void test_RtlCompareString(){
 }
 
 void test_RtlCompareUnicodeString(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x010F";
+    const char* func_name = "RtlCompareUnicodeString";
+    BOOL tests_passed = 1;
+    print_test_header(func_num, func_name);
+
+    const BOOL case_sensitive = 0;
+    const BOOL case_insensitive = 1;
+    UNICODE_STRING base_str, lowercase_base_str, shorter_str, longer_str;
+    LONG result;
+
+    RtlInitUnicodeString(&base_str, L"Xbox");
+    RtlInitUnicodeString(&lowercase_base_str, L"xbox");
+    RtlInitUnicodeString(&shorter_str, L"Xb");
+    RtlInitUnicodeString(&longer_str, L"Xbox Original");
+
+    result = RtlCompareUnicodeString(&base_str, &base_str, case_sensitive);
+    result += RtlCompareUnicodeString(&base_str, &base_str, case_insensitive);
+    if(result != 0) {
+        print("  Comparing a string to itself failed with result: %d", result);
+        tests_passed = 0;
+    }
+
+    result = RtlCompareUnicodeString(&base_str, &lowercase_base_str, case_sensitive);
+    if( !(result < 0) ) {
+        print("  Case sensitive compare of case mismatching strings failed with result %d", result);
+        tests_passed = 0;
+    }
+    result = RtlCompareUnicodeString(&base_str, &lowercase_base_str, case_insensitive);
+    if(result != 0) {
+        print("  Case insensitive compare of case mismatching strings failed with result %d", result);
+        tests_passed = 0;
+    }
+
+    result = RtlCompareUnicodeString(&base_str, &shorter_str, case_sensitive);
+    if( !(result > 0) ) {
+        print("  Case sensitive compare of shorter string failed with result %d", result);
+        tests_passed = 0;
+    }
+    result = RtlCompareUnicodeString(&base_str, &shorter_str, case_insensitive);
+    if( !(result > 0) ) {
+        print("  Case insensitive compare of shorter string failed with result %d", result);
+        tests_passed = 0;
+    }
+
+    result = RtlCompareUnicodeString(&base_str, &longer_str, case_sensitive);
+    if( !(result < 0) ) {
+        print("  Case sensitive compare of longer string failed with result %d", result);
+        tests_passed = 0;
+    }
+    result = RtlCompareUnicodeString(&base_str, &longer_str, case_insensitive);
+    if( !(result < 0) ) {
+        print("  Case insensitive compare of longer string failed with result %d", result);
+        tests_passed = 0;
+    }
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlCopyString(){
