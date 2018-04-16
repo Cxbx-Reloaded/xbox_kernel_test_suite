@@ -134,7 +134,46 @@ void test_RtlAppendUnicodeStringToString(){
 }
 
 void test_RtlAppendUnicodeToString(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x0107";
+    const char* func_name = "RtlAppendUnicodeToString";
+    BOOL tests_passed = 1;
+    print_test_header(func_num, func_name);
+
+    // wcslen does not work because nxdk fails to find wchar.h
+    const WCHAR src_text[] = L"Xbox";
+    const uint8_t num_chars_in_src = 4;
+    WCHAR buffer[num_chars_in_src * 2];
+    const uint8_t num_buf_bytes = sizeof(buffer);
+    UNICODE_STRING dest_str;
+
+    dest_str.Length = 0;
+    dest_str.MaximumLength = num_buf_bytes;
+    dest_str.Buffer = buffer;
+
+    NTSTATUS ret = RtlAppendUnicodeToString(&dest_str, src_text);
+    tests_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, func_name);
+    tests_passed &= assert_unicode_string(
+        &dest_str,
+        num_chars_in_src * sizeof(WCHAR),
+        num_buf_bytes,
+        buffer,
+        "Append src str to empty dest str"
+    );
+
+    ret = RtlAppendUnicodeToString(&dest_str, src_text);
+    tests_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, func_name);
+    tests_passed &= assert_unicode_string(
+        &dest_str,
+        num_chars_in_src * 2 * sizeof(WCHAR),
+        num_buf_bytes,
+        buffer,
+        "Append src str to dest str again"
+    );
+
+    ret = RtlAppendUnicodeToString(&dest_str, src_text);
+    tests_passed &= assert_NTSTATUS(ret, STATUS_BUFFER_TOO_SMALL, func_name);
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlAssert(){
@@ -319,7 +358,62 @@ void test_RtlCompareString(){
 }
 
 void test_RtlCompareUnicodeString(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x010F";
+    const char* func_name = "RtlCompareUnicodeString";
+    BOOL tests_passed = 1;
+    print_test_header(func_num, func_name);
+
+    const BOOL case_sensitive = 0;
+    const BOOL case_insensitive = 1;
+    UNICODE_STRING base_str, lowercase_base_str, shorter_str, longer_str;
+    LONG result;
+
+    RtlInitUnicodeString(&base_str, L"Xbox");
+    RtlInitUnicodeString(&lowercase_base_str, L"xbox");
+    RtlInitUnicodeString(&shorter_str, L"Xb");
+    RtlInitUnicodeString(&longer_str, L"Xbox Original");
+
+    result = RtlCompareUnicodeString(&base_str, &base_str, case_sensitive);
+    result += RtlCompareUnicodeString(&base_str, &base_str, case_insensitive);
+    if(result != 0) {
+        print("  Comparing a string to itself failed with result: %d", result);
+        tests_passed = 0;
+    }
+
+    result = RtlCompareUnicodeString(&base_str, &lowercase_base_str, case_sensitive);
+    if( !(result < 0) ) {
+        print("  Case sensitive compare of case mismatching strings failed with result %d", result);
+        tests_passed = 0;
+    }
+    result = RtlCompareUnicodeString(&base_str, &lowercase_base_str, case_insensitive);
+    if(result != 0) {
+        print("  Case insensitive compare of case mismatching strings failed with result %d", result);
+        tests_passed = 0;
+    }
+
+    result = RtlCompareUnicodeString(&base_str, &shorter_str, case_sensitive);
+    if( !(result > 0) ) {
+        print("  Case sensitive compare of shorter string failed with result %d", result);
+        tests_passed = 0;
+    }
+    result = RtlCompareUnicodeString(&base_str, &shorter_str, case_insensitive);
+    if( !(result > 0) ) {
+        print("  Case insensitive compare of shorter string failed with result %d", result);
+        tests_passed = 0;
+    }
+
+    result = RtlCompareUnicodeString(&base_str, &longer_str, case_sensitive);
+    if( !(result < 0) ) {
+        print("  Case sensitive compare of longer string failed with result %d", result);
+        tests_passed = 0;
+    }
+    result = RtlCompareUnicodeString(&base_str, &longer_str, case_insensitive);
+    if( !(result < 0) ) {
+        print("  Case insensitive compare of longer string failed with result %d", result);
+        tests_passed = 0;
+    }
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlCopyString(){
