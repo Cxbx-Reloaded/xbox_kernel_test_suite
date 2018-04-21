@@ -484,7 +484,28 @@ void test_RtlCreateUnicodeString(){
 }
 
 void test_RtlDowncaseUnicodeChar(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x0113";
+    const char* func_name = "RtlDowncaseUnicodeChar";
+    BOOL tests_passed = 1;
+    print_test_header(func_num, func_name);
+
+    WCHAR result;
+    WCHAR input[]           = {L' ', L'w', L'W', L'X', L']', L'$'};
+    WCHAR expected_output[] = {L' ', L'w', L'w', L'x', L']', L'$'};
+
+    for(uint8_t i = 0; i < sizeof(input) / sizeof(WCHAR); i++) {
+        result = RtlDowncaseUnicodeChar(input[i]);
+        if(result == expected_output[i]) {
+            // For some reason print does not work with %S to display input chars
+            print("  Test PASSED for input #%u", i);
+        }
+        else {
+            tests_passed = 0;
+            print("  Test FAILED for input #%u", i);
+        }
+    }
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlDowncaseUnicodeString(){
