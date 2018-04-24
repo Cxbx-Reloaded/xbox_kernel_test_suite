@@ -1,4 +1,5 @@
 #include <xboxkrnl/xboxkrnl.h>
+#include <hal/xbox.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -831,7 +832,40 @@ void test_RtlMapGenericMask(){
 }
 
 void test_RtlMoveMemory(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x012A";
+    const char* func_name = "RtlMoveMemory";
+    BOOL tests_passed = 1;
+    print_test_header(func_num, func_name);
+
+    const int size = 1024;
+    char rnd_letter;
+    /* CREATE AND FILL THE SOURCE BUFFER */
+    CHAR* src_buffer = malloc(sizeof(CHAR) * size);
+    if(src_buffer == NULL) {
+        print("ERROR: Could not malloc src_buffer");
+    }
+    for(int k=0; k<size; k++){ // we use XGetTickCount as a rand() replacement
+        rnd_letter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[(int)XGetTickCount() % 26];
+        src_buffer[k] = rnd_letter;
+    }
+
+    /* CREATE AND FILL THE DESTINATION BUFFER (using RtlMoveMemory)*/
+    CHAR* dest_buffer = malloc(sizeof(CHAR) * size);
+    if(dest_buffer == NULL) {
+        print("ERROR: Could not malloc dest_buffer");
+    }
+    RtlMoveMemory(dest_buffer, (void*)src_buffer, size);
+
+    for(int k=0; k<size; k++){
+        if(src_buffer[k] != dest_buffer[k]){
+            tests_passed = 0;
+            break;
+        }
+    }
+
+    free(src_buffer);
+    free(dest_buffer);
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlMultiByteToUnicodeN(){
@@ -919,7 +953,25 @@ void test_RtlWalkFrameChain(){
 }
 
 void test_RtlZeroMemory(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x0140";
+    const char* func_name = "RtlZeroMemory";
+    BOOL tests_passed = 1;
+    print_test_header(func_num, func_name);
+
+    const int size = 1024;
+    CHAR* alloc_buffer = malloc(sizeof(CHAR) * size);
+    if(alloc_buffer == NULL) {
+        print("ERROR: Could not malloc alloc_buffer");
+    }
+    RtlZeroMemory(alloc_buffer, size);
+    for(int k=0; k<size; k++){
+        if(alloc_buffer[k] != (char)0){
+            tests_passed = 0;
+            break;
+        }
+    }
+    free(alloc_buffer);
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlRip(){
