@@ -824,7 +824,19 @@ void test_RtlLeaveCriticalSectionAndRegion(){
 }
 
 void test_RtlLowerChar(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x0128";
+    const char* func_name = "RtlLowerChar";
+    BOOL tests_passed = 1;
+    print_test_header(func_num, func_name);
+
+    tests_passed &= (RtlLowerChar('A') == 'a' ? 1 : 0);
+    tests_passed &= (RtlLowerChar('a') == 'a' ? 1 : 0);
+    tests_passed &= (RtlLowerChar('1') == '1' ? 1 : 0);
+    tests_passed &= (RtlLowerChar('!') == '!' ? 1 : 0);
+    tests_passed &= (RtlLowerChar(' ') == ' ' ? 1 : 0);
+    tests_passed &= (RtlLowerChar((char)127) == (char)127 ? 1 : 0); // This is DEL
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlMapGenericMask(){
@@ -937,7 +949,20 @@ void test_RtlUpcaseUnicodeToMultiByteN(){
 }
 
 void test_RtlUpperChar(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x013C";
+    const char* func_name = "RtlUpperChar";
+    BOOL tests_passed = 1;
+    print_test_header(func_num, func_name);
+
+    tests_passed &= (RtlUpperChar('a') == 'A' ? 1 : 0);
+    tests_passed &= (RtlUpperChar('A') == 'A' ? 1 : 0);
+    tests_passed &= (RtlUpperChar('1') == '1' ? 1 : 0);
+    tests_passed &= (RtlUpperChar('!') == '!' ? 1 : 0);
+    tests_passed &= (RtlUpperChar(' ') == ' ' ? 1 : 0);
+    tests_passed &= (RtlUpperChar((char)127) == (char)127 ? 1 : 0); // This is DEL
+    tests_passed &= (RtlUpperChar((char)-1) == '?' ? 1 : 0);
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlUpperString(){
