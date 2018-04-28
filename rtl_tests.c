@@ -965,8 +965,46 @@ void test_RtlUpperChar(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlUpperString(){
-    /* FIXME: This is a stub! implement this function! */
+void test_RtlUpperString(){ // Inspired by wine tests
+    const char* func_num = "0x013D";
+    const char* func_name = "RtlUpperString";
+    BOOL tests_passed = 1;
+    print_test_header(func_num, func_name);
+
+    int i;
+    CHAR ch;
+    CHAR upper_ch;
+    char ascii_buf[257];
+    char result_buf[257];
+    char upper_buf[257];
+    ANSI_STRING ascii_str;
+    ANSI_STRING result_str;
+    ANSI_STRING upper_str;
+
+    for (i = 0; i <= 255; i++) {
+        ch = (CHAR) i;
+        upper_ch = RtlUpperChar(ch);
+        ascii_buf[i] = ch;
+        result_buf[i] = '\0';
+        upper_buf[i] = upper_ch;
+    }
+    ascii_buf[i] = '\0';
+    result_buf[i] = '\0';
+    upper_buf[i] = '\0';
+    ascii_str.Length = 256;
+    ascii_str.MaximumLength = 256;
+    ascii_str.Buffer = ascii_buf;
+    result_str.Length = 256;
+    result_str.MaximumLength = 256;
+    result_str.Buffer = result_buf;
+    upper_str.Length = 256;
+    upper_str.MaximumLength = 256;
+    upper_str.Buffer = upper_buf;
+
+    RtlUpperString(&result_str, &ascii_str);
+    tests_passed &= memcmp(result_str.Buffer, upper_str.Buffer, 256) == 0 ? 1 : 0;
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlUshortByteSwap(){
