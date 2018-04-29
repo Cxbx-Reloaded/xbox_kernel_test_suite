@@ -2,6 +2,7 @@
 #include <hal/xbox.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #include "output.h"
 #include "common_assertions.h"
@@ -965,44 +966,74 @@ void test_RtlUpperChar(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlUpperString(){ // Inspired by wine tests
+void test_RtlUpperString(){
     const char* func_num = "0x013D";
     const char* func_name = "RtlUpperString";
     BOOL tests_passed = 1;
     print_test_header(func_num, func_name);
 
-    int i;
-    CHAR ch;
-    CHAR upper_ch;
-    char ascii_buf[257];
-    char result_buf[257];
-    char upper_buf[257];
-    ANSI_STRING ascii_str;
-    ANSI_STRING result_str;
-    ANSI_STRING upper_str;
+    char rnd_letter;
+    char rnd_letters[101];
 
-    for (i = 0; i <= 255; i++) {
-        ch = (CHAR) i;
-        upper_ch = RtlUpperChar(ch);
-        ascii_buf[i] = ch;
-        result_buf[i] = '\0';
-        upper_buf[i] = upper_ch;
+    for(int k=0; k<100; k++){ // we use XGetTickCount as a rand() replacement
+        rnd_letter = "abcdefghijklmnopqrstuvwxyz"[(int)XGetTickCount() % 26];
+        rnd_letters[k] = rnd_letter;
     }
-    ascii_buf[i] = '\0';
-    result_buf[i] = '\0';
-    upper_buf[i] = '\0';
-    ascii_str.Length = 256;
-    ascii_str.MaximumLength = 256;
-    ascii_str.Buffer = ascii_buf;
-    result_str.Length = 256;
-    result_str.MaximumLength = 256;
-    result_str.Buffer = result_buf;
-    upper_str.Length = 256;
-    upper_str.MaximumLength = 256;
-    upper_str.Buffer = upper_buf;
+    rnd_letters[100] = '\0';
 
-    RtlUpperString(&result_str, &ascii_str);
-    tests_passed &= memcmp(result_str.Buffer, upper_str.Buffer, 256) == 0 ? 1 : 0;
+    ANSI_STRING src_str;
+    ANSI_STRING res_str;
+
+    /* Empty String Test */
+    RtlInitAnsiString(&src_str, "");
+    RtlInitAnsiString(&res_str, "");
+    RtlUpperString(&res_str, &src_str);
+    tests_passed &= strcmp(res_str.Buffer, "") == 0 ? 1 : 0;
+    if(!tests_passed)
+        print("RtlUpperString Lowercase String Test Failed");
+
+    /* Lowercase String Test */
+    RtlInitAnsiString(&src_str, "xbox");
+    RtlInitAnsiString(&res_str, "xbox");
+    RtlUpperString(&res_str, &src_str);
+    tests_passed &= strcmp(res_str.Buffer, "XBOX") == 0 ? 1 : 0;
+    if(!tests_passed)
+        print("RtlUpperString Lowercase String Test Failed");
+
+    /* Lowercase Single Character Test */
+    RtlInitAnsiString(&src_str, "x");
+    RtlInitAnsiString(&res_str, "x");
+    RtlUpperString(&res_str, &src_str);
+    tests_passed &= strcmp(res_str.Buffer, "X") == 0 ? 1 : 0;
+    if(!tests_passed)
+        print("RtlUpperString Lowercase Single Character Test Failed");
+
+    /* Uppercase Single Character Test */
+    RtlInitAnsiString(&src_str, "X");
+    RtlInitAnsiString(&res_str, "X");
+    RtlUpperString(&res_str, &src_str);
+    tests_passed &= strcmp(res_str.Buffer, "X") == 0 ? 1 : 0;
+    if(!tests_passed)
+        print("RtlUpperString Uppercase Single Character Test Failed"); 
+
+    /* 100 Lowercase Characters Test */
+    RtlInitAnsiString(&src_str, rnd_letters);
+    RtlInitAnsiString(&res_str, rnd_letters);
+    RtlUpperString(&res_str, &src_str);
+    for(int k=0; k<100; k++){
+        if(res_str.Buffer[k] != toupper(rnd_letters[k]))
+            tests_passed = 0;
+    }
+    if(!tests_passed)
+        print("RtlUpperString 100 Lowercase Characters Test Failed");
+
+    /* Uppercase String Test */
+    RtlInitAnsiString(&src_str, "XBOX");
+    RtlInitAnsiString(&res_str, "XBOX");
+    RtlUpperString(&res_str, &src_str);
+    tests_passed &= strcmp(res_str.Buffer, "XBOX") == 0 ? 1 : 0;
+    if(!tests_passed)
+        print("RtlUpperString Uppercase String Test Failed");
 
     print_test_footer(func_num, func_name, tests_passed);
 }
