@@ -955,13 +955,21 @@ void test_RtlUpperChar(){
     BOOL tests_passed = 1;
     print_test_header(func_num, func_name);
 
-    tests_passed &= (RtlUpperChar('a') == 'A' ? 1 : 0);
-    tests_passed &= (RtlUpperChar('A') == 'A' ? 1 : 0);
-    tests_passed &= (RtlUpperChar('1') == '1' ? 1 : 0);
-    tests_passed &= (RtlUpperChar('!') == '!' ? 1 : 0);
-    tests_passed &= (RtlUpperChar(' ') == ' ' ? 1 : 0);
-    tests_passed &= (RtlUpperChar((char)127) == (char)127 ? 1 : 0); // This is DEL
-    tests_passed &= (RtlUpperChar((char)-1) == '?' ? 1 : 0);
+    // -1 = ?, 127 = DEL
+    CHAR inputs[] =             {'a', 'A', '1', '!', ' ', (CHAR)127, (CHAR)-1};
+    CHAR expected_outputs[] =   {'A', 'A', '1', '!', ' ', (CHAR)127, '?'};
+    CHAR result;
+
+    for(uint8_t i = 0; i < sizeof(inputs) / sizeof(CHAR); i++) {
+        result = RtlUpperChar(inputs[i]);
+        if(result == expected_outputs[i]) {
+            print("  Test PASSED for input '%c'", inputs[i]);
+        }
+        else {
+            tests_passed = 0;
+            print("  Test FAILED for input = '%c', got = '%c', expected = '%c'", inputs[i], result, expected_outputs[i]);
+        }
+    }
 
     print_test_footer(func_num, func_name, tests_passed);
 }
