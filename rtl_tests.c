@@ -7,6 +7,7 @@
 #include "output.h"
 #include "common_assertions.h"
 #include "rtl_assertions.h"
+#include "ke_assertions.h"
 
 // TODO - Move into nxdk
 #define STATUS_INVALID_PARAMETER_2  0xC00000F0
@@ -555,7 +556,34 @@ void test_RtlEnterCriticalSection(){
 }
 
 void test_RtlEnterCriticalSectionAndRegion(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x0116";
+    const char* func_name = "RtlEnterCriticalSectionAndRegion";
+    RTL_CRITICAL_SECTION crit_section;
+    BOOL tests_passed = 1;
+    print_test_header(func_num, func_name);
+
+    PKTHREAD thread = KeGetCurrentThread();
+    const ULONG orig_APC_disable = thread->KernelApcDisable;
+
+    RtlInitializeCriticalSection(&crit_section);
+    RtlEnterCriticalSectionAndRegion(&crit_section);
+    RtlEnterCriticalSectionAndRegion(&crit_section);
+
+    tests_passed &= assert_critical_section_equals(
+        &crit_section,
+        1,
+        2,
+        (HANDLE)thread,
+        "Enter critcal section and region twice"
+    );
+    tests_passed &= assert_critical_region(thread, orig_APC_disable - 2, "Entered critical region twice");
+
+    // Cleanup machine state without using RtlLeaveCriticalSectionAndRegion because it only
+    // increments KernelApcDisable when the critical region is freed (RecursionCount == 0)
+    KeLeaveCriticalRegion();
+    KeLeaveCriticalRegion();
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlEqualString(){ // FIXME this test failed on real hardware!!!
