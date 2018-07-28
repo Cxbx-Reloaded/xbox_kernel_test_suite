@@ -39,7 +39,6 @@ void test_KeDisconnectInterrupt(){
     /* FIXME: This is a stub! implement this function! */
 }
 
-// FIXME - Passes on real hardware but fails on emulator
 void test_KeEnterCriticalRegion(){
     const char* func_num = "0x0065";
     const char* func_name = "KeEnterCriticalRegion";
