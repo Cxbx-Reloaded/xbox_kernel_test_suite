@@ -1210,7 +1210,30 @@ void test_RtlUpperString(){
 }
 
 void test_RtlUshortByteSwap(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x013E";
+    const char* func_name = "RtlUshortByteSwap";
+    BOOL tests_passed = 1;
+    print_test_header(func_num, func_name);
+
+    const uint8_t num_tests = 4;
+    const USHORT inputs[num_tests]           = {0xFF00, 0x00FF, 0x1234, 0xF0E0};
+    const USHORT expected_results[num_tests] = {0x00FF, 0xFF00, 0x3412, 0xE0F0};
+    USHORT result;
+
+    for(uint8_t i = 0; i < num_tests; i++) {
+        result = RtlUshortByteSwap(inputs[i]);
+        if(result == expected_results[i]) {
+            print("  Test PASSED: Expected = 0x%x for Input = 0x%x, Result = 0x%x",
+                  expected_results[i], inputs[i], result);
+        }
+        else {
+            tests_passed = 0;
+            print("  Test FAILED: Expected = 0x%x for Input = 0x%x, Result = 0x%x",
+                  expected_results[i], inputs[i], result);
+        }
+    }
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlWalkFrameChain(){
