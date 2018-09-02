@@ -1062,7 +1062,29 @@ void test_RtlTryEnterCriticalSection(){
 }
 
 void test_RtlUlongByteSwap(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x0133";
+    const char* func_name = "RtlUlongByteSwap";
+    BOOL tests_passed = 1;
+    print_test_header(func_num, func_name);
+
+    const ULONG inputs[]           = {0xFF00FF00, 0x12345678, 0xD4C3B2A1};
+    const ULONG expected_results[] = {0x00FF00FF, 0x78563412, 0xA1B2C3D4};
+    ULONG result;
+
+    for(uint8_t i = 0; i < sizeof(inputs) / sizeof(ULONG); i++) {
+        result = RtlUlongByteSwap(inputs[i]);
+        if(result == expected_results[i]) {
+            print("  Test PASSED: Expected = 0x%x for Input = 0x%x, Result = 0x%x",
+                  expected_results[i], inputs[i], result);
+        }
+        else {
+            tests_passed = 0;
+            print("  Test FAILED: Expected = 0x%x for Input = 0x%x, Result = 0x%x",
+                  expected_results[i], inputs[i], result);
+        }
+    }
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlUnicodeStringToAnsiString(){
