@@ -21,7 +21,7 @@ install:
 before_script:
     # clone NXDK repository to /home/travis/build/Cxbx-Reloaded/
     - cd .. # because we currently are in /home/travis/build/Cxbx-Reloaded/xbox_kernel_test_suite
-    - git clone https://github.com/xqemu/nxdk.git
+    - git clone https://github.com/XboxDev/nxdk.git
     - cd nxdk # now we are in /home/travis/build/Cxbx-Reloaded/nxdk
     - git submodule init && git submodule update --recursive
     - mkdir projects
