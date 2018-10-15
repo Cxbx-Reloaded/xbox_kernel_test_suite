@@ -8,7 +8,7 @@ notifications:
 before_install:
     # add LLVM repository
     - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -
-    - echo "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty main" | sudo tee -a /etc/apt/sources.list
+    - echo "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-7 main" | sudo tee -a /etc/apt/sources.list
     - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
     - sudo apt-get update -qq
     
