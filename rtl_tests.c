@@ -1175,42 +1175,45 @@ void test_RtlUpperString(){
 
     ANSI_STRING src_str;
     ANSI_STRING res_str;
+    char res_buf[256];
+
+    /* Initialize res_buf so RtlInitAnsiString works correctly */
+    for (int i=0; i<255; i++)
+        res_buf[i] = '0';
+    res_buf[255] = 0;
+
+    RtlInitAnsiString(&res_str, res_buf);
 
     /* Empty String Test */
     RtlInitAnsiString(&src_str, "");
-    RtlInitAnsiString(&res_str, "");
     RtlUpperString(&res_str, &src_str);
-    tests_passed &= strcmp(res_str.Buffer, "") == 0 ? 1 : 0;
+    tests_passed &= strncmp(res_str.Buffer, "", res_str.Length) == 0 ? 1 : 0;
     if(!tests_passed)
         print("RtlUpperString Lowercase String Test Failed");
 
     /* Lowercase String Test */
     RtlInitAnsiString(&src_str, "xbox");
-    RtlInitAnsiString(&res_str, "xbox");
     RtlUpperString(&res_str, &src_str);
-    tests_passed &= strcmp(res_str.Buffer, "XBOX") == 0 ? 1 : 0;
+    tests_passed &= strncmp(res_str.Buffer, "XBOX", res_str.Length) == 0 ? 1 : 0;
     if(!tests_passed)
         print("RtlUpperString Lowercase String Test Failed");
 
     /* Lowercase Single Character Test */
     RtlInitAnsiString(&src_str, "x");
-    RtlInitAnsiString(&res_str, "x");
     RtlUpperString(&res_str, &src_str);
-    tests_passed &= strcmp(res_str.Buffer, "X") == 0 ? 1 : 0;
+    tests_passed &= strncmp(res_str.Buffer, "X", res_str.Length) == 0 ? 1 : 0;
     if(!tests_passed)
         print("RtlUpperString Lowercase Single Character Test Failed");
 
     /* Uppercase Single Character Test */
     RtlInitAnsiString(&src_str, "X");
-    RtlInitAnsiString(&res_str, "X");
     RtlUpperString(&res_str, &src_str);
-    tests_passed &= strcmp(res_str.Buffer, "X") == 0 ? 1 : 0;
+    tests_passed &= strncmp(res_str.Buffer, "X", res_str.Length) == 0 ? 1 : 0;
     if(!tests_passed)
         print("RtlUpperString Uppercase Single Character Test Failed"); 
 
     /* 100 Lowercase Characters Test */
     RtlInitAnsiString(&src_str, rnd_letters);
-    RtlInitAnsiString(&res_str, rnd_letters);
     RtlUpperString(&res_str, &src_str);
     for(int k=0; k<100; k++){
         if(res_str.Buffer[k] != toupper(rnd_letters[k]))
@@ -1221,9 +1224,8 @@ void test_RtlUpperString(){
 
     /* Uppercase String Test */
     RtlInitAnsiString(&src_str, "XBOX");
-    RtlInitAnsiString(&res_str, "XBOX");
     RtlUpperString(&res_str, &src_str);
-    tests_passed &= strcmp(res_str.Buffer, "XBOX") == 0 ? 1 : 0;
+    tests_passed &= strncmp(res_str.Buffer, "XBOX", res_str.Length) == 0 ? 1 : 0;
     if(!tests_passed)
         print("RtlUpperString Uppercase String Test Failed");
 
