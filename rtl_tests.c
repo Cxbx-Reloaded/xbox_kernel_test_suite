@@ -586,30 +586,41 @@ void test_RtlEnterCriticalSectionAndRegion(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlEqualString(){ // FIXME this test failed on real hardware!!!
-    /*const char* func_num = "0x0117";
+void test_RtlEqualString(){
+    const char* func_num = "0x0117";
     const char* func_name = "RtlEqualString";
     BOOL tests_passed = 1;
     print_test_header(func_num, func_name);
 
-    ANSI_STRING str1;
-    ANSI_STRING str2;
-    ANSI_STRING str3;
-
+    ANSI_STRING str1, str2, str3;
     RtlInitAnsiString(&str1, "xbox is cool");
     RtlInitAnsiString(&str2, "XBOX IS COOL");
     RtlInitAnsiString(&str3, "is xbox cool?");
 
-    tests_passed &= !RtlEqualString(&str1, &str2, 0);
-    print("1st result=%d", RtlEqualString(&str1, &str2, 0));
-    tests_passed &= RtlEqualString(&str1, &str2, 1);
-    print("2nd result=%d", RtlEqualString(&str1, &str2, 1));
-    tests_passed &= !RtlEqualString(&str1, &str3, 1);
-    print("3rd result=%d", RtlEqualString(&str1, &str3, 1));
-    tests_passed &= !RtlEqualString(&str1, &str3, 0);
-    print("4th result=%d", RtlEqualString(&str1, &str3, 0));
+    ANSI_STRING* str1_inputs[]      = {&str1, &str1, &str1, &str1, &str1, &str1};
+    ANSI_STRING* str2_inputs[]      = {&str1, &str1, &str2, &str2, &str3, &str3};
+    BOOLEAN      case_insensitive[] = {0    , 1    , 0    , 1    , 0    , 1    };
+    BOOLEAN      expected_result[]  = {1    , 1    , 0    , 1    , 0    , 0    };
 
-    print_test_footer(func_num, func_name, tests_passed);*/
+    BOOLEAN result;
+    for(uint8_t i = 0; i < sizeof(str1_inputs) / sizeof(ANSI_STRING*); i++) {
+        // Real hardware does not clear the upper bits of eax in RtlEqualString before setting
+        // the result in the al register. To get the actual result of the function call, only
+        // look at the first bit of the result.
+        result = RtlEqualString(str1_inputs[i], str2_inputs[i], case_insensitive[i]) & 0x1;
+        if(result == expected_result[i]) {
+            print("  Test PASSED for str1 = %s, str2 = %s, case sensitive = %x.",
+                  str1_inputs[i]->Buffer, str2_inputs[i]->Buffer, case_insensitive[i]);
+        }
+        else {
+            tests_passed = 0;
+            print("  Test FAILED for str1 = %s, str2 = %s, case sensitive = %x. Expected = %x, got = %x",
+                  str1_inputs[i]->Buffer, str2_inputs[i]->Buffer, case_insensitive[i], expected_result[i],
+                  result);
+        }
+    }
+
+    print_test_footer(func_num, func_name, tests_passed);
 }
 
 void test_RtlEqualUnicodeString(){
