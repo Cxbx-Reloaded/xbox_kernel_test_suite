@@ -604,10 +604,7 @@ void test_RtlEqualString(){
 
     BOOLEAN result;
     for(uint8_t i = 0; i < sizeof(str1_inputs) / sizeof(ANSI_STRING*); i++) {
-        // Real hardware does not clear the upper bits of eax in RtlEqualString before setting
-        // the result in the al register. To get the actual result of the function call, only
-        // look at the first bit of the result.
-        result = RtlEqualString(str1_inputs[i], str2_inputs[i], case_insensitive[i]) & 0x1;
+        result = RtlEqualString(str1_inputs[i], str2_inputs[i], case_insensitive[i]);
         if(result == expected_result[i]) {
             print("  Test PASSED for str1 = %s, str2 = %s, case insensitive = %x.",
                   str1_inputs[i]->Buffer, str2_inputs[i]->Buffer, case_insensitive[i]);
