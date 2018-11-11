@@ -609,12 +609,12 @@ void test_RtlEqualString(){
         // look at the first bit of the result.
         result = RtlEqualString(str1_inputs[i], str2_inputs[i], case_insensitive[i]) & 0x1;
         if(result == expected_result[i]) {
-            print("  Test PASSED for str1 = %s, str2 = %s, case sensitive = %x.",
+            print("  Test PASSED for str1 = %s, str2 = %s, case insensitive = %x.",
                   str1_inputs[i]->Buffer, str2_inputs[i]->Buffer, case_insensitive[i]);
         }
         else {
             tests_passed = 0;
-            print("  Test FAILED for str1 = %s, str2 = %s, case sensitive = %x. Expected = %x, got = %x",
+            print("  Test FAILED for str1 = %s, str2 = %s, case insensitive = %x. Expected = %x, got = %x",
                   str1_inputs[i]->Buffer, str2_inputs[i]->Buffer, case_insensitive[i], expected_result[i],
                   result);
         }
