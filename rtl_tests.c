@@ -109,7 +109,7 @@ void test_RtlAppendUnicodeStringToString(){
     dest_str.Length = 0;
     dest_str.MaximumLength = num_buf_bytes;
     dest_str.Buffer = buffer;
-    wcscpy(expected_result, src_str.Buffer);
+    wcsncpy(expected_result, src_str.Buffer, num_chars_in_src + 1);
 
     NTSTATUS ret = RtlAppendUnicodeStringToString(&dest_str, &src_str);
     tests_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, func_name);
