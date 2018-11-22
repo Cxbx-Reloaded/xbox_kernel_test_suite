@@ -50,44 +50,65 @@ void test_RtlAnsiStringToUnicodeString(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
+// Odd behavior of this function: A terminating NULL character '\0' is not added to the end of the appended string.
 void test_RtlAppendStringToString(){
     const char* func_num = "0x0105";
     const char* func_name = "RtlAppendStringToString";
     BOOL tests_passed = 1;
     print_test_header(func_num, func_name);
 
-    const uint8_t buf_size = 8;
-    const CHAR src_text[] = "Xbox";
+    // Append string to empty dest once
     ANSI_STRING src_str, dest_str;
-    CHAR buffer[buf_size];
+    RtlInitAnsiString(&src_str, "XBOX");
+    CHAR dest_buffer[src_str.Length * 2];
+    CHAR expected_result[30];
 
-    RtlInitAnsiString(&src_str, src_text);
     dest_str.Length = 0;
-    dest_str.MaximumLength = buf_size;
-    dest_str.Buffer = buffer;
+    dest_str.MaximumLength = sizeof(dest_buffer);
+    dest_str.Buffer = dest_buffer;
+    strncpy(expected_result, src_str.Buffer, src_str.MaximumLength);
 
     NTSTATUS ret = RtlAppendStringToString(&dest_str, &src_str);
     tests_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, func_name);
+    dest_buffer[dest_str.Length] = '\0'; // RtlAppendStringToString does not add a terminating NULL character which breaks strncmp
     tests_passed &= assert_ansi_string(
         &dest_str,
-        strlen(src_text),
-        buf_size,
-        buffer,
-        "Append src str to empty dest str"
+        strlen(expected_result),
+        sizeof(dest_buffer),
+        expected_result,
+        "Append src_str to dest_str"
     );
+
+    // if (src_str.Length + dest_str.Length) <= dest_str.MaximumLength, then return STATUS_SUCCESS
+    // and append the strings. This will test the equal to case.
+    strncat(expected_result, src_str.Buffer, src_str.MaximumLength);
 
     ret = RtlAppendStringToString(&dest_str, &src_str);
     tests_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, func_name);
     tests_passed &= assert_ansi_string(
         &dest_str,
-        strlen(src_text) * 2,
-        buf_size,
-        buffer,
-        "Append src str to dest str again"
+        strlen(expected_result),
+        sizeof(dest_buffer),
+        expected_result,
+        "Append src_str to dest_str a second time"
     );
 
+    // Should now return STATUS_BUFFER_TOO_SMALL
+    RtlInitAnsiString(&src_str, "A");
     ret = RtlAppendStringToString(&dest_str, &src_str);
     tests_passed &= assert_NTSTATUS(ret, STATUS_BUFFER_TOO_SMALL, func_name);
+
+    // Appending empty str is okay though
+    RtlInitAnsiString(&src_str, "");
+    ret = RtlAppendStringToString(&dest_str, &src_str);
+    tests_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, func_name);
+    tests_passed &= assert_ansi_string(
+        &dest_str,
+        strlen(expected_result),
+        sizeof(dest_buffer),
+        expected_result,
+        "Appending empty_str does not change dest_str"
+    );
 
     print_test_footer(func_num, func_name, tests_passed);
 }
