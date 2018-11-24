@@ -1,6 +1,8 @@
 #include "rtl_assertions.h"
 #include "assertion_defines.h"
 
+#include <string.h>
+
 BOOL assert_critical_section_equals(
     PRTL_CRITICAL_SECTION crit_section,
     LONG expected_LockCount,
@@ -28,7 +30,17 @@ BOOL assert_ansi_string(
 
     GEN_CHECK(string->Length, expected_Length, "Length");
     GEN_CHECK(string->MaximumLength, expected_MaximumLength, "MaximumLength");
-    GEN_CHECK(string->Buffer, expected_Buffer, "Buffer");
+
+    if(expected_Buffer == NULL) {
+        GEN_CHECK(string->Buffer, NULL, "Buffer is NULL");
+    }
+    else {
+        int result = strncmp(string->Buffer, expected_Buffer, expected_MaximumLength);
+        GEN_CHECK(result, 0, "strcmp result of Buffer");
+        if(result) {
+            print("  Buffer = %s, expected_Buffer = %s", string->Buffer, expected_Buffer);
+        }
+    }
 
     ASSERT_FOOTER(test_name)
 }
