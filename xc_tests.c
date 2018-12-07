@@ -164,7 +164,6 @@ void test_XcPKEncPublic(){
 	else {
 		tests_passed &= 0;
 	}
-	validate_hashed_result(output_buffer, sizeof(output_buffer), digest);
 	
 	// Wrong magic string
 	memcpy(pub_key, bogus_data, 4);
@@ -195,7 +194,6 @@ void test_XcPKEncPublic(){
 	else {
 		tests_passed &= 0;
 	}
-	validate_hashed_result(output_buffer, sizeof(output_buffer), digest);
 	
 	// Wrong max encode size -> same result as if original value
 	memcpy(&pub_key[8], original_key_bit_size, 4);
@@ -211,7 +209,6 @@ void test_XcPKEncPublic(){
 	else {
 		tests_passed &= 0;
 	}
-	validate_hashed_result(output_buffer, sizeof(output_buffer), digest);
 	memcpy(&pub_key[12], original_max_encode_size, 4);
 	
 	print_test_footer(func_num, func_name, tests_passed);
