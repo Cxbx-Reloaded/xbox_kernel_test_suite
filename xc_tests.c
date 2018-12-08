@@ -1,4 +1,3 @@
-#include <hal/fileio.h>
 #include <string.h>
 
 #include "global.h"
@@ -149,8 +148,6 @@ void test_XcPKEncPublic(){
 	UCHAR original_max_encode_size[] = { 0xff,0x00,0x00,0x00 };
 	UCHAR key_bit_size1024[]         = { 0x00,0x04,0x00,0x00 };
 	UCHAR bogus_data[]               = { 0xcc,0xcc,0xcc,0xcc };
-	
-	unsigned char digest[20]    = { 0 };
 
     print_test_header(func_num, func_name);
 	
