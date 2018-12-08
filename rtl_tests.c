@@ -236,15 +236,18 @@ void test_RtlCharToInteger(){
 
     // if base != (2 | 8 | 10 | 16) return STATUS_INVALID_PARAMETER
     // SPECIAL CASE: Base = 0 will not throw this error as base = 0 signifies that the base will be included
-    // in the input string format: '0b' = binary, '0o' = octal, '0x' = hex
+    // in the input string: '0b' = binary, '0o' = octal, '0x' = hex
     NTSTATUS ret = RtlCharToInteger("1", 1, NULL);
     tests_passed &= assert_NTSTATUS(ret, STATUS_INVALID_PARAMETER, func_name);
 
-    // Test all of the different bases with positive and negative results, including base = 0
-    CHAR* inputs[]           = {"11001010", "7631", "1100", "5FAC2"};
-    CHAR* base_formats[]     = {"0b"      , "0o"  , ""    , "0x"   };
-    ULONG base[]             = {2         , 8     , 10    , 16     };
-    ULONG expected_results[] = {0xCA      , 0xF99 , 1100  , 0x5FAC2};
+    // Test all of the different bases with positive and negative results, including base = 0.
+    // In test cases where there are invalid numbers for the specified base, the RtlCharToInteger will
+    // convert the valid numbers up to invalid number.
+    // For example, base = 2, input = '1015C' will return 0x5
+    CHAR* inputs[]           = {"11001010", "7631", "1100", "5FAC2", "101C813", "76BA787", "1000B1"};
+    CHAR* base_formats[]     = {"0b"      , "0o"  , ""    , "0x"   , "0b"     , "0o"     , ""      };
+    ULONG base[]             = {2         , 8     , 10    , 16     , 2        , 8        , 10      };
+    ULONG expected_results[] = {0xCA      , 0xF99 , 1100  , 0x5FAC2, 0x5      , 0x3E     , 1000    };
 
     NTSTATUS base_ret, neg_base_ret, format_ret, neg_format_ret;
     ULONG    base_result, neg_base_result, format_result, neg_format_result, neg_expected_result;
