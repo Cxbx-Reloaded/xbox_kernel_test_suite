@@ -168,7 +168,7 @@ void test_XcPKEncPublic(){
 	memcpy(input_buffer, "\x45\x6e\x63\x72\x79\x70\x74\x20\x6d\x65", 10);
 	memset(output_buffer, 0, 264);
 	ret = XcPKEncPublic(pub_key, input_buffer, output_buffer);
-	memset(input_buffer, 0, 264); // The function clears output_buffer when it fails
+	memset(input_buffer, 0, 264);
 	if(ret == 0 && memcmp(output_buffer, input_buffer, 264) == 0) {
 		tests_passed &= 1;
 	}
@@ -225,7 +225,7 @@ void test_XcPKDecPrivate(){
 	
 	// Correct usage
 	// While this succeeds on real hardware, it still fails to give back the original "Encrypt me" string. I believe it's because the
-	// prv_key is missing the parameters of the Chinese remainder theorem to perform the decryption correctly, but now I'm too lazy
+	// prv_key is missing the parameters of the Chinese Remainder Theorem to perform the decryption correctly, but now I'm too lazy
 	// to calculate them...
 	memcpy(input_buffer, encrypted_string, sizeof(encrypted_string));
 	ret = XcPKDecPrivate(prv_key, input_buffer, output_buffer);
@@ -242,7 +242,7 @@ void test_XcPKDecPrivate(){
 	memcpy(input_buffer, encrypted_string, sizeof(encrypted_string));
 	memset(output_buffer, 0, 264);
 	ret = XcPKDecPrivate(prv_key, input_buffer, output_buffer);
-	memset(input_buffer, 0, 264); // The function clears output_buffer when it fails
+	memset(input_buffer, 0, 264);
 	if(ret == 0 && memcmp(output_buffer, input_buffer, 264) == 0) {
 		tests_passed &= 1;
 	}
