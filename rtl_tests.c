@@ -212,87 +212,68 @@ void test_RtlCaptureStackBackTrace(){
     /* FIXME: This is a stub! implement this function! */
 }
 
+static BOOL check_RtlCharToInteger_result(
+    CHAR* input,
+    ULONG base,
+    ULONG expected_result,
+    ULONG result,
+    NTSTATUS retval
+) {
+    if((retval == STATUS_SUCCESS) && (result == expected_result)) {
+        print("  Test PASSED for input = %s, base = %u, expected_result = %d", input, base, expected_result);
+        return 1;
+    }
+    print("  Test FAILED for input = %s, base = %u, expected_result = %d, result = %d, NTSTATUS = 0x%x",
+            input, base, expected_result, result, retval);
+    return 0;
+}
+
 void test_RtlCharToInteger(){
     const char* func_num = "0x010B";
     const char* func_name = "RtlCharToInteger";
     BOOL tests_passed = 1;
     print_test_header(func_num, func_name);
 
-    unsigned long val = 0;
-    NTSTATUS res;
+    // if base != (2 | 8 | 10 | 16) return STATUS_INVALID_PARAMETER
+    // SPECIAL CASE: Base = 0 will not throw this error as base = 0 signifies that the base will be included
+    // in the input string: '0b' = binary, '0o' = octal, '0x' = hex
+    NTSTATUS ret = RtlCharToInteger("1", 1, NULL);
+    tests_passed &= assert_NTSTATUS(ret, STATUS_INVALID_PARAMETER, func_name);
 
-    res = RtlCharToInteger("-1", 0, &val);
-    if(res == STATUS_SUCCESS && val == -1)
-        tests_passed &= 1;
-    else
-        tests_passed = 0;
+    // Test all of the different bases with positive and negative results, including base = 0.
+    // In test cases where there are invalid numbers for the specified base, the RtlCharToInteger will
+    // convert the valid numbers up to invalid number.
+    // For example, base = 2, input = '1015C' will return 0x5
+    CHAR* inputs[]           = {"11001010", "7631", "1100", "5FAC2", "101C813", "76BA787", "1000B1"};
+    CHAR* base_formats[]     = {"0b"      , "0o"  , ""    , "0x"   , "0b"     , "0o"     , ""      };
+    ULONG base[]             = {2         , 8     , 10    , 16     , 2        , 8        , 10      };
+    ULONG expected_results[] = {0xCA      , 0xF99 , 1100  , 0x5FAC2, 0x5      , 0x3E     , 1000    };
 
-    res = RtlCharToInteger("0", 0, &val);
-    if(res == STATUS_SUCCESS && val == 0)
-        tests_passed &= 1;
-    else
-        tests_passed = 0;
+    NTSTATUS base_ret, neg_base_ret, format_ret, neg_format_ret;
+    ULONG    base_result, neg_base_result, format_result, neg_format_result, neg_expected_result;
+    CHAR     neg_base_buffer[50], format_buffer[50], neg_format_buffer[50];
+    for(uint8_t i = 0; i < sizeof(expected_results) / sizeof(ULONG); i++) {
+        strcpy(neg_base_buffer, "-");
+        strcat(neg_base_buffer, inputs[i]);
 
-    res = RtlCharToInteger("1", 0, &val);
-    if(res == STATUS_SUCCESS && val == 1)
-        tests_passed &= 1;
-    else
-        tests_passed = 0;
+        strcpy(format_buffer, base_formats[i]);
+        strcat(format_buffer, inputs[i]);
 
-    res = RtlCharToInteger("0x12345", 0, &val);
-    if(res == STATUS_SUCCESS && val == 0x12345)
-        tests_passed &= 1;
-    else
-        tests_passed = 0;
+        strcpy(neg_format_buffer, "-");
+        strcat(neg_format_buffer, base_formats[i]);
+        strcat(neg_format_buffer, inputs[i]);
 
-    res = RtlCharToInteger("1011101100", 2, &val);
-    if(res == STATUS_SUCCESS && val == 748)
-        tests_passed &= 1;
-    else
-        tests_passed = 0;
+        base_ret        = RtlCharToInteger(inputs[i]        , base[i], &base_result);
+        neg_base_ret    = RtlCharToInteger(neg_base_buffer  , base[i], &neg_base_result);
+        format_ret      = RtlCharToInteger(format_buffer    , 0      , &format_result);
+        neg_format_ret  = RtlCharToInteger(neg_format_buffer, 0      , &neg_format_result);
 
-    res = RtlCharToInteger("-1011101100", 2, &val);
-    if(res == STATUS_SUCCESS && val == -748)
-        tests_passed &= 1;
-    else
-        tests_passed = 0;
-
-    res = RtlCharToInteger("1011101100", 8, &val);
-    if(res == STATUS_SUCCESS && val == 136610368)
-        tests_passed &= 1;
-    else
-        tests_passed = 0;
-
-    res = RtlCharToInteger("-1011101100", 8, &val);
-    if(res == STATUS_SUCCESS && val == -136610368)
-        tests_passed &= 1;
-    else
-        tests_passed = 0;
-
-    res = RtlCharToInteger("1011101100", 10, &val);
-    if(res == STATUS_SUCCESS && val == 1011101100)
-        tests_passed &= 1;
-    else
-        tests_passed = 0;
-
-    res = RtlCharToInteger("-1011101100", 10, &val);
-    if(res == STATUS_SUCCESS && val == -1011101100)
-        tests_passed &= 1;
-    else
-        tests_passed = 0;
-
-    res = RtlCharToInteger("1011101100", 16, &val);
-    if(res == STATUS_SUCCESS && val == 286265600)
-        tests_passed &= 1;
-    else
-        tests_passed = 0;
-
-    res = RtlCharToInteger("0", 20, &val);
-    if(res == STATUS_INVALID_PARAMETER)
-        tests_passed &= 1;
-    else
-        tests_passed = 0;
-
+        neg_expected_result = -1 * expected_results[i];
+        tests_passed &= check_RtlCharToInteger_result(inputs[i]        , base[i], expected_results[i], base_result      , base_ret);
+        tests_passed &= check_RtlCharToInteger_result(neg_base_buffer  , base[i], neg_expected_result, neg_base_result  , neg_base_ret);
+        tests_passed &= check_RtlCharToInteger_result(format_buffer    , 0      , expected_results[i], format_result    , format_ret);
+        tests_passed &= check_RtlCharToInteger_result(neg_format_buffer, 0      , neg_expected_result, neg_format_result, neg_format_ret);
+    }
 
     print_test_footer(func_num, func_name, tests_passed);
 }
