@@ -502,15 +502,14 @@ void test_RtlDowncaseUnicodeChar(){
     WCHAR expected_output[] = {L' ', L'w', L'w', L'x', L']', L'$'};
 
     for(uint8_t i = 0; i < sizeof(input) / sizeof(WCHAR); i++) {
+        const char* result_text = passed_text;
         result = RtlDowncaseUnicodeChar(input[i]);
-        if(result == expected_output[i]) {
-            // For some reason print does not work with %S to display input chars
-            print("  Test PASSED for input #%u", i);
-        }
-        else {
+        if(result != expected_output[i]) {
             tests_passed = 0;
-            print("  Test FAILED for input #%u", i);
+            result_text = failed_text;
         }
+        // Change %u to %S when printf supports %S in nxdk
+        print("  Test %s for input #%u", result_text, i);
     }
 
     print_test_footer(func_num, func_name, tests_passed);
@@ -609,17 +608,15 @@ void test_RtlEqualString(){
 
     BOOLEAN result;
     for(uint8_t i = 0; i < sizeof(str1_inputs) / sizeof(ANSI_STRING*); i++) {
+        const char* result_text = passed_text;
         result = RtlEqualString(str1_inputs[i], str2_inputs[i], case_insensitive[i]);
-        if(result == expected_result[i]) {
-            print("  Test PASSED for str1 = %s, str2 = %s, case insensitive = %x.",
-                  str1_inputs[i]->Buffer, str2_inputs[i]->Buffer, case_insensitive[i]);
-        }
-        else {
+        if(result != expected_result[i]) {
             tests_passed = 0;
-            print("  Test FAILED for str1 = %s, str2 = %s, case insensitive = %x. Expected = %x, got = %x",
-                  str1_inputs[i]->Buffer, str2_inputs[i]->Buffer, case_insensitive[i], expected_result[i],
-                  result);
+            result_text = failed_text;
         }
+        print("  Test %s for str1 = %s, str2 = %s, case insensitive = %x. Expected = %x, got = %x",
+              result_text, str1_inputs[i]->Buffer, str2_inputs[i]->Buffer, case_insensitive[i], expected_result[i],
+              result);
     }
 
     print_test_footer(func_num, func_name, tests_passed);
@@ -694,6 +691,7 @@ void test_RtlFillMemory(){
 
     RtlZeroMemory(buffer, buf_len);
     for(uint8_t i = 0; i < sizeof(lengths) / sizeof(DWORD); i++) {
+        const char* result_text = passed_text;
         RtlFillMemory(buffer, lengths[i], fills[i]);
         for(uint8_t y = 0; y < buf_len; y++) {
             BYTE expected_fill = (y < lengths[i]) ? fills[i] : 0x00;
@@ -702,13 +700,11 @@ void test_RtlFillMemory(){
                 individual_test_passes = 0;
             }
         }
-        if(individual_test_passes) {
-            print("  Test PASSED for length = %u, fill = 0x%x", lengths[i], fills[i]);
-        }
-        else {
-            print("  Test FAILED for length = %u, fill = 0x%x", lengths[i], fills[i]);
+        if(!individual_test_passes) {
             tests_passed = 0;
+            result_text = failed_text;
         }
+        print("  Test %s for length = %u, fill = 0x%x", result_text, lengths[i], fills[i]);
         individual_test_passes = 1;
     }
 
@@ -729,6 +725,7 @@ void test_RtlFillMemoryUlong(){
 
     RtlZeroMemory(buffer, buf_len * sizeof(ULONG));
     for(uint8_t i = 0; i < sizeof(lengths) / sizeof(SIZE_T); i++) {
+        const char* result_text = passed_text;
         RtlFillMemoryUlong(buffer, lengths[i] * sizeof(ULONG), patterns[i]);
         for(uint8_t y = 0; y < buf_len; y++) {
             ULONG expected_pattern = (y < lengths[i]) ? patterns[i] : 0x0;
@@ -737,13 +734,11 @@ void test_RtlFillMemoryUlong(){
                 individual_test_passes = 0;
             }
         }
-        if(individual_test_passes) {
-            print("  Test PASSED for length = %u, pattern = 0x%x", lengths[i], patterns[i]);
-        }
-        else {
-            print("  Test FAILED for length = %u, pattern = 0x%x", lengths[i], patterns[i]);
+        if(!individual_test_passes) {
             tests_passed = 0;
+            result_text = failed_text;
         }
+        print("  Test %s for length = %u, pattern = 0x%x", result_text, lengths[i], patterns[i]);
         individual_test_passes = 1;
     }
 
@@ -1106,16 +1101,14 @@ void test_RtlUlongByteSwap(){
     ULONG result;
 
     for(uint8_t i = 0; i < sizeof(inputs) / sizeof(ULONG); i++) {
+        const char* result_text = passed_text;
         result = RtlUlongByteSwap(inputs[i]);
-        if(result == expected_results[i]) {
-            print("  Test PASSED: Expected = 0x%x for Input = 0x%x, Result = 0x%x",
-                  expected_results[i], inputs[i], result);
-        }
-        else {
+        if(result != expected_results[i]) {
             tests_passed = 0;
-            print("  Test FAILED: Expected = 0x%x for Input = 0x%x, Result = 0x%x",
-                  expected_results[i], inputs[i], result);
+            result_text = failed_text;
         }
+        print("  Test %s: Expected = 0x%x for Input = 0x%x, Result = 0x%x",
+              result_text, expected_results[i], inputs[i], result);
     }
 
     print_test_footer(func_num, func_name, tests_passed);
@@ -1278,16 +1271,14 @@ void test_RtlUshortByteSwap(){
     USHORT result;
 
     for(uint8_t i = 0; i < num_tests; i++) {
+        const char* result_text = passed_text;
         result = RtlUshortByteSwap(inputs[i]);
-        if(result == expected_results[i]) {
-            print("  Test PASSED: Expected = 0x%x for Input = 0x%x, Result = 0x%x",
-                  expected_results[i], inputs[i], result);
-        }
-        else {
+        if(result != expected_results[i]) {
             tests_passed = 0;
-            print("  Test FAILED: Expected = 0x%x for Input = 0x%x, Result = 0x%x",
-                  expected_results[i], inputs[i], result);
+            result_text = failed_text;
         }
+        print("  Test %s: Expected = 0x%x for Input = 0x%x, Result = 0x%x",
+              result_text, expected_results[i], inputs[i], result);
     }
 
     print_test_footer(func_num, func_name, tests_passed);
