@@ -1,5 +1,6 @@
 #include "rtl_assertions.h"
 #include "assertion_defines.h"
+#include <wchar.h>
 
 #include <string.h>
 
@@ -56,7 +57,14 @@ static BOOL assert_unicode_string(
 
     GEN_CHECK(string->Length, expected_Length, "Length");
     GEN_CHECK(string->MaximumLength, expected_MaximumLength, "MaximumLength");
-    GEN_CHECK(string->Buffer, expected_Buffer, "Buffer");
+
+    if(expected_Buffer == NULL) {
+        GEN_CHECK(string->Buffer, NULL, "Buffer is null");
+    }
+    else {
+        int result = wcscmp(string->Buffer, expected_Buffer);
+        GEN_CHECK(result, 0, "wcscmp result of Buffer");
+    }
 
     ASSERT_FOOTER(test_name)
 }

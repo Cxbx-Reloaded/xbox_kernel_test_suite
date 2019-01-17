@@ -23,7 +23,7 @@ void print(char* str, ...){
     /*******************************/
 
     /*** PRINT ON CONSOLE (CXBX) ***/
-    DbgPrint("%s\n", buffer);
+    DbgPrint("%s", buffer);
     /*******************************/
 
     // Write information to logfile
