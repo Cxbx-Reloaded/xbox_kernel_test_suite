@@ -168,34 +168,36 @@ void test_RtlAppendUnicodeToString(){
     BOOL tests_passed = 1;
     print_test_header(func_num, func_name);
 
-    // wcslen does not work because nxdk fails to find wchar.h
     const WCHAR src_text[] = L"Xbox";
-    const uint8_t num_chars_in_src = 4;
+    const uint8_t num_chars_in_src = wcslen(src_text) + 1;
     WCHAR buffer[num_chars_in_src * 2];
+    WCHAR expected_result[num_chars_in_src * 2];
     const uint8_t num_buf_bytes = sizeof(buffer);
     UNICODE_STRING dest_str;
 
     dest_str.Length = 0;
     dest_str.MaximumLength = num_buf_bytes;
     dest_str.Buffer = buffer;
+    wcsncpy(expected_result, src_text, num_chars_in_src);
 
     NTSTATUS ret = RtlAppendUnicodeToString(&dest_str, src_text);
     tests_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, func_name);
     tests_passed &= assert_unicode_string(
         &dest_str,
-        num_chars_in_src * sizeof(WCHAR),
+        wcslen(expected_result) * sizeof(WCHAR),
         num_buf_bytes,
-        buffer,
+        expected_result,
         "Append src str to empty dest str"
     );
 
+    wcsncat(expected_result, src_text, num_chars_in_src);
     ret = RtlAppendUnicodeToString(&dest_str, src_text);
     tests_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, func_name);
     tests_passed &= assert_unicode_string(
         &dest_str,
-        num_chars_in_src * 2 * sizeof(WCHAR),
+        wcslen(expected_result) * sizeof(WCHAR),
         num_buf_bytes,
-        buffer,
+        expected_result,
         "Append src str to dest str again"
     );
 
