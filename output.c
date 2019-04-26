@@ -1,7 +1,7 @@
 #include <pbkit/pbkit.h>
 #include <xboxrt/debug.h>
 #include <hal/fileio.h>
-
+#include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>

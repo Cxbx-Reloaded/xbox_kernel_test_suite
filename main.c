@@ -9,6 +9,7 @@
 #include "global.h"
 #include "func_table.h"
 #include "vector.h"
+#include "string_extra.h"
 
 int load_conf_file(char *config_file_path) {
     int handle;
