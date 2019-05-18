@@ -1,5 +1,6 @@
 #include <xboxrt/debug.h>
 #include <pbkit/pbkit.h>
+#include <hal/video.h>
 #include <hal/xbox.h>
 #include <hal/fileio.h>
 #include <stdio.h>
@@ -92,6 +93,8 @@ static void run_tests() {
 }
 
 void main(void){
+
+    XVideoSetMode(640, 480, 32, REFRESH_DEFAULT);
 
     switch(pb_init()){
         case 0: break;
