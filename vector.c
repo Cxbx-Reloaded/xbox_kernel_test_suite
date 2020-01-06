@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <windows.h>
 #include <hal/xbox.h>
 #include "vector.h"
 #include "output.h"
@@ -20,7 +21,7 @@ void vector_append(vector *vec, int value) {
 int vector_get(vector *vec, int index) {
     if (index >= vec->size || index < 0) {
         print("Error: vector index out of bound\n");
-        XSleep(5000);
+        Sleep(5000);
         XReboot();
     }
     return vec->data[index];
