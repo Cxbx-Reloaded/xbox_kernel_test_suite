@@ -2,8 +2,6 @@
 #include <pbkit/pbkit.h>
 #include <hal/video.h>
 #include <hal/xbox.h>
-#include <winapi/fileapi.h>
-#include <winapi/handleapi.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,6 +31,7 @@ int load_conf_file(char *config_file_path) {
     DWORD file_size = GetFileSize(handle, NULL);
     if(file_size == INVALID_FILE_SIZE) {
         print("ERROR: Could not get file size for %s", config_file_path);
+        return -1;
     }
 
     char* buffer = (char *)malloc(file_size);

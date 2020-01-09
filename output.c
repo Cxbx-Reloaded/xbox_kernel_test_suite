@@ -1,7 +1,6 @@
 #include <pbkit/pbkit.h>
 #include <hal/debug.h>
-#include <winapi/fileapi.h>
-#include <winapi/handleapi.h>
+#include <windows.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -10,7 +9,7 @@
 #include "global.h"
 #include "output.h"
 
-static HANDLE output_filehandle = NULL;
+static HANDLE output_filehandle = INVALID_HANDLE_VALUE;
 
 void print(char* str, ...){
     va_list args;
@@ -78,7 +77,7 @@ int write_to_output_file(void* data_to_print, DWORD num_bytes_to_print) {
     }
 
     DWORD bytes_written;
-    int ret = WriteFile(
+    BOOL ret = WriteFile(
         output_filehandle,
         data_to_print,
         num_bytes_to_print,
