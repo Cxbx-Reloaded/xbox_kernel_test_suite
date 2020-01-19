@@ -4,16 +4,12 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <wchar.h>
+#include <windows.h>
 
 #include "output.h"
 #include "common_assertions.h"
 #include "rtl_assertions.h"
 #include "ke_assertions.h"
-
-// TODO - Move into nxdk
-#define STATUS_INVALID_PARAMETER_2  0xC00000F0
-#define STATUS_BUFFER_OVERFLOW      0x80000005
-#define STATUS_BUFFER_TOO_SMALL     0xC0000023
 
 const char* failed_text = "FAILED";
 const char* passed_text = "PASSED";
@@ -1160,8 +1156,8 @@ void test_RtlMoveMemory(){
     if(src_buffer == NULL) {
         print("ERROR: Could not malloc src_buffer");
     }
-    for(int k=0; k<size; k++){ // we use XGetTickCount as a rand() replacement
-        rnd_letter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[(int)XGetTickCount() % 26];
+    for(int k=0; k<size; k++){ // we use GetTickCount as a rand() replacement
+        rnd_letter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[(int)GetTickCount() % 26];
         src_buffer[k] = rnd_letter;
     }
 
@@ -1320,8 +1316,8 @@ void test_RtlUpperString(){
     char rnd_letter;
     char rnd_letters[101];
 
-    for(int k=0; k<100; k++){ // we use XGetTickCount as a rand() replacement
-        rnd_letter = "abcdefghijklmnopqrstuvwxyz"[(int)XGetTickCount() % 26];
+    for(int k=0; k<100; k++){ // we use GetTickCount as a rand() replacement
+        rnd_letter = "abcdefghijklmnopqrstuvwxyz"[(int)GetTickCount() % 26];
         rnd_letters[k] = rnd_letter;
     }
     rnd_letters[100] = '\0';

@@ -1,11 +1,11 @@
-#include <xboxrt/debug.h>
+#include <hal/debug.h>
 #include <pbkit/pbkit.h>
 #include <hal/video.h>
 #include <hal/xbox.h>
-#include <hal/fileio.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <windows.h>
 #include "output.h"
 #include "global.h"
 #include "func_table.h"
@@ -13,40 +13,41 @@
 #include "string_extra.h"
 
 int load_conf_file(char *config_file_path) {
-    int handle;
-    unsigned int file_size = 0;
-    char *buffer;
-    unsigned int read = 0;
-    int result;
-
     print("Trying to open config file: %s", config_file_path);
-
-    result = XCreateFile(&handle,
+    HANDLE handle = CreateFile(
         config_file_path,
         GENERIC_READ,
         FILE_SHARE_READ,
+        0,
         OPEN_EXISTING,
-        FILE_ATTRIBUTE_NORMAL);
-    if(result != 0) {
+        FILE_ATTRIBUTE_NORMAL,
+        NULL
+    );
+    if(handle == INVALID_HANDLE_VALUE) {
         print("Could not open config file '%s' for read", config_file_path);
         return -1;
     }
 
-    XGetFileSize(handle, &file_size);
+    DWORD file_size = GetFileSize(handle, NULL);
+    if(file_size == INVALID_FILE_SIZE) {
+        print("ERROR: Could not get file size for %s", config_file_path);
+        return -1;
+    }
 
-    buffer = malloc(file_size);
+    char* buffer = (char *)malloc(file_size);
     if(buffer == NULL) {
         print("Malloc failed for file_size %u", file_size);
         return -1;
     }
 
-    result = XReadFile(handle, buffer, file_size, &read);
-    if(result == 0 || read != file_size) {
-        print("Read failed for config file. result = %d, read = %u", file_size, read);
+    DWORD bytes_read = 0;
+    BOOL result = ReadFile(handle, buffer, file_size, &bytes_read, NULL);
+    if(result == 0 || bytes_read != file_size) {
+        print("Read failed for config file. result = %d, read = %u", file_size, bytes_read);
         return -1;
     }
 
-    XCloseHandle(handle);
+    CloseHandle(handle);
 
     char *line;
     char *rest = buffer;
@@ -99,7 +100,7 @@ void main(void){
     switch(pb_init()){
         case 0: break;
         default:
-            XSleep(2000);
+            Sleep(2000);
             XReboot();
             return;
     }
@@ -117,6 +118,6 @@ void main(void){
     vector_free(&tests_to_run);
     close_output_file();
 
-    XSleep(10000);
+    Sleep(10000);
     pb_kill();
 }

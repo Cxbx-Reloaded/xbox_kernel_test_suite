@@ -1,6 +1,6 @@
 #include <pbkit/pbkit.h>
-#include <xboxrt/debug.h>
-#include <hal/fileio.h>
+#include <hal/debug.h>
+#include <windows.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -9,7 +9,7 @@
 #include "global.h"
 #include "output.h"
 
-static int output_filehandle = 0;
+static HANDLE output_filehandle = INVALID_HANDLE_VALUE;
 
 void print(char* str, ...){
     va_list args;
@@ -49,38 +49,40 @@ void print_test_footer(
     }
 }
 
-int open_output_file(char* file_name) {
+void open_output_file(char* file_name) {
     if(is_emu) {
         print("Kernel Test Suite: Skipping creating %s because on emulator", file_name);
-        return 0;
+        return;
     }
 
     debugPrint("Creating file %s", file_name);
-    int ret = XCreateFile(
-        &output_filehandle,
+    output_filehandle = CreateFile(
         file_name,
         GENERIC_WRITE,
         FILE_SHARE_WRITE,
+        0,
         CREATE_ALWAYS,
-        FILE_ATTRIBUTE_NORMAL
+        FILE_ATTRIBUTE_NORMAL,
+        NULL
     );
-    if(ret != 0) {
+
+    if(output_filehandle == INVALID_HANDLE_VALUE) {
         debugPrint("ERROR: Could not create file %s", file_name);
     }
-    return ret;
 }
 
-int write_to_output_file(void* data_to_print, unsigned int num_bytes_to_print) {
+int write_to_output_file(void* data_to_print, DWORD num_bytes_to_print) {
     if(is_emu) {
         return 0;
     }
 
-    unsigned int bytes_written;
-    int ret = XWriteFile(
+    DWORD bytes_written;
+    BOOL ret = WriteFile(
         output_filehandle,
         data_to_print,
         num_bytes_to_print,
-        &bytes_written
+        &bytes_written,
+        NULL
     );
     if(!ret) {
         debugPrint("ERROR: Could not write to output file");
@@ -93,11 +95,11 @@ int write_to_output_file(void* data_to_print, unsigned int num_bytes_to_print) {
     return ret;
 }
 
-int close_output_file() {
+BOOL close_output_file() {
     if(is_emu) {
         return 0;
     }
-    int ret = XCloseHandle(output_filehandle);
+    BOOL ret = CloseHandle(output_filehandle);
     if(!ret) {
         debugPrint("ERROR: Could not close output file");
     }
