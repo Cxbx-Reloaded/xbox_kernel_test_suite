@@ -49,15 +49,15 @@ void print_test_footer(
     }
 }
 
-void open_output_file(char* output_file_path) {
+void open_output_file(char* file_path) {
     if(is_emu) {
-        print("Kernel Test Suite: Skipping creating %s because on emulator", output_file_path);
+        print("Kernel Test Suite: Skipping creating %s because on emulator", file_path);
         return;
     }
 
-    debugPrint("Creating file %s", output_file_path);
+    debugPrint("Creating file %s", file_path);
     output_filehandle = CreateFile(
-        output_file_path,
+        file_path,
         GENERIC_WRITE,
         FILE_SHARE_WRITE,
         0,
@@ -67,7 +67,7 @@ void open_output_file(char* output_file_path) {
     );
 
     if(output_filehandle == INVALID_HANDLE_VALUE) {
-        debugPrint("ERROR: Could not create file %s", output_file_path);
+        debugPrint("ERROR: Could not create file %s", file_path);
     }
 }
 

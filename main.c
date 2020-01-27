@@ -12,10 +12,10 @@
 #include "vector.h"
 #include "string_extra.h"
 
-int load_conf_file(char *config_file_path) {
-    print("Trying to open config file: %s", config_file_path);
+int load_conf_file(char *file_path) {
+    print("Trying to open config file: %s", file_path);
     HANDLE handle = CreateFile(
-        config_file_path,
+        file_path,
         GENERIC_READ,
         FILE_SHARE_READ,
         0,
@@ -24,13 +24,13 @@ int load_conf_file(char *config_file_path) {
         NULL
     );
     if(handle == INVALID_HANDLE_VALUE) {
-        print("Could not open config file '%s' for read", config_file_path);
+        print("Could not open config file '%s' for read", file_path);
         return -1;
     }
 
     DWORD file_size = GetFileSize(handle, NULL);
     if(file_size == INVALID_FILE_SIZE) {
-        print("ERROR: Could not get file size for %s", config_file_path);
+        print("ERROR: Could not get file size for %s", file_path);
         return -1;
     }
 
