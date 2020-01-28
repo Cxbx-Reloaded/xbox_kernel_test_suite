@@ -50,11 +50,6 @@ void print_test_footer(
 }
 
 void open_output_file(char* file_path) {
-    if(is_emu) {
-        print("Kernel Test Suite: Skipping creating %s because on emulator", file_path);
-        return;
-    }
-
     debugPrint("Creating file %s", file_path);
     output_filehandle = CreateFile(
         file_path,
@@ -72,10 +67,6 @@ void open_output_file(char* file_path) {
 }
 
 int write_to_output_file(void* data_to_print, DWORD num_bytes_to_print) {
-    if(is_emu) {
-        return 0;
-    }
-
     DWORD bytes_written;
     BOOL ret = WriteFile(
         output_filehandle,
@@ -96,9 +87,6 @@ int write_to_output_file(void* data_to_print, DWORD num_bytes_to_print) {
 }
 
 BOOL close_output_file() {
-    if(is_emu) {
-        return 0;
-    }
     BOOL ret = CloseHandle(output_filehandle);
     if(!ret) {
         debugPrint("ERROR: Could not close output file");

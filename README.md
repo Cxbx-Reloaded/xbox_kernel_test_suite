@@ -14,8 +14,6 @@ The configuration file should be called _**"config.txt"**_ and should be placed 
 This is an example of config.txt:
 
 ```
-is_emu=1
-
 tests=1,25,3,F
 ```
 

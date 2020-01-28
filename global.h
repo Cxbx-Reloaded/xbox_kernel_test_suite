@@ -5,7 +5,6 @@
 
 #define NV2A_MMIO_BASE 0xFD000000
 
-extern int is_emu;
 extern vector tests_to_run;
 
 #endif

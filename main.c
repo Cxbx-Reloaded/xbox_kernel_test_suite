@@ -53,9 +53,6 @@ int load_conf_file(char *file_path) {
     char *rest = buffer;
     while ((line = strtok_r(rest, "\n", &rest))){
         char *current_key = strtok(line, "=");
-        if(strcmp("is_emu", current_key) == 0){
-            is_emu = strtol(strtok(NULL, "\n"), NULL, 16);
-        }
         if(strcmp("tests", current_key) == 0){
             char *current_test;
             char *tests = strtok(NULL, "\n");
@@ -70,12 +67,6 @@ int load_conf_file(char *file_path) {
 }
 
 static void run_tests() {
-    if(is_emu) {
-        print("Running tests in emulator mode");
-    }
-    else {
-        print("Running tests in real hardware mode");
-    }
     if(tests_to_run.size == 0) {
         print("No Specific tests specified. Running all tests (Single Pass).");
         print("-------------------------------------------------------------");
