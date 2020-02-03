@@ -6,6 +6,7 @@
 #include <wchar.h>
 #include <windows.h>
 
+#include "global.h"
 #include "output.h"
 #include "common_assertions.h"
 #include "rtl_assertions.h"
@@ -1156,8 +1157,9 @@ void test_RtlMoveMemory(){
     if(src_buffer == NULL) {
         print("ERROR: Could not malloc src_buffer");
     }
-    for(int k=0; k<size; k++){ // we use GetTickCount as a rand() replacement
-        rnd_letter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[(int)GetTickCount() % 26];
+    srand(seed);
+    for(int k=0; k<size; k++){
+        rnd_letter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[rand() % 26];
         src_buffer[k] = rnd_letter;
     }
 
@@ -1316,8 +1318,9 @@ void test_RtlUpperString(){
     char rnd_letter;
     char rnd_letters[101];
 
-    for(int k=0; k<100; k++){ // we use GetTickCount as a rand() replacement
-        rnd_letter = "abcdefghijklmnopqrstuvwxyz"[(int)GetTickCount() % 26];
+    srand(seed);
+    for(int k=0; k<100; k++){
+        rnd_letter = "abcdefghijklmnopqrstuvwxyz"[rand() % 26];
         rnd_letters[k] = rnd_letter;
     }
     rnd_letters[100] = '\0';

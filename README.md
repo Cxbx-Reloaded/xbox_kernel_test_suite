@@ -14,6 +14,8 @@ The configuration file should be called _**"config.txt"**_ and should be placed 
 This is an example of config.txt:
 
 ```
+seed=5
+
 tests=1,25,3,F
 ```
 
