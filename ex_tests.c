@@ -13,12 +13,43 @@ typedef struct {
     ULONG thread3_status;
 } control_struct;
 
+static void increment_thread2_cmd(control_struct* control, const char* calling_func) {
+    control->thread2_cmd++;
+    print("  %s: thread2_cmd = %u", calling_func, control->thread2_cmd);
+}
+
+static void increment_thread2_status(control_struct* control, const char* calling_func) {
+    control->thread2_status++;
+    print("  %s: thread2_status = %u", calling_func, control->thread2_status);
+}
+
+static void increment_thread3_cmd(control_struct* control, const char* calling_func) {
+    control->thread3_cmd++;
+    print("  %s: thread3_cmd = %u", calling_func, control->thread3_cmd);
+}
+
+static void increment_thread3_status(control_struct* control, const char* calling_func) {
+    control->thread3_status++;
+    print("  %s: thread3_status = %u", calling_func, control->thread3_status);
+}
+
+static BOOL timed_poll_for_value(ULONG* poll_var, ULONG wait_value) {
+    for(BYTE i = 0; i < 10; i++) {
+        if(*poll_var == wait_value) {
+            return 1;
+        }
+        Sleep(10);
+    }
+    return 0;
+}
+
 static void ExAcquireReadWriteLockExclusive_thread2(void* arg) {
+    const char* func_name = "ExAcquireReadWriteLockExclusive_thread2";
     control_struct* control = (control_struct*)arg;
     ExAcquireReadWriteLockExclusive(control->ReadWriteLock);
-    control->thread2_status = 1;
+    increment_thread2_status(control, func_name);
     ExReleaseReadWriteLock(control->ReadWriteLock);
-    control->thread2_status = 2;
+    increment_thread2_status(control, func_name);
 }
 
 void test_ExAcquireReadWriteLockExclusive(){
@@ -51,14 +82,18 @@ void test_ExAcquireReadWriteLockExclusive(){
     control_struct control = {&ReadWriteLock, 0, 0, 0, 0};
     NTSTATUS result = PsCreateSystemThread(&handle, NULL, ExAcquireReadWriteLockExclusive_thread2, (void*)&control, 0);
     if(result != STATUS_SUCCESS) {
-        print("ERROR: did not create thread");
+        print("  ERROR: did not create thread");
         tests_passed = 0;
         print_test_footer(func_num, func_name, tests_passed);
         return;
     }
 
-    while(ReadWriteLock.LockCount != 1) {
-        Sleep(10);
+    tests_passed = timed_poll_for_value((ULONG*)&ReadWriteLock.LockCount, 1);
+    if(!tests_passed) {
+        print("  ERROR: LockCount did not equal 1\n");
+        tests_passed = 0;
+        print_test_footer(func_num, func_name, tests_passed);
+        return;
     }
     tests_passed = assert_ERWLOCK_equals(
         &ReadWriteLock,
@@ -68,11 +103,13 @@ void test_ExAcquireReadWriteLockExclusive(){
 
     if(control.thread2_status == 1) {
         tests_passed = 0;
-        print("    ERROR: The second thread was not supposed to write before the lock is released on the first thread.");
+        print("  ERROR: The second thread was not supposed to write before the lock is released on the first thread.");
     }
     ExReleaseReadWriteLock(&ReadWriteLock);
-    while(control.thread2_status != 2) {
-        Sleep(10);
+    tests_passed = timed_poll_for_value(&control.thread2_status, 2);
+    if(!tests_passed) {
+        print("  ERROR: thread2_status did not equal 2 before timing out.\n");
+        tests_passed = 0;
     }
 
     print_test_footer(func_num, func_name, tests_passed);
@@ -80,48 +117,58 @@ void test_ExAcquireReadWriteLockExclusive(){
 
 static void ExAcquireReadWriteLockShared_thread2(void* arg) {
     control_struct* control = (control_struct*)arg;
+    const char* func_name = "ExAcquireReadWriteLockShared_thread2";
 
     // Test case where LockCount != 0, and ReaderEntryCount == 0, which should cause this thread to wait.
-    while(control->thread2_cmd != 1) {
-        Sleep(10);
+    BOOL value_found = timed_poll_for_value(&control->thread2_cmd, 1);
+    if(!value_found) {
+        print("  ERROR: %s failed waiting for thread2_cmd == 1", func_name);
+        PsTerminateSystemThread(STATUS_TIMEOUT);
     }
     ExAcquireReadWriteLockShared(control->ReadWriteLock);
-    control->thread2_status = 1;
+    increment_thread2_status(control, func_name);
     ExReleaseReadWriteLock(control->ReadWriteLock);
-    control->thread2_status = 2;
+    increment_thread2_status(control, func_name);
 
 
     // Test case where LockCount != 0, ReaderEntryCount != 0, and WritersWaitingCount == 0. Should grab lock fine.
-    while(control->thread2_cmd != 2) {
-        Sleep(10);
+    value_found = timed_poll_for_value(&control->thread2_cmd, 2);
+    if(!value_found) {
+        print("  ERROR: %s failed waiting for thread2_cmd == 2", func_name);
+        PsTerminateSystemThread(STATUS_TIMEOUT);
     }
     ExAcquireReadWriteLockShared(control->ReadWriteLock);
-    control->thread2_status = 3;
+    increment_thread2_status(control, func_name);
 
-    while(control->thread2_cmd != 3) {
-        Sleep(10);
+    value_found = timed_poll_for_value(&control->thread2_cmd, 3);
+    if(!value_found) {
+        print("  ERROR: %s failed waiting for thread2_cmd == 3", func_name);
+        PsTerminateSystemThread(STATUS_TIMEOUT);
     }
     ExReleaseReadWriteLock(control->ReadWriteLock);
-    control->thread2_status = 4;
+    increment_thread2_status(control, func_name);
 
 
     // Test case where LockCount != 0, ReaderEntryCount != 0, and WritersWaitingCount != 0. Should wait for exclusive thread to release.
-    while(control->thread2_cmd != 4) {
-        Sleep(10);
+    value_found = timed_poll_for_value(&control->thread2_cmd, 4);
+    if(!value_found) {
+        print("  ERROR: %s failed waiting for thread2_cmd == 4", func_name);
+        PsTerminateSystemThread(STATUS_TIMEOUT);
     }
     ExAcquireReadWriteLockExclusive(control->ReadWriteLock);
-    control->thread2_status = 5;
+    increment_thread2_status(control, func_name);
     ExReleaseReadWriteLock(control->ReadWriteLock);
-    control->thread2_status = 6;
+    increment_thread2_status(control, func_name);
 }
 
 static void ExAcquireReadWriteLockShared_thread3(void* arg) {
     control_struct* control = (control_struct*)arg;
+    const char* func_name = "ExAcquireReadWriteLockShared_thread3";
 
     ExAcquireReadWriteLockShared(control->ReadWriteLock);
-    control->thread3_status = 1;
+    increment_thread3_status(control, func_name);
     ExReleaseReadWriteLock(control->ReadWriteLock);
-    control->thread3_status = 2;
+    increment_thread3_status(control, func_name);
 }
 
 void test_ExAcquireReadWriteLockShared(){
@@ -154,17 +201,20 @@ void test_ExAcquireReadWriteLockShared(){
     HANDLE handle;
     NTSTATUS result = PsCreateSystemThread(&handle, NULL, ExAcquireReadWriteLockShared_thread2, (void*)&control, 0);
     if(result != STATUS_SUCCESS) {
-        print("ERROR: Did not create thread2");
+        print("  ERROR: Did not create thread2");
         tests_passed = 0;
         print_test_footer(func_num, func_name, tests_passed);
         return;
     }
 
     ExAcquireReadWriteLockExclusive(&ReadWriteLock);
-    control.thread2_cmd = 1;
+    increment_thread2_cmd(&control, func_name);
 
-    while(ReadWriteLock.LockCount != 1) {
-        Sleep(10);
+    tests_passed = timed_poll_for_value((ULONG*)&ReadWriteLock.LockCount, 1);
+    if(!tests_passed) {
+        print("  ERROR: %s failed waiting for LockCount == 1", func_name);
+        print_test_footer(func_num, func_name, tests_passed);
+        return;
     }
     tests_passed = assert_ERWLOCK_equals(
         &ReadWriteLock,
@@ -173,22 +223,28 @@ void test_ExAcquireReadWriteLockShared(){
     );
     if(control.thread2_status == 1) {
         tests_passed = 0;
-        print("    ERROR: The second thread was not supposed to write before the lock is released on the first thread.");
+        print("  ERROR: The second thread was not supposed to write before the lock is released on the first thread.");
         print_test_footer(func_num, func_name, tests_passed);
         return;
     }
 
     ExReleaseReadWriteLock(&ReadWriteLock);
-    while(control.thread2_status != 2) {
-        Sleep(10);
+    tests_passed = timed_poll_for_value(&control.thread2_status, 2);
+    if(!tests_passed) {
+        print("  ERROR: %s failed waiting for thread2_status == 2", func_name);
+        print_test_footer(func_num, func_name, tests_passed);
+        return;
     }
 
     // Test case where LockCount != 0, ReaderEntryCount != 0, and WritersWaitingCount == 0. Should grab lock fine.
     ExAcquireReadWriteLockShared(&ReadWriteLock);
-    control.thread2_cmd = 2;
+    increment_thread2_cmd(&control, func_name);
 
-    while(ReadWriteLock.LockCount != 1) {
-        Sleep(1);
+    tests_passed = timed_poll_for_value((ULONG*)&ReadWriteLock.LockCount, 1);
+    if(!tests_passed) {
+        print("  ERROR: %s failed waiting for LockCount == 1", func_name);
+        print_test_footer(func_num, func_name, tests_passed);
+        return;
     }
     tests_passed = assert_ERWLOCK_equals(
         &ReadWriteLock,
@@ -198,23 +254,29 @@ void test_ExAcquireReadWriteLockShared(){
     Sleep(10);
     if(control.thread2_status != 3) {
         tests_passed = 0;
-        print("    ERROR: The second thread was supposed to obtain the shared lock and update thread2_status.");
+        print("  ERROR: The second thread was supposed to obtain the shared lock and update thread2_status.");
         print_test_footer(func_num, func_name, tests_passed);
         return;
     }
 
-    control.thread2_cmd = 3;
+    increment_thread2_cmd(&control, func_name);
     ExReleaseReadWriteLock(&ReadWriteLock);
-    while(control.thread2_status != 4) {
-        Sleep(10);
+    tests_passed = timed_poll_for_value(&control.thread2_status, 4);
+    if(!tests_passed) {
+        print("  ERROR: %s failed waiting for thread2_status == 4", func_name);
+        print_test_footer(func_num, func_name, tests_passed);
+        return;
     }
 
     // Test case where LockCount != 0, ReaderEntryCount != 0, and WritersWaitingCount != 0. Should wait for exclusive thread to release.
     ExAcquireReadWriteLockShared(&ReadWriteLock);
-    control.thread2_cmd = 4;
+    increment_thread2_cmd(&control, func_name);
 
-    while(ReadWriteLock.LockCount != 1) {
-        Sleep(10);
+    tests_passed = timed_poll_for_value((ULONG*)&ReadWriteLock.LockCount, 1);
+    if(!tests_passed) {
+        print("  ERROR: %s failed waiting for LockCount == 1", func_name);
+        print_test_footer(func_num, func_name, tests_passed);
+        return;
     }
 
     HANDLE handle_thread3;
@@ -225,8 +287,11 @@ void test_ExAcquireReadWriteLockShared(){
         return;
     }
 
-    while(ReadWriteLock.LockCount != 2) {
-        Sleep(10);
+    tests_passed = timed_poll_for_value((ULONG*)&ReadWriteLock.LockCount, 2);
+    if(!tests_passed) {
+        print("  ERROR: %s failed waiting for LockCount == 2", func_name);
+        print_test_footer(func_num, func_name, tests_passed);
+        return;
     }
     tests_passed = assert_ERWLOCK_equals(
         &ReadWriteLock,
@@ -240,7 +305,13 @@ void test_ExAcquireReadWriteLockShared(){
     }
     ExReleaseReadWriteLock(&ReadWriteLock);
 
-    while( (control.thread2_status != 6) || (control.thread3_status != 2) ) {
+    print("  Waiting for thread statuses to be at their final value.");
+    for(BYTE i = 0; i < 10; i++) {
+        tests_passed = 0;
+        if( (control.thread2_status == 6) && (control.thread3_status == 2) ) {
+            tests_passed = 1;
+            break;
+        }
         Sleep(10);
     }
 
