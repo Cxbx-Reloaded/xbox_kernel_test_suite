@@ -1253,7 +1253,6 @@ void test_RtlUnicodeStringToAnsiString(){
 
     // Test if default behavior is working as intended.
     RtlInitUnicodeString(&unicode_string, unicode_text);
-
     tests_passed &= assert_unicode_string(
         &unicode_string,
         wcslen(unicode_text) * sizeof(WCHAR),
@@ -1262,10 +1261,9 @@ void test_RtlUnicodeStringToAnsiString(){
         "Initialize unicode string."
     );
 
+    // Test default behavior for allocated buffer.
     NTSTATUS result = RtlUnicodeStringToAnsiString(&ansi_string, &unicode_string, alloc_buffer);
-
     tests_passed &= assert_NTSTATUS(result, STATUS_SUCCESS, func_name);
-
     tests_passed &= assert_ansi_string(
         &ansi_string,
         wcslen(unicode_text),
@@ -1278,13 +1276,12 @@ void test_RtlUnicodeStringToAnsiString(){
         RtlFreeAnsiString(&ansi_string);
     }
 
+    // Initialize our own ansi string.
     ansi_string.Length = wcslen(unicode_text);
     ansi_string.MaximumLength = ansi_string.Length + 1;
     ansi_string.Buffer = ansi_buffer;
     result = RtlUnicodeStringToAnsiString(&ansi_string, &unicode_string, 0);
-
     tests_passed &= assert_NTSTATUS(result, STATUS_SUCCESS, func_name);
-
     tests_passed &= assert_ansi_string(
         &ansi_string,
         wcslen(unicode_text),
@@ -1293,21 +1290,44 @@ void test_RtlUnicodeStringToAnsiString(){
         "Convert partial unicode to ansi string."
     );
 
+    // Finally, try modify member variables to get any other result come back as invalid.
+
+    // Increase unicode string by one to trigger buffer overflow status.
+    // Yet, at least get a partial returned buffer.
+    // Ansi string's max and current lengths should remain the same.
+    unicode_string.Length += 2;
+    unicode_string.MaximumLength += 2;
+    result = RtlUnicodeStringToAnsiString(&ansi_string, &unicode_string, 0);
+    tests_passed &= assert_NTSTATUS(result, STATUS_BUFFER_OVERFLOW, func_name);
+    tests_passed &= assert_ansi_string(
+        &ansi_string,
+        wcslen(unicode_text),
+        wcslen(unicode_text) + 1,
+        ansi_text,
+        "Convert unicode (up by one length) to limited ansi string."
+    );
+
     // When default behavior is working, try override to use whole unicode text.
     unicode_string.MaximumLength = sizeof(unicode_text);
     unicode_string.Length = unicode_string.MaximumLength - 1 * sizeof(WCHAR);
 
     // Since we didn't update ansi string, we should trigger buffer overflow status.
+    // Yet, at least get a partial returned buffer.
     result = RtlUnicodeStringToAnsiString(&ansi_string, &unicode_string, 0);
     tests_passed &= assert_NTSTATUS(result, STATUS_BUFFER_OVERFLOW, func_name);
+    tests_passed &= assert_ansi_string(
+        &ansi_string,
+        wcslen(unicode_text),
+        wcslen(unicode_text) + 1,
+        ansi_text,
+        "Convert max unicode to limited ansi string."
+    );
 
     // Now let's update ansi string's length to the max.
     ansi_string.MaximumLength = sizeof(ansi_buffer);
     ansi_string.Length = ansi_string.MaximumLength - 1;
     result = RtlUnicodeStringToAnsiString(&ansi_string, &unicode_string, 0);
-
     tests_passed &= assert_NTSTATUS(result, STATUS_SUCCESS, func_name);
-
     tests_passed &= assert_ansi_string(
         &ansi_string,
         sizeof(unicode_text) / sizeof(WCHAR) - 1,
@@ -1316,11 +1336,10 @@ void test_RtlUnicodeStringToAnsiString(){
         "Convert full unicode to ansi string."
     );
 
-    // Finally, try modify member variables to get any other result come back as invalid.
-
     ansi_string.MaximumLength = 0;
     result = RtlUnicodeStringToAnsiString(&ansi_string, &unicode_string, 0);
     tests_passed &= assert_NTSTATUS(result, STATUS_BUFFER_OVERFLOW, func_name);
+    // We can't do ansi string assert check since max length of ansi string is set to 0.
 
     // Allocate unicode and ansi strings for attempt to maxed out.
     WCHAR* unicode_text_max = ExAllocatePoolWithTag(UINT16_MAX, 'grtS');
@@ -1333,9 +1352,7 @@ void test_RtlUnicodeStringToAnsiString(){
     ansi_string.Length = UINT16_MAX;
     ansi_string.Buffer = ansi_text_max;
     result = RtlUnicodeStringToAnsiString(&ansi_string, &unicode_string, 0);
-
     tests_passed &= assert_NTSTATUS(result, STATUS_SUCCESS, func_name);
-
     tests_passed &= assert_ansi_string(
         &ansi_string,
         sizeof(unicode_text) / sizeof(WCHAR) - 1,
@@ -1350,9 +1367,7 @@ void test_RtlUnicodeStringToAnsiString(){
     unicode_string.Length = UINT16_MAX;
     unicode_string.Buffer = unicode_text_max;
     result = RtlUnicodeStringToAnsiString(&ansi_string, &unicode_string, 0);
-
     tests_passed &= assert_NTSTATUS(result, STATUS_SUCCESS, func_name);
-
     tests_passed &= assert_ansi_string(
         &ansi_string,
         (UINT16_MAX-1) / sizeof(WCHAR),
@@ -1361,7 +1376,7 @@ void test_RtlUnicodeStringToAnsiString(){
         "Max unicode to max ansi string."
     );
 
-    // Free up buffers
+    // Free up our allocated buffers
     ExFreePool(ansi_text_max);
     ExFreePool(unicode_text_max);
 
