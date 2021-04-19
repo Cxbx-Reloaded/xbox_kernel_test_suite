@@ -1289,6 +1289,7 @@ void test_RtlUnicodeStringToAnsiString(){
         ansi_text,
         "Convert partial unicode to ansi string."
     );
+    memset(ansi_string.Buffer, 0, ansi_string.MaximumLength);
 
     // Finally, try modify member variables to get any other result come back as invalid.
 
@@ -1306,6 +1307,7 @@ void test_RtlUnicodeStringToAnsiString(){
         ansi_text,
         "Convert unicode (up by one length) to limited ansi string."
     );
+    memset(ansi_string.Buffer, 0, ansi_string.MaximumLength);
 
     // When default behavior is working, try override to use whole unicode text.
     unicode_string.MaximumLength = sizeof(unicode_text);
@@ -1322,6 +1324,7 @@ void test_RtlUnicodeStringToAnsiString(){
         ansi_text,
         "Convert max unicode to limited ansi string."
     );
+    memset(ansi_string.Buffer, 0, ansi_string.MaximumLength);
 
     // Now let's update ansi string's length to the max.
     ansi_string.MaximumLength = sizeof(ansi_buffer);
@@ -1335,6 +1338,7 @@ void test_RtlUnicodeStringToAnsiString(){
         ansi_text,
         "Convert full unicode to ansi string."
     );
+    memset(ansi_string.Buffer, 0, ansi_string.MaximumLength);
 
     ansi_string.MaximumLength = 0;
     result = RtlUnicodeStringToAnsiString(&ansi_string, &unicode_string, 0);
@@ -1360,6 +1364,7 @@ void test_RtlUnicodeStringToAnsiString(){
         ansi_text_max,
         "Unicode to max ansi string."
     );
+    memset(ansi_string.Buffer, 0, ansi_string.MaximumLength);
 
     // Now increase unicode string length to max.
     // We can't multiply by size of WCHAR due to uint16_t's max size
@@ -1375,6 +1380,7 @@ void test_RtlUnicodeStringToAnsiString(){
         ansi_text_max,
         "Max unicode to max ansi string."
     );
+    memset(ansi_string.Buffer, 0, ansi_string.MaximumLength);
 
     // Free up our allocated buffers
     ExFreePool(ansi_text_max);
