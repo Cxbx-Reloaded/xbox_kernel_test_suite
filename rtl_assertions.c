@@ -36,8 +36,8 @@ BOOL assert_ansi_string(
         GEN_CHECK(string->Buffer, NULL, "Buffer is NULL");
     }
     else {
-        int result = strncmp(string->Buffer, expected_Buffer, expected_MaximumLength);
-        GEN_CHECK(result, 0, "strcmp result of Buffer");
+        int result = memcmp(string->Buffer, expected_Buffer, expected_Length);
+        GEN_CHECK(result, 0, "memcmp result of Buffer");
         if(result) {
             print("  Buffer = %s, expected_Buffer = %s", string->Buffer, expected_Buffer);
         }
@@ -62,8 +62,8 @@ static BOOL assert_unicode_string(
         GEN_CHECK(string->Buffer, NULL, "Buffer is null");
     }
     else {
-        int result = wcscmp(string->Buffer, expected_Buffer);
-        GEN_CHECK(result, 0, "wcscmp result of Buffer");
+        int result = memcmp(string->Buffer, expected_Buffer, expected_Length);
+        GEN_CHECK(result, 0, "memcmp result of Buffer");
     }
 
     ASSERT_FOOTER(test_name)
