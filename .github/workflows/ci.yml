@@ -1,0 +1,61 @@
+name: GitHub CI
+
+on:
+  push:
+    paths-ignore:
+      - '.github/*'
+      - '.github/*_TEMPLATE/**'
+      - '*.md'
+      - '*.yml'
+  pull_request:
+    paths-ignore:
+      - '.github/*'
+      - '.github/*_TEMPLATE/**'
+      - '*.md'
+      - '*.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout nxdk
+        uses: actions/checkout@v2
+        with:
+          repository: XboxDev/nxdk
+          submodules: recursive
+      - name: Set xbox_kernel_test_suite dir
+        id: xkts
+        run: echo "::set-output name=dir::projects/xbox_kernel_test_suite"
+      - name: Checkout xbox_kernel_test_suite
+        uses: actions/checkout@v2
+        with:
+          path: ${{ steps.xkts.outputs.dir }}
+      - name: Install dependencies
+        run: |
+          sudo apt-get -y update
+          sudo apt-get -y install lld llvm
+      - name: Build
+        working-directory: ${{ steps.xkts.outputs.dir }}
+        run: make -j$(nproc)
+      - name: Set artifact + release parameters
+        id: parameters
+        run: |
+          export file=default.xbe
+          echo "::set-output name=name::$file"
+          echo "::set-output name=path::${{ steps.xkts.outputs.dir }}/bin/$file"
+          echo "::set-output name=tag::$(date +'%Y%m%d%H%M%S')-${GITHUB_SHA:0:7}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ steps.parameters.outputs.name }}
+          path: ${{ steps.parameters.outputs.path }}
+          if-no-files-found: error
+      - name: Create release
+        if: |
+          github.event.action != 'pull_request' &&
+          github.ref == 'refs/heads/master'     &&
+          github.repository == 'Cxbx-Reloaded/xbox_kernel_test_suite'
+        env:
+          GH_REPO: ${{ github.repository }} # https://github.com/cli/cli/issues/3556
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create ${{ steps.parameters.outputs.tag }} ${{ steps.parameters.outputs.path }} --target $GITHUB_SHA
