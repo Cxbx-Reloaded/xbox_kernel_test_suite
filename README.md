@@ -24,8 +24,8 @@ tests=1,25,3,F
 # BINARIES:
 You can download pre-built bins from here: https://github.com/Cxbx-Reloaded/xbox_kernel_test_suite/releases
 
-# TRAVIS CI:
-Current build status can be seen here: https://travis-ci.org/Cxbx-Reloaded/xbox_kernel_test_suite
+# GITHUB CI:
+Current build status can be seen here: https://github.com/Cxbx-Reloaded/xbox_kernel_test_suite/actions/workflows/ci.yml
 
 # USEFUL LINKS:
 * https://github.com/wine-mirror/wine/tree/master/dlls/ntdll/tests
