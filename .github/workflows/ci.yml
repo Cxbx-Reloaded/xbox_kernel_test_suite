@@ -56,6 +56,6 @@ jobs:
           github.ref == 'refs/heads/master'     &&
           github.repository == 'Cxbx-Reloaded/xbox_kernel_test_suite'
         env:
-          GH_REPO: ${{ github.repository }} # https://github.com/cli/cli/issues/3556
+          GH_REPO: ${{ github.repository }} # Required because nxdk is the workspace repository
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release create ${{ steps.parameters.outputs.tag }} ${{ steps.parameters.outputs.path }} --target $GITHUB_SHA
