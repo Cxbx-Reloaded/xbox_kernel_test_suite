@@ -37,7 +37,9 @@ jobs:
           sudo apt-get -y install lld llvm
       - name: Build
         working-directory: ${{ steps.xkts.outputs.dir }}
-        run: make -j$(nproc)
+        run: |
+          eval $(../../bin/activate -s) # setup nxdk variables into environment
+          make -j$(nproc)
       - name: Set artifact + release parameters
         id: parameters
         run: |
