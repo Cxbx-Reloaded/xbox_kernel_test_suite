@@ -11,6 +11,7 @@
 #include "common_assertions.h"
 #include "rtl_assertions.h"
 #include "ke_assertions.h"
+#include "assertion_defines.h"
 
 const char* failed_text = "FAILED";
 const char* passed_text = "PASSED";
@@ -1556,8 +1557,50 @@ void test_RtlUshortByteSwap(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
+// stack calls to see how RtlWalkFrameChain work internally.
+static ULONG stub_RtlWalkFrameChain4of4(PVOID* Callers, ULONG Count) {
+    return RtlWalkFrameChain(Callers, Count, 0/*Flags parameter is unused*/);
+}
+static ULONG stub_RtlWalkFrameChain3of4(PVOID* Callers, ULONG Count) {
+    return stub_RtlWalkFrameChain4of4(Callers, Count);
+}
+static ULONG stub_RtlWalkFrameChain2of4(PVOID* Callers, ULONG Count) {
+    return stub_RtlWalkFrameChain3of4(Callers, Count);
+}
+static ULONG stub_RtlWalkFrameChain1of4(PVOID* Callers, ULONG Count) {
+    return stub_RtlWalkFrameChain2of4(Callers, Count);
+}
+
 void test_RtlWalkFrameChain(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x013F";
+    const char* func_name = "RtlWalkFrameChain";
+    BOOL test_passed = 1;
+    print_test_header(func_num, func_name);
+
+    ULONG count = 20;
+    ULONG callers[count];
+    memset(callers, 0, sizeof(callers));
+
+    ULONG total = stub_RtlWalkFrameChain1of4((PVOID*)callers, count);
+
+    // Last time checked on hardware, there's total of 10 calls.
+    GEN_CHECK(total, 10, "total");
+
+    // We are checking for child calls in this function for verification.
+    GEN_CHECK_RANGE(callers[0], (ULONG)(PVOID)stub_RtlWalkFrameChain4of4, 0x50, "callers[0]");
+    GEN_CHECK_RANGE(callers[1], (ULONG)(PVOID)stub_RtlWalkFrameChain3of4, 0x30, "callers[1]");
+    GEN_CHECK_RANGE(callers[2], (ULONG)(PVOID)stub_RtlWalkFrameChain2of4, 0x30, "callers[2]");
+    GEN_CHECK_RANGE(callers[3], (ULONG)(PVOID)stub_RtlWalkFrameChain1of4, 0x30, "callers[3]");
+
+    // We don't check test_RtlWalkFrameChain as it can change at any time.
+
+    // Output any remaining parent calls occur from the stack.
+    // We do not make any parent calls address verification as they can change at any time.
+    for (ULONG i = 4; i < total; i++) {
+        print("  INFO: callers[%u] = 0x%08x", i, callers[i]);
+    }
+
+    print_test_footer(func_num, func_name, test_passed);
 }
 
 void test_RtlZeroMemory(){
