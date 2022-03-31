@@ -990,8 +990,28 @@ void test_RtlFreeUnicodeString(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
+void stub_RtlGetCallersAddress(PVOID* CallerAddress_test, PVOID* CallersCaller_test, PULONG CallerAddress_expected){
+    *CallerAddress_expected = (ULONG)__builtin_return_address(0);
+    RtlGetCallersAddress(CallerAddress_test, CallersCaller_test);
+}
+
 void test_RtlGetCallersAddress(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x0120";
+    const char* func_name = "RtlGetCallersAddress";
+    BOOL test_passed = 1;
+
+    print_test_header(func_num, func_name);
+
+    ULONG CallerAddress_test, CallersCaller_test, CallerAddress_expected;
+    ULONG CallersCaller_expected = (ULONG)__builtin_return_address(0);
+
+    stub_RtlGetCallersAddress((PVOID*)&CallerAddress_test, (PVOID*)&CallersCaller_test, &CallerAddress_expected);
+
+    GEN_CHECK(CallerAddress_test, CallerAddress_expected, "CallerAddress");
+
+    GEN_CHECK(CallersCaller_test, CallersCaller_expected, "CallersCaller");
+
+    print_test_footer(func_num, func_name, test_passed);
 }
 
 void test_RtlInitAnsiString(){
