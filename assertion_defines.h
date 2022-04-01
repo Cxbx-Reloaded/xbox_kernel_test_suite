@@ -32,4 +32,15 @@
         test_passed = 0; \
     }
 
+#define GEN_CHECK_ARRAY(check_var, expected_var, size, varname) \
+    for (unsigned i = 0; i < size; i++) { \
+        if (check_var[i] != expected_var[i]) { \
+            print(\
+            "  Expected array %s[%u] = 0x%x, Got %s[%u] = 0x%x", \
+                varname, i, expected_var[i], varname, i, check_var[i] \
+            ); \
+                test_passed = 0; \
+        } \
+    }
+
 #endif // ASSERTION_DEFINES_H

@@ -294,7 +294,78 @@ void test_RtlCaptureContext(){
 }
 
 void test_RtlCaptureStackBackTrace(){
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x010A";
+    const char* func_name = "RtlCaptureStackBackTrace";
+    BOOL test_passed = 1;
+    print_test_header(func_num, func_name);
+
+    ULONG frame_size = 10;
+    PULONG frames_expected = (PULONG)malloc(frame_size * sizeof(ULONG));
+    PULONG frames_test = (PULONG)malloc(frame_size * sizeof(ULONG));
+
+    // First, we need to collect frames_expected to perform later tests.
+    frame_size = RtlWalkFrameChain((PVOID*)frames_expected, frame_size, 0);
+    if (!frame_size) {
+        // If we are not getting any return size, force fail.
+        GEN_CHECK(frame_size, 1, "frame_size");
+    }
+    else {
+        // Check all frames capture without any skip.
+        ULONG frames_skip = 1; // We want to skip at least one due to the fact it point to first call within kernel.
+        ULONG frames_capture = frame_size - 1;
+
+        ULONG frames_hash_expected = 0, frames_hash_test = 0;
+        USHORT frames_count = RtlCaptureStackBackTrace(frames_skip, frames_capture, (PVOID*)frames_test, &frames_hash_test);
+
+        GEN_CHECK(frames_count, frames_capture, "frames_count1");
+
+        PULONG frames_expected_offset = frames_expected + frames_skip;
+        GEN_CHECK_ARRAY(frames_test, frames_expected_offset, frames_count, "frames1");
+
+        for (unsigned i = frames_skip; i < frames_skip + frames_count; i++) {
+            frames_hash_expected += frames_expected[i];
+        }
+        GEN_CHECK(frames_hash_test, frames_hash_expected, "frames_hash1");
+
+        // Choose specific portion of the frames we want to check against.
+        frames_skip = frame_size / 2;
+        frames_capture = frame_size / 2;
+
+        frames_hash_expected = frames_hash_test = 0;
+        frames_count = RtlCaptureStackBackTrace(frames_skip, frames_capture, (PVOID*)frames_test, &frames_hash_test);
+
+        GEN_CHECK(frames_count, frames_capture, "frames_count2");
+
+        frames_expected_offset = frames_expected + frames_skip;
+        GEN_CHECK_ARRAY(frames_test, frames_expected_offset, frames_count, "frames2");
+
+        for (unsigned i = frames_skip; i < frames_skip + frames_count; i++) {
+            frames_hash_expected += frames_expected[i];
+        }
+        GEN_CHECK(frames_hash_test, frames_hash_expected, "frames_hash2");
+
+        // Choose specific portion of the frames we want to check against.
+        frames_skip = frame_size / 2;
+        frames_capture = frames_skip / 2;
+
+        frames_hash_expected = frames_hash_test = 0;
+        frames_count = RtlCaptureStackBackTrace(frames_skip, frames_capture, (PVOID*)frames_test, &frames_hash_test);
+
+        GEN_CHECK(frames_count, frames_capture, "frames_count3");
+
+        frames_expected_offset = frames_expected + frames_skip;
+        GEN_CHECK_ARRAY(frames_test, frames_expected_offset, frames_count, "frames3");
+
+        for (unsigned i = frames_skip; i < frames_skip + frames_count; i++) {
+            frames_hash_expected += frames_expected[i];
+        }
+        GEN_CHECK(frames_hash_test, frames_hash_expected, "frames_hash3");
+    }
+
+    free(frames_expected);
+    free(frames_test);
+
+    print_test_footer(func_num, func_name, test_passed);
 }
 
 static BOOL check_RtlCharToInteger_result(
