@@ -1,3 +1,3 @@
-XBE_TITLE=kernel_test_suite
+XBE_TITLE=kernel\ test\ suite
 SRCS = $(wildcard $(CURDIR)/*.c)
 include $(NXDK_DIR)/Makefile
