@@ -23,11 +23,6 @@ static void increment_thread2_status(control_struct* control, const char* callin
     print("  %s: thread2_status = %u", calling_func, control->thread2_status);
 }
 
-static void increment_thread3_cmd(control_struct* control, const char* calling_func) {
-    control->thread3_cmd++;
-    print("  %s: thread3_cmd = %u", calling_func, control->thread3_cmd);
-}
-
 static void increment_thread3_status(control_struct* control, const char* calling_func) {
     control->thread3_status++;
     print("  %s: thread3_status = %u", calling_func, control->thread3_status);
@@ -43,79 +38,7 @@ static BOOL timed_poll_for_value(ULONG* poll_var, ULONG wait_value) {
     return 0;
 }
 
-static void ExAcquireReadWriteLockExclusive_thread2(void* arg) {
-    const char* func_name = "ExAcquireReadWriteLockExclusive_thread2";
-    control_struct* control = (control_struct*)arg;
-    ExAcquireReadWriteLockExclusive(control->ReadWriteLock);
-    increment_thread2_status(control, func_name);
-    ExReleaseReadWriteLock(control->ReadWriteLock);
-    increment_thread2_status(control, func_name);
-}
-
-void test_ExAcquireReadWriteLockExclusive(){
-    const char* func_num = "0x000C";
-    const char* func_name = "ExAcquireReadWriteLockExclusive";
-    BOOL tests_passed = 1;
-    print_test_header(func_num, func_name);
-
-    ERWLOCK ReadWriteLock;
-    ExInitializeReadWriteLock(&ReadWriteLock);
-
-    ExAcquireReadWriteLockExclusive(&ReadWriteLock);
-    tests_passed = assert_ERWLOCK_equals(
-        &ReadWriteLock,
-        0, 0, 0, 0,
-        "Acquire exclusive lock on empty lock"
-    );
-    // Avoid spinning forever in the loop below.
-    if(!tests_passed) {
-        print_test_footer(func_num, func_name, tests_passed);
-        return;
-    }
-    ExReleaseReadWriteLock(&ReadWriteLock);
-
-
-    // Test case where one thread has the lock exclusively and another thread requests it exclusive. Should wait.
-    ExAcquireReadWriteLockExclusive(&ReadWriteLock);
-
-    HANDLE handle;
-    control_struct control = {&ReadWriteLock, 0, 0, 0, 0};
-    NTSTATUS result = PsCreateSystemThread(&handle, NULL, ExAcquireReadWriteLockExclusive_thread2, (void*)&control, 0);
-    if(result != STATUS_SUCCESS) {
-        print("  ERROR: did not create thread");
-        tests_passed = 0;
-        print_test_footer(func_num, func_name, tests_passed);
-        return;
-    }
-
-    tests_passed = timed_poll_for_value((ULONG*)&ReadWriteLock.LockCount, 1);
-    if(!tests_passed) {
-        print("  ERROR: LockCount did not equal 1\n");
-        tests_passed = 0;
-        print_test_footer(func_num, func_name, tests_passed);
-        return;
-    }
-    tests_passed = assert_ERWLOCK_equals(
-        &ReadWriteLock,
-        1, 1, 0, 0,
-        "Second thread attempted to acquire the exclusive lock, incrementing WritersWaitingCount"
-    );
-
-    if(control.thread2_status == 1) {
-        tests_passed = 0;
-        print("  ERROR: The second thread was not supposed to write before the lock is released on the first thread.");
-    }
-    ExReleaseReadWriteLock(&ReadWriteLock);
-    tests_passed = timed_poll_for_value(&control.thread2_status, 2);
-    if(!tests_passed) {
-        print("  ERROR: thread2_status did not equal 2 before timing out.\n");
-        tests_passed = 0;
-    }
-
-    print_test_footer(func_num, func_name, tests_passed);
-}
-
-static void ExAcquireReadWriteLockShared_thread2(void* arg) {
+static void NTAPI ExAcquireReadWriteLockShared_thread2(void* arg) {
     control_struct* control = (control_struct*)arg;
     const char* func_name = "ExAcquireReadWriteLockShared_thread2";
 
@@ -161,7 +84,7 @@ static void ExAcquireReadWriteLockShared_thread2(void* arg) {
     increment_thread2_status(control, func_name);
 }
 
-static void ExAcquireReadWriteLockShared_thread3(void* arg) {
+static void NTAPI ExAcquireReadWriteLockShared_thread3(void* arg) {
     control_struct* control = (control_struct*)arg;
     const char* func_name = "ExAcquireReadWriteLockShared_thread3";
 
@@ -316,88 +239,4 @@ void test_ExAcquireReadWriteLockShared(){
     }
 
     print_test_footer(func_num, func_name, tests_passed);
-}
-
-void test_ExAllocatePool(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ExAllocatePoolWithTag(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ExEventObjectType(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ExFreePool(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ExInitializeReadWriteLock(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ExInterlockedAddLargeInteger(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ExInterlockedAddLargeStatistic(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ExInterlockedCompareExchange64(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ExMutantObjectType(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ExQueryPoolBlockSize(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ExQueryNonVolatileSetting(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ExReadWriteRefurbInfo(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ExRaiseException(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ExRaiseStatus(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ExReleaseReadWriteLock(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ExSaveNonVolatileSetting(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ExSemaphoreObjectType(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ExTimerObjectType(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ExfInterlockedInsertHeadList(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ExfInterlockedInsertTailList(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ExfInterlockedRemoveHeadList(){
-    /* FIXME: This is a stub! implement this function! */
 }
