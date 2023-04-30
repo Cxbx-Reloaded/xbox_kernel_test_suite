@@ -4,30 +4,6 @@
 #include "assertions/defines.h"
 #include "assertions/common.h"
 
-void test_ObCreateObject(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ObDirectoryObjectType(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ObInsertObject(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ObMakeTemporaryObject(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ObOpenObjectByName(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ObOpenObjectByPointer(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
 void test_ObReferenceObjectByHandle(){
     const char* func_num = "0x00F6";
     const char* func_name = "ObReferenceObjectByHandle";
@@ -75,16 +51,4 @@ void test_ObReferenceObjectByHandle(){
     }
 
     print_test_footer(func_num, func_name, test_passed);
-}
-
-void test_ObReferenceObjectByName(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ObReferenceObjectByPointer(){
-    /* FIXME: This is a stub! implement this function! */
-}
-
-void test_ObSymbolicLinkObjectType(){
-    /* FIXME: This is a stub! implement this function! */
 }

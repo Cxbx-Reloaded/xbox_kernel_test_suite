@@ -1,0 +1,7 @@
+#include <xboxkrnl/xboxkrnl.h>
+
+#include "util/output.h"
+
+void test_ObMakeTemporaryObject(){
+    /* FIXME: This is a stub! implement this function! */
+}
