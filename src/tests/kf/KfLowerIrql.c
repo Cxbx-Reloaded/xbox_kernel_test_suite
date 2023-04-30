@@ -1,6 +1,6 @@
-void test_KfRaiseIrql(){
-    /* FIXME: This is a stub! implement this function! */
-}
+#include <xboxkrnl/xboxkrnl.h>
+
+#include "util/output.h"
 
 void test_KfLowerIrql(){
     /* FIXME: This is a stub! implement this function! */
