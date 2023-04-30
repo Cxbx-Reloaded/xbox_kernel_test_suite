@@ -1,6 +1,6 @@
-void test_XProfpControl(){
-    /* FIXME: This is a stub! implement this function! */
-}
+#include <xboxkrnl/xboxkrnl.h>
+
+#include "util/output.h"
 
 void test_XProfpGetData(){
     /* FIXME: This is a stub! implement this function! */
