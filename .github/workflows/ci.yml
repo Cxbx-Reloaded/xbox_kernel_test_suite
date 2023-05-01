@@ -20,15 +20,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout nxdk
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: XboxDev/nxdk
           submodules: recursive
       - name: Set xbox_kernel_test_suite dir
         id: xkts
-        run: echo "::set-output name=dir::projects/xbox_kernel_test_suite"
+        run: echo "dir=projects/xbox_kernel_test_suite" >> $GITHUB_OUTPUT
       - name: Checkout xbox_kernel_test_suite
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: ${{ steps.xkts.outputs.dir }}
       - name: Install dependencies
@@ -44,10 +44,10 @@ jobs:
         id: parameters
         run: |
           export file=default.xbe
-          echo "::set-output name=name::$file"
-          echo "::set-output name=path::${{ steps.xkts.outputs.dir }}/bin/$file"
-          echo "::set-output name=tag::$(date +'%Y%m%d%H%M%S')-${GITHUB_SHA:0:7}"
-      - uses: actions/upload-artifact@v2
+          echo "name=$file" >> $GITHUB_OUTPUT
+          echo "path=${{ steps.xkts.outputs.dir }}/bin/$file" >> $GITHUB_OUTPUT
+          echo "tag=$(date +'%Y%m%d%H%M%S')-${GITHUB_SHA:0:7}" >> $GITHUB_OUTPUT
+      - uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.parameters.outputs.name }}
           path: ${{ steps.parameters.outputs.path }}
