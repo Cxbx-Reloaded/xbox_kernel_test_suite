@@ -3,7 +3,8 @@
 #include "util/output.h"
 #include "assertions/rtl.h"
 
-void test_RtlInitUnicodeString(){
+void test_RtlInitUnicodeString()
+{
     const char* func_num = "0x0122";
     const char* func_name = "RtlInitUnicodeString";
     BOOL tests_passed = 1;

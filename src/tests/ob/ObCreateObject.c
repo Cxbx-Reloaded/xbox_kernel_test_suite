@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_ObCreateObject(){
+void test_ObCreateObject()
+{
     /* FIXME: This is a stub! implement this function! */
 }

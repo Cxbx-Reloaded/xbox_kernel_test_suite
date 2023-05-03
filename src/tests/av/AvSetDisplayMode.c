@@ -2,7 +2,8 @@
 
 #include "util/output.h"
 
-void test_AvSetDisplayMode(){
+void test_AvSetDisplayMode()
+{
     // FIXME: FATAL - Fails on emulator as of april 6th, 2018
     // FIXME: FATAL - Fails on real hardware too. The parameters passed to AvSetDisplayMode are wrong.
     return;

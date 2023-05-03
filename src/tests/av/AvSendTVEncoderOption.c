@@ -3,7 +3,8 @@
 #include "global.h"
 #include "util/output.h"
 
-void test_AvSendTVEncoderOption(){
+void test_AvSendTVEncoderOption()
+{
     // FIXME: there are other functions such as AV_OPTION_QUERY_MODE, AV_QUERY_ENCODER_TYPE, AV_OPTION_WIDESCREEN etc
     // FIXME: this test is broken. I get inconsistent value from my real xbox
     const char* func_num = "0x0002";

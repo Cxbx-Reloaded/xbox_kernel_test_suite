@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_ExfInterlockedInsertTailList(){
+void test_ExfInterlockedInsertTailList()
+{
     /* FIXME: This is a stub! implement this function! */
 }

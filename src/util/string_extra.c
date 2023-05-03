@@ -6,28 +6,25 @@ char* strtok_r(char *str, const char *delim, char **nextp)
 {
     char *ret;
 
-     if (str == NULL)
-    {
+    if (str == NULL) {
         str = *nextp;
     }
 
-     str += strspn(str, delim);
+    str += strspn(str, delim);
 
-     if (*str == '\0')
-    {
+    if (*str == '\0') {
         return NULL;
     }
 
-     ret = str;
+    ret = str;
 
-     str += strcspn(str, delim);
+    str += strcspn(str, delim);
 
-     if (*str)
-    {
+    if (*str) {
         *str++ = '\0';
     }
 
-     *nextp = str;
+    *nextp = str;
 
-     return ret;
+    return ret;
 }

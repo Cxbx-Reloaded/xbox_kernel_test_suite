@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_HalEnableSecureTrayEject(){
+void test_HalEnableSecureTrayEject()
+{
     /* FIXME: This is a stub! implement this function! */
 }

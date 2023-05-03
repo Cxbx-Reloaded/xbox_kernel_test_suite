@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeGetCurrentIrql(){
+void test_KeGetCurrentIrql()
+{
     /* FIXME: This is a stub! implement this function! */
 }

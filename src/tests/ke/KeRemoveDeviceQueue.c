@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeRemoveDeviceQueue(){
+void test_KeRemoveDeviceQueue()
+{
     /* FIXME: This is a stub! implement this function! */
 }

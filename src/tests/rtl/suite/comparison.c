@@ -5,7 +5,8 @@
 #include "util/output.h"
 #include "assertions/rtl.h"
 
-void test_RtlCompareMemory(){
+void test_RtlCompareMemory()
+{
     const char* func_num = "0x010C";
     const char* func_name = "RtlCompareMemory";
     BOOL tests_passed = 1;
@@ -38,7 +39,8 @@ void test_RtlCompareMemory(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlCompareMemoryUlong(){
+void test_RtlCompareMemoryUlong()
+{
     const char* func_num = "0x010D";
     const char* func_name = "RtlCompareMemoryUlong";
     BOOL tests_passed = 1;
@@ -65,7 +67,8 @@ void test_RtlCompareMemoryUlong(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlCompareString(){
+void test_RtlCompareString()
+{
     const char* func_num = "0x010E";
     const char* func_name = "RtlCompareString";
     BOOL tests_passed = 1;
@@ -89,7 +92,8 @@ void test_RtlCompareString(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlCompareUnicodeString(){
+void test_RtlCompareUnicodeString()
+{
     const char* func_num = "0x010F";
     const char* func_name = "RtlCompareUnicodeString";
     BOOL tests_passed = 1;
@@ -148,7 +152,8 @@ void test_RtlCompareUnicodeString(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlEqualString(){
+void test_RtlEqualString()
+{
     const char* func_num = "0x0117";
     const char* func_name = "RtlEqualString";
     BOOL tests_passed = 1;
@@ -180,7 +185,8 @@ void test_RtlEqualString(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlEqualUnicodeString(){
+void test_RtlEqualUnicodeString()
+{
     const char* func_num = "0x0118";
     const char* func_name = "RtlEqualUnicodeString";
     BOOL tests_passed = 1;

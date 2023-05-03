@@ -13,22 +13,26 @@ typedef struct {
     ULONG thread3_status;
 } control_struct;
 
-static void increment_thread2_cmd(control_struct* control, const char* calling_func) {
+static void increment_thread2_cmd(control_struct* control, const char* calling_func)
+{
     control->thread2_cmd++;
     print("  %s: thread2_cmd = %u", calling_func, control->thread2_cmd);
 }
 
-static void increment_thread2_status(control_struct* control, const char* calling_func) {
+static void increment_thread2_status(control_struct* control, const char* calling_func)
+{
     control->thread2_status++;
     print("  %s: thread2_status = %u", calling_func, control->thread2_status);
 }
 
-static void increment_thread3_status(control_struct* control, const char* calling_func) {
+static void increment_thread3_status(control_struct* control, const char* calling_func)
+{
     control->thread3_status++;
     print("  %s: thread3_status = %u", calling_func, control->thread3_status);
 }
 
-static BOOL timed_poll_for_value(ULONG* poll_var, ULONG wait_value) {
+static BOOL timed_poll_for_value(ULONG* poll_var, ULONG wait_value)
+{
     for(BYTE i = 0; i < 10; i++) {
         if(*poll_var == wait_value) {
             return 1;
@@ -38,7 +42,8 @@ static BOOL timed_poll_for_value(ULONG* poll_var, ULONG wait_value) {
     return 0;
 }
 
-static void NTAPI ExAcquireReadWriteLockShared_thread2(void* arg) {
+static void NTAPI ExAcquireReadWriteLockShared_thread2(void* arg)
+{
     control_struct* control = (control_struct*)arg;
     const char* func_name = "ExAcquireReadWriteLockShared_thread2";
 
@@ -84,7 +89,8 @@ static void NTAPI ExAcquireReadWriteLockShared_thread2(void* arg) {
     increment_thread2_status(control, func_name);
 }
 
-static void NTAPI ExAcquireReadWriteLockShared_thread3(void* arg) {
+static void NTAPI ExAcquireReadWriteLockShared_thread3(void* arg)
+{
     control_struct* control = (control_struct*)arg;
     const char* func_name = "ExAcquireReadWriteLockShared_thread3";
 
@@ -94,7 +100,8 @@ static void NTAPI ExAcquireReadWriteLockShared_thread3(void* arg) {
     increment_thread3_status(control, func_name);
 }
 
-void test_ExAcquireReadWriteLockShared(){
+void test_ExAcquireReadWriteLockShared()
+{
     const char* func_num = "0x000D";
     const char* func_name = "ExAcquireReadWriteLockShared";
     BOOL tests_passed = 1;

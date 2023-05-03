@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtDeviceIoControlFile(){
+void test_NtDeviceIoControlFile()
+{
     /* FIXME: This is a stub! implement this function! */
 }

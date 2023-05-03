@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeTestAlertThread(){
+void test_KeTestAlertThread()
+{
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoDismountVolumeByName(){
+void test_IoDismountVolumeByName()
+{
     /* FIXME: This is a stub! implement this function! */
 }

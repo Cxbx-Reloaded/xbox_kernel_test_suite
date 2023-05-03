@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeRemoveQueueDpc(){
+void test_KeRemoveQueueDpc()
+{
     /* FIXME: This is a stub! implement this function! */
 }

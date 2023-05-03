@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoStartNextPacket(){
+void test_IoStartNextPacket()
+{
     /* FIXME: This is a stub! implement this function! */
 }

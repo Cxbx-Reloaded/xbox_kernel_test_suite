@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_HalDiskModelNumber(){
+void test_HalDiskModelNumber()
+{
     /* FIXME: This is a stub! implement this function! */
 }

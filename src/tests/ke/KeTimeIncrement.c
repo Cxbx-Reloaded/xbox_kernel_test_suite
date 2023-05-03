@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeTimeIncrement(){
+void test_KeTimeIncrement()
+{
     /* FIXME: This is a stub! implement this function! */
 }

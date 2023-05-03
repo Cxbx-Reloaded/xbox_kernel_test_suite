@@ -2,7 +2,8 @@
 
 #include "util/output.h"
 
-void test_NtReadFile(){ // We will read the xbe magic number as a test
+void test_NtReadFile()
+{ // We will read the xbe magic number as a test
     const char* func_num = "0x00DB";
     const char* func_name = "NtReadFile";
     HANDLE handle;

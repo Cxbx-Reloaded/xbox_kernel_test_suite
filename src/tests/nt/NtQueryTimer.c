@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtQueryTimer(){
+void test_NtQueryTimer()
+{
     /* FIXME: This is a stub! implement this function! */
 }

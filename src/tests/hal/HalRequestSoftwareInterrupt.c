@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_HalRequestSoftwareInterrupt(){
+void test_HalRequestSoftwareInterrupt()
+{
     /* FIXME: This is a stub! implement this function! */
 }

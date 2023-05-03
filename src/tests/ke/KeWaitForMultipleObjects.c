@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeWaitForMultipleObjects(){
+void test_KeWaitForMultipleObjects()
+{
     /* FIXME: This is a stub! implement this function! */
 }

@@ -3,7 +3,8 @@
 #include "util/output.h"
 #include "assertions/common.h"
 
-void test_IoDeleteSymbolicLink(){
+void test_IoDeleteSymbolicLink()
+{
     const char* func_num = "0x0045";
     const char* func_name = "IoDeleteSymbolicLink";
     BOOL tests_passed = 1;

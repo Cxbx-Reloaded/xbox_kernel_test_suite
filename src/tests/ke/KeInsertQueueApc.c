@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeInsertQueueApc(){
+void test_KeInsertQueueApc()
+{
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_ObpObjectHandleTable(){
+void test_ObpObjectHandleTable()
+{
     /* FIXME: This is a stub! implement this function! */
 }

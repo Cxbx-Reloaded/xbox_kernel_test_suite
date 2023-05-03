@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtQueryDirectoryObject(){
+void test_NtQueryDirectoryObject()
+{
     /* FIXME: This is a stub! implement this function! */
 }

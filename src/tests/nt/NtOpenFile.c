@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtOpenFile(){
+void test_NtOpenFile()
+{
     /* FIXME: This is a stub! implement this function! */
 }

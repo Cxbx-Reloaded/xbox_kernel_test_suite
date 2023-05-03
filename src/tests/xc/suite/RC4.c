@@ -2,10 +2,12 @@
 
 #include "util/output.h"
 
-void test_XcRC4Key(){
+void test_XcRC4Key()
+{
 	/* FIXME: This is a stub! implement this function! */
 }
 
-void test_XcRC4Crypt(){
+void test_XcRC4Crypt()
+{
 	/* FIXME: This is a stub! implement this function! */
 }

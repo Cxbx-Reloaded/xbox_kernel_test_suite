@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeInitializeSemaphore(){
+void test_KeInitializeSemaphore()
+{
     /* FIXME: This is a stub! implement this function! */
 }

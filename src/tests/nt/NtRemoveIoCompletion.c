@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtRemoveIoCompletion(){
+void test_NtRemoveIoCompletion()
+{
     /* FIXME: This is a stub! implement this function! */
 }

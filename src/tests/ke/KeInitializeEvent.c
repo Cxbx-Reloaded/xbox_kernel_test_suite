@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeInitializeEvent(){
+void test_KeInitializeEvent()
+{
     /* FIXME: This is a stub! implement this function! */
 }

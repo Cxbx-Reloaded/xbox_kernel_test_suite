@@ -4,7 +4,8 @@
 #include "global.h" // for (passed|failed)_test vars
 #include "util/output.h"
 
-void test_RtlFillMemory(){
+void test_RtlFillMemory()
+{
     const char* func_num = "0x011C";
     const char* func_name = "RtlFillMemory";
     BOOL tests_passed = 1;

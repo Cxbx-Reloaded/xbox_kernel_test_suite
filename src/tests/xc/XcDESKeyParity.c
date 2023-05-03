@@ -3,7 +3,8 @@
 
 #include "util/output.h"
 
-void test_XcDESKeyParity(){
+void test_XcDESKeyParity()
+{
 	const char* func_num = "0x015a";
 	const char* func_name = "XcDESKeyParity";
 	BOOL test_passed = 1;

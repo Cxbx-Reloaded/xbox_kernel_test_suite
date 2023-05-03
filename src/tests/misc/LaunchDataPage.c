@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_LaunchDataPage(){
+void test_LaunchDataPage()
+{
     /* FIXME: This is a stub! implement this function! */
 }

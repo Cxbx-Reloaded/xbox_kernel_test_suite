@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeSetTimerEx(){
+void test_KeSetTimerEx()
+{
     /* FIXME: This is a stub! implement this function! */
 }

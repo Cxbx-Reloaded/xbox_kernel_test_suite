@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtFlushBuffersFile(){
+void test_NtFlushBuffersFile()
+{
     /* FIXME: This is a stub! implement this function! */
 }

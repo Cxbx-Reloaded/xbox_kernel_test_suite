@@ -2,7 +2,8 @@
 
 #include "util/output.h"
 
-void test_NtCreateFile(){
+void test_NtCreateFile()
+{
     const char* func_num = "0x00BE";
     const char* func_name = "NtCreateFile";
     HANDLE handle;

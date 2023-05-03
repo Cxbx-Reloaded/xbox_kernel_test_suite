@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_XboxLANKey(){
+void test_XboxLANKey()
+{
     /* FIXME: This is a stub! implement this function! */
 }

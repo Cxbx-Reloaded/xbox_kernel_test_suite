@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_ExInterlockedAddLargeInteger(){
+void test_ExInterlockedAddLargeInteger()
+{
     /* FIXME: This is a stub! implement this function! */
 }

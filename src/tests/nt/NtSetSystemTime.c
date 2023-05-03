@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtSetSystemTime(){
+void test_NtSetSystemTime()
+{
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_ExMutantObjectType(){
+void test_ExMutantObjectType()
+{
     /* FIXME: This is a stub! implement this function! */
 }

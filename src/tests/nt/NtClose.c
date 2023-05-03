@@ -2,7 +2,8 @@
 
 #include "util/output.h"
 
-void test_NtClose(){
+void test_NtClose()
+{
     const char* func_num = "0x00BB";
     const char* func_name = "NtClose";
     HANDLE handle;

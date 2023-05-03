@@ -4,7 +4,8 @@
 #include "global.h"
 #include "util/output.h"
 
-void test_RtlMoveMemory(){
+void test_RtlMoveMemory()
+{
     const char* func_num = "0x012A";
     const char* func_name = "RtlMoveMemory";
     BOOL tests_passed = 1;

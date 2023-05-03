@@ -4,7 +4,8 @@
 #include "util/output.h"
 #include "assertions/xc.h"
 
-void test_XcBlockCrypt(){
+void test_XcBlockCrypt()
+{
 	const char* func_num = "0x015c";
 	const char* func_name = "XcBlockCrypt";
 	BOOL test_passed = 1;
@@ -105,7 +106,8 @@ void test_XcBlockCrypt(){
 	print_test_footer(func_num, func_name, test_passed);
 }
 
-void test_XcBlockCryptCBC(){
+void test_XcBlockCryptCBC()
+{
 	const char* func_num = "0x015d";
 	const char* func_name = "XcBlockCryptCBC";
 	BOOL test_passed = 1;

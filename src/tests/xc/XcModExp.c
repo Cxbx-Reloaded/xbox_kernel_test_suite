@@ -2,7 +2,8 @@
 
 #include "util/output.h"
 
-void test_XcModExp(){
+void test_XcModExp()
+{
 	const char* func_num = "0x0159";
     const char* func_name = "XcModExp";
     BOOL test_passed = 1;

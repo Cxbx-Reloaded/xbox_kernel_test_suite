@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtQuerySymbolicLinkObject(){
+void test_NtQuerySymbolicLinkObject()
+{
     /* FIXME: This is a stub! implement this function! */
 }

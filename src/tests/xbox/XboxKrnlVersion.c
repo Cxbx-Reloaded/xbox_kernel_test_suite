@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_XboxKrnlVersion(){
+void test_XboxKrnlVersion()
+{
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_ObReferenceObjectByName(){
+void test_ObReferenceObjectByName()
+{
     /* FIXME: This is a stub! implement this function! */
 }

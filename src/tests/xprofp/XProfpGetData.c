@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_XProfpGetData(){
+void test_XProfpGetData()
+{
     /* FIXME: This is a stub! implement this function! */
 }

@@ -13,7 +13,8 @@
 #include "global.h"
 #include "include/func_table.h"
 
-int load_conf_file(char *file_path) {
+int load_conf_file(char *file_path)
+{
     print("Trying to open config file: %s", file_path);
     HANDLE handle = CreateFile(
         file_path,
@@ -70,7 +71,8 @@ int load_conf_file(char *file_path) {
     return 0;
 }
 
-static void run_tests() {
+static void run_tests()
+{
     print("Random seed used is %u", seed);
     if(tests_to_run.size == 0) {
         print("No Specific tests specified. Running all tests (Single Pass).");

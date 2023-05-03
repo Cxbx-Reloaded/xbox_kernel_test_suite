@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeConnectInterrupt(){
+void test_KeConnectInterrupt()
+{
     /* FIXME: This is a stub! implement this function! */
 }

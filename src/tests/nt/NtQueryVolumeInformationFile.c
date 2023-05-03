@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtQueryVolumeInformationFile(){
+void test_NtQueryVolumeInformationFile()
+{
     /* FIXME: This is a stub! implement this function! */
 }

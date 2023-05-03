@@ -3,7 +3,8 @@
 
 #include "util/output.h"
 
-void test_RtlCopyString(){
+void test_RtlCopyString()
+{
     const char* func_num = "0x0110";
     const char* func_name = "RtlCopyString";
     BOOL tests_passed = 1;

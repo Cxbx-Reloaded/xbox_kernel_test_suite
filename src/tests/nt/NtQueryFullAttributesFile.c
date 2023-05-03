@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtQueryFullAttributesFile(){
+void test_NtQueryFullAttributesFile()
+{
     /* FIXME: This is a stub! implement this function! */
 }

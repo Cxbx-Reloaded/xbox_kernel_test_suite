@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoAllocateIrp(){
+void test_IoAllocateIrp()
+{
     /* FIXME: This is a stub! implement this function! */
 }

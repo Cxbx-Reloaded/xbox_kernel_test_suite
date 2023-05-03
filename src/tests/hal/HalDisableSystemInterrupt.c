@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_HalDisableSystemInterrupt(){
+void test_HalDisableSystemInterrupt()
+{
     /* FIXME: This is a stub! implement this function! */
 }

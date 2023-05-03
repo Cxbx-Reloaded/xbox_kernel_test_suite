@@ -4,7 +4,8 @@
 #include "util/output.h"
 #include "assertions/rtl.h"
 
-void test_RtlInitAnsiString(){
+void test_RtlInitAnsiString()
+{
     const char* func_num = "0x0121";
     const char* func_name = "RtlInitAnsiString";
     BOOL tests_passed = 1;

@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeQueryPerformanceCounter(){
+void test_KeQueryPerformanceCounter()
+{
     /* FIXME: This is a stub! implement this function! */
 }

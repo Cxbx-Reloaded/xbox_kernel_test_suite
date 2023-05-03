@@ -8,8 +8,8 @@ BOOL assert_ERWLOCK_equals(
     ULONG expected_WritersWaitingCount,
     ULONG expected_ReadersWaitingCount,
     ULONG expected_ReadersEntryCount,
-    const char* test_name
-) {
+    const char* test_name)
+{
     ASSERT_HEADER
 
     GEN_CHECK(ReadWriteLock->LockCount, expected_LockCount, "LockCount")

@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeReleaseSemaphore(){
+void test_KeReleaseSemaphore()
+{
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_ObMakeTemporaryObject(){
+void test_ObMakeTemporaryObject()
+{
     /* FIXME: This is a stub! implement this function! */
 }

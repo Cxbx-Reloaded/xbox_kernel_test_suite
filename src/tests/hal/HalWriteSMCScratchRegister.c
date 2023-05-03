@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_HalWriteSMCScratchRegister(){
+void test_HalWriteSMCScratchRegister()
+{
     /* FIXME: This is a stub! implement this function! */
 }

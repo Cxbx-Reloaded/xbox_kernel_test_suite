@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_MmQueryStatistics(){
+void test_MmQueryStatistics()
+{
     /* FIXME: This is a stub! implement this function! */
 }

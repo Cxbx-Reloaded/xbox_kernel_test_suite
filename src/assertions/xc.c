@@ -7,8 +7,8 @@ BOOL assert_hashed_result(
     PUCHAR input,
     size_t len,
     PUCHAR expected_result,
-    const char *test_name
-) {
+    const char *test_name)
+{
     ASSERT_HEADER
     unsigned char sha1_ctx[116] = {0};
     unsigned char digest[20] = {0};

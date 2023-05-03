@@ -13,27 +13,32 @@ typedef struct {
     ULONG thread3_status;
 } control_struct;
 
-static void increment_thread2_cmd(control_struct* control, const char* calling_func) {
+static void increment_thread2_cmd(control_struct* control, const char* calling_func)
+{
     control->thread2_cmd++;
     print("  %s: thread2_cmd = %u", calling_func, control->thread2_cmd);
 }
 
-static void increment_thread2_status(control_struct* control, const char* calling_func) {
+static void increment_thread2_status(control_struct* control, const char* calling_func)
+{
     control->thread2_status++;
     print("  %s: thread2_status = %u", calling_func, control->thread2_status);
 }
 
-static void increment_thread3_cmd(control_struct* control, const char* calling_func) {
+static void increment_thread3_cmd(control_struct* control, const char* calling_func)
+{
     control->thread3_cmd++;
     print("  %s: thread3_cmd = %u", calling_func, control->thread3_cmd);
 }
 
-static void increment_thread3_status(control_struct* control, const char* calling_func) {
+static void increment_thread3_status(control_struct* control, const char* calling_func)
+{
     control->thread3_status++;
     print("  %s: thread3_status = %u", calling_func, control->thread3_status);
 }
 
-static BOOL timed_poll_for_value(ULONG* poll_var, ULONG wait_value) {
+static BOOL timed_poll_for_value(ULONG* poll_var, ULONG wait_value)
+{
     for(BYTE i = 0; i < 10; i++) {
         if(*poll_var == wait_value) {
             return 1;
@@ -43,7 +48,8 @@ static BOOL timed_poll_for_value(ULONG* poll_var, ULONG wait_value) {
     return 0;
 }
 
-static void NTAPI ExAcquireReadWriteLockExclusive_thread2(void* arg) {
+static void NTAPI ExAcquireReadWriteLockExclusive_thread2(void* arg)
+{
     const char* func_name = "ExAcquireReadWriteLockExclusive_thread2";
     control_struct* control = (control_struct*)arg;
     ExAcquireReadWriteLockExclusive(control->ReadWriteLock);
@@ -52,7 +58,8 @@ static void NTAPI ExAcquireReadWriteLockExclusive_thread2(void* arg) {
     increment_thread2_status(control, func_name);
 }
 
-void test_ExAcquireReadWriteLockExclusive(){
+void test_ExAcquireReadWriteLockExclusive()
+{
     const char* func_num = "0x000C";
     const char* func_name = "ExAcquireReadWriteLockExclusive";
     BOOL tests_passed = 1;

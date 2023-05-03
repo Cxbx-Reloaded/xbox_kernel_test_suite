@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_PhyInitialize(){
+void test_PhyInitialize()
+{
     /* FIXME: This is a stub! implement this function! */
 }

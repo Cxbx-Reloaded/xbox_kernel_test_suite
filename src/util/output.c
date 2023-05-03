@@ -11,7 +11,8 @@
 
 static HANDLE output_filehandle = INVALID_HANDLE_VALUE;
 
-void print(char* str, ...){
+void print(char* str, ...)
+{
     va_list args;
     char buffer[500];
     va_start (args, str);
@@ -34,13 +35,18 @@ void print(char* str, ...){
     );
 }
 
-void print_test_header(const char* func_num, const char* func_name) {
+void print_test_header(
+    const char* func_num,
+    const char* func_name)
+{
     print("%s - %s: Tests Starting", func_num, func_name);
 }
 
 void print_test_footer(
-    const char* func_num, const char* func_name, BOOL tests_passed
-) {
+    const char* func_num,
+    const char* func_name,
+    BOOL tests_passed)
+{
     if(tests_passed) {
         print("%s - %s: All tests PASSED", func_num, func_name);
     }
@@ -49,7 +55,8 @@ void print_test_footer(
     }
 }
 
-void open_output_file(char* file_path) {
+void open_output_file(char* file_path)
+{
     debugPrint("Creating file %s", file_path);
     output_filehandle = CreateFile(
         file_path,
@@ -66,7 +73,10 @@ void open_output_file(char* file_path) {
     }
 }
 
-int write_to_output_file(void* data_to_print, DWORD num_bytes_to_print) {
+int write_to_output_file(
+    void* data_to_print,
+    DWORD num_bytes_to_print)
+{
     DWORD bytes_written;
     BOOL ret = WriteFile(
         output_filehandle,
@@ -86,7 +96,8 @@ int write_to_output_file(void* data_to_print, DWORD num_bytes_to_print) {
     return ret;
 }
 
-BOOL close_output_file() {
+BOOL close_output_file()
+{
     BOOL ret = CloseHandle(output_filehandle);
     if(!ret) {
         debugPrint("ERROR: Could not close output file");

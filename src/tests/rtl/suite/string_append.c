@@ -9,7 +9,8 @@
 #include "assertions/rtl.h"
 
 // Odd behavior of this function: A terminating NULL character '\0' is not added to the end of the appended string.
-void test_RtlAppendStringToString(){
+void test_RtlAppendStringToString()
+{
     const char* func_num = "0x0105";
     const char* func_name = "RtlAppendStringToString";
     BOOL tests_passed = 1;
@@ -71,7 +72,8 @@ void test_RtlAppendStringToString(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlAppendUnicodeStringToString(){
+void test_RtlAppendUnicodeStringToString()
+{
     const char* func_num = "0x0106";
     const char* func_name = "RtlAppendUnicodeStringToString";
     BOOL tests_passed = 1;
@@ -116,7 +118,8 @@ void test_RtlAppendUnicodeStringToString(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlAppendUnicodeToString(){
+void test_RtlAppendUnicodeToString()
+{
     const char* func_num = "0x0107";
     const char* func_name = "RtlAppendUnicodeToString";
     BOOL tests_passed = 1;

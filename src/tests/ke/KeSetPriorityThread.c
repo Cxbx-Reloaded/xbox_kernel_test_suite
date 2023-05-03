@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeSetPriorityThread(){
+void test_KeSetPriorityThread()
+{
     /* FIXME: This is a stub! implement this function! */
 }

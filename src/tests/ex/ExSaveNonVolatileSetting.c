@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_ExSaveNonVolatileSetting(){
+void test_ExSaveNonVolatileSetting()
+{
     /* FIXME: This is a stub! implement this function! */
 }

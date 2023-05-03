@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoRemoveShareAccess(){
+void test_IoRemoveShareAccess()
+{
     /* FIXME: This is a stub! implement this function! */
 }

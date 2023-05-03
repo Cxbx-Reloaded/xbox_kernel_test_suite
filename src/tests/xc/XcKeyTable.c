@@ -4,7 +4,8 @@
 #include "util/output.h"
 #include "assertions/xc.h"
 
-void test_XcKeyTable(){
+void test_XcKeyTable()
+{
 	const char* func_num = "0x015b";
 	const char* func_name = "XcKeyTable";
 	BOOL test_passed = 1;

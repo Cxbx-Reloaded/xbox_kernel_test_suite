@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeDelayExecutionThread(){
+void test_KeDelayExecutionThread()
+{
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_ExRaiseException(){
+void test_ExRaiseException()
+{
     /* FIXME: This is a stub! implement this function! */
 }

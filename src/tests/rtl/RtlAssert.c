@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_RtlAssert(){
+void test_RtlAssert()
+{
     /* FIXME: This is a stub! implement this function! */
 }

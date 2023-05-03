@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoCreateFile(){
+void test_IoCreateFile()
+{
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_MmMapIoSpace(){
+void test_MmMapIoSpace()
+{
     /* FIXME: This is a stub! implement this function! */
 }

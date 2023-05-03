@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeQueryInterruptTime(){
+void test_KeQueryInterruptTime()
+{
     /* FIXME: This is a stub! implement this function! */
 }

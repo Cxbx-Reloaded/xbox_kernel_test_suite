@@ -5,7 +5,8 @@
 #include "assertions/rtl.h"
 #include "assertions/ke.h"
 
-void test_RtlEnterCriticalSection(){
+void test_RtlEnterCriticalSection()
+{
     const char* func_num = "0x0115";
     const char* func_name = "RtlEnterCriticalSection";
     RTL_CRITICAL_SECTION crit_section;
@@ -45,7 +46,8 @@ void test_RtlEnterCriticalSection(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlEnterCriticalSectionAndRegion(){
+void test_RtlEnterCriticalSectionAndRegion()
+{
     const char* func_num = "0x0116";
     const char* func_name = "RtlEnterCriticalSectionAndRegion";
     RTL_CRITICAL_SECTION crit_section;
@@ -76,7 +78,8 @@ void test_RtlEnterCriticalSectionAndRegion(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlInitializeCriticalSection(){
+void test_RtlInitializeCriticalSection()
+{
     const char* func_num = "0x0123";
     const char* func_name = "RtlInitializeCriticalSection";
     RTL_CRITICAL_SECTION crit_section;
@@ -105,7 +108,8 @@ void test_RtlInitializeCriticalSection(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlLeaveCriticalSection(){
+void test_RtlLeaveCriticalSection()
+{
     const char* func_num = "0x0126";
     const char* func_name = "RtlLeaveCriticalSection";
     RTL_CRITICAL_SECTION crit_section;
@@ -145,7 +149,8 @@ void test_RtlLeaveCriticalSection(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlLeaveCriticalSectionAndRegion(){
+void test_RtlLeaveCriticalSectionAndRegion()
+{
     const char* func_num = "0x0127";
     const char* func_name = "RtlLeaveCriticalSectionAndRegion";
     RTL_CRITICAL_SECTION crit_section;
@@ -185,6 +190,7 @@ void test_RtlLeaveCriticalSectionAndRegion(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlTryEnterCriticalSection(){
+void test_RtlTryEnterCriticalSection()
+{
     /* FIXME: This is a stub! implement this function! */
 }

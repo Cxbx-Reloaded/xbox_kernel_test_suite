@@ -4,7 +4,8 @@
 #include "global.h" // for (passed|failed)_test vars
 #include "util/output.h"
 
-void test_RtlDowncaseUnicodeChar(){
+void test_RtlDowncaseUnicodeChar()
+{
     const char* func_num = "0x0113";
     const char* func_name = "RtlDowncaseUnicodeChar";
     BOOL tests_passed = 1;
@@ -28,11 +29,13 @@ void test_RtlDowncaseUnicodeChar(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlDowncaseUnicodeString(){
+void test_RtlDowncaseUnicodeString()
+{
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlLowerChar(){
+void test_RtlLowerChar()
+{
     const char* func_num = "0x0128";
     const char* func_name = "RtlLowerChar";
     BOOL tests_passed = 1;

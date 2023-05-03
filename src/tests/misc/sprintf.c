@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test__sprintf(){
+void test__sprintf()
+{
     /* FIXME: This is a stub! implement this function! */
 }

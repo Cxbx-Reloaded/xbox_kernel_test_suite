@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_HalReadWritePCISpace(){
+void test_HalReadWritePCISpace()
+{
     /* FIXME: This is a stub! implement this function! */
 }

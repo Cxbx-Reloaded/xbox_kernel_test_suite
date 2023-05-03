@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_ExQueryPoolBlockSize(){
+void test_ExQueryPoolBlockSize()
+{
     /* FIXME: This is a stub! implement this function! */
 }

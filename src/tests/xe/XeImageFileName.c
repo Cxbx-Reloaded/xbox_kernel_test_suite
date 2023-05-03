@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_XeImageFileName(){
+void test_XeImageFileName()
+{
     /* FIXME: This is a stub! implement this function! */
 }

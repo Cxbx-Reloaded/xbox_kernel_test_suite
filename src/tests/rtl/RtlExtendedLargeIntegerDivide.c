@@ -10,7 +10,8 @@
 //    to test this as it will cause real hardware to hang.
 // 3. Real hardware implements this as a binary divison algorithm that emits interesting results when negative
 //    inputs are provided. The expected_results below are taken from what real hardware produces as output.
-void test_RtlExtendedLargeIntegerDivide(){
+void test_RtlExtendedLargeIntegerDivide()
+{
     const char* func_num = "0x011A";
     const char* func_name = "RtlExtendedLargeIntegerDivide";
     BOOL tests_passed = 1;

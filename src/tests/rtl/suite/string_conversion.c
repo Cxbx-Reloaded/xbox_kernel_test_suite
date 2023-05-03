@@ -8,7 +8,8 @@
 #include "assertions/common.h"
 #include "assertions/rtl.h"
 
-void test_RtlAnsiStringToUnicodeString(){
+void test_RtlAnsiStringToUnicodeString()
+{
     const char* func_num = "0x0104";
     const char* func_name = "RtlAnsiStringToUnicodeString";
     BOOL tests_passed = 1;
@@ -49,8 +50,8 @@ static BOOL check_RtlCharToInteger_result(
     ULONG base,
     ULONG expected_result,
     ULONG result,
-    NTSTATUS retval
-) {
+    NTSTATUS retval)
+{
     if((retval == STATUS_SUCCESS) && (result == expected_result)) {
         print("  Test PASSED for input = %s, base = %u, expected_result = %d", input, base, expected_result);
         return 1;
@@ -60,7 +61,8 @@ static BOOL check_RtlCharToInteger_result(
     return 0;
 }
 
-void test_RtlCharToInteger(){
+void test_RtlCharToInteger()
+{
     const char* func_num = "0x010B";
     const char* func_name = "RtlCharToInteger";
     BOOL tests_passed = 1;
@@ -110,23 +112,28 @@ void test_RtlCharToInteger(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlIntegerToChar(){
+void test_RtlIntegerToChar()
+{
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlIntegerToUnicodeString(){
+void test_RtlIntegerToUnicodeString()
+{
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlMultiByteToUnicodeN(){
+void test_RtlMultiByteToUnicodeN()
+{
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlMultiByteToUnicodeSize(){
+void test_RtlMultiByteToUnicodeSize()
+{
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlUnicodeStringToAnsiString(){
+void test_RtlUnicodeStringToAnsiString()
+{
     const char* func_num = "0x0134";
     const char* func_name = "RtlUnicodeStringToAnsiString";
     BOOL tests_passed = 1;
@@ -277,14 +284,17 @@ void test_RtlUnicodeStringToAnsiString(){
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlUnicodeStringToInteger(){
+void test_RtlUnicodeStringToInteger()
+{
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlUnicodeToMultiByteN(){
+void test_RtlUnicodeToMultiByteN()
+{
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlUnicodeToMultiByteSize(){
+void test_RtlUnicodeToMultiByteSize()
+{
     /* FIXME: This is a stub! implement this function! */
 }

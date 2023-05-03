@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtFreeVirtualMemory(){
+void test_NtFreeVirtualMemory()
+{
     /* FIXME: This is a stub! implement this function! */
 }

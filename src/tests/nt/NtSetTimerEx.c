@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtSetTimerEx(){
+void test_NtSetTimerEx()
+{
     /* FIXME: This is a stub! implement this function! */
 }

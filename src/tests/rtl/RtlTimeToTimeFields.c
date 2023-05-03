@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_RtlTimeToTimeFields(){
+void test_RtlTimeToTimeFields()
+{
     /* FIXME: This is a stub! implement this function! */
 }

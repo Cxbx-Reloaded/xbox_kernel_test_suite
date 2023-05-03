@@ -2,10 +2,12 @@
 
 #include "util/output.h"
 
-void test_RtlRaiseException(){
+void test_RtlRaiseException()
+{
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlRaiseStatus(){
+void test_RtlRaiseStatus()
+{
     /* FIXME: This is a stub! implement this function! */
 }

@@ -4,8 +4,8 @@
 BOOL assert_NTSTATUS(
     NTSTATUS status,
     NTSTATUS expected_status,
-    const char* func_name
-) {
+    const char* func_name)
+{
     ASSERT_HEADER
     if(status != expected_status) {
         print(

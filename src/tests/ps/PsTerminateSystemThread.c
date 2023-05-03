@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_PsTerminateSystemThread(){
+void test_PsTerminateSystemThread()
+{
     /* FIXME: This is a stub! implement this function! */
 }

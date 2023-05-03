@@ -3,7 +3,8 @@
 
 #include "util/output.h"
 
-void test_RtlZeroMemory(){
+void test_RtlZeroMemory()
+{
     const char* func_num = "0x0140";
     const char* func_name = "RtlZeroMemory";
     BOOL tests_passed = 1;

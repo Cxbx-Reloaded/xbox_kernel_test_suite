@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_HalInitiateShutdown(){
+void test_HalInitiateShutdown()
+{
     /* FIXME: This is a stub! implement this function! */
 }

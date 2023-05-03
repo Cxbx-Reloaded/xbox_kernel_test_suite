@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_PsQueryStatistics(){
+void test_PsQueryStatistics()
+{
     /* FIXME: This is a stub! implement this function! */
 }

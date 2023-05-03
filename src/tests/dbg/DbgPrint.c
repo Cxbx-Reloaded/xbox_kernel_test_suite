@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_DbgPrint(){
+void test_DbgPrint()
+{
     /* FIXME: This is a stub! implement this function! */
 }

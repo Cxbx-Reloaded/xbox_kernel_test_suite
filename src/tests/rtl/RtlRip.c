@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_RtlRip(){
+void test_RtlRip()
+{
     /* FIXME: This is a stub! implement this function! */
 }

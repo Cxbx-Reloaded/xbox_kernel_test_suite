@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoFreeIrp(){
+void test_IoFreeIrp()
+{
     /* FIXME: This is a stub! implement this function! */
 }

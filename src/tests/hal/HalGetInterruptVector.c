@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_HalGetInterruptVector(){
+void test_HalGetInterruptVector()
+{
     /* FIXME: This is a stub! implement this function! */
 }

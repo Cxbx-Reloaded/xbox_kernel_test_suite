@@ -3,7 +3,8 @@
 #include "assertions/ke.h"
 #include "util/output.h"
 
-void test_KeEnterCriticalRegion(){
+void test_KeEnterCriticalRegion()
+{
     const char* func_num = "0x0065";
     const char* func_name = "KeEnterCriticalRegion";
     BOOL tests_passed = 1;

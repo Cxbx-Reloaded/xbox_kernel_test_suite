@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_XcUpdateCrypto(){
+void test_XcUpdateCrypto()
+{
 	/* FIXME: This is a stub! implement this function! */
 }

@@ -3,7 +3,8 @@
 #include "util/output.h"
 #include "assertions/rtl.h"
 
-void test_RtlFreeUnicodeString(){
+void test_RtlFreeUnicodeString()
+{
     const char* func_num = "0x011F";
     const char* func_name = "RtlFreeUnicodeString";
     BOOL tests_passed = 1;

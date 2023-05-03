@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtWaitForSingleObjectEx(){
+void test_NtWaitForSingleObjectEx()
+{
     /* FIXME: This is a stub! implement this function! */
 }

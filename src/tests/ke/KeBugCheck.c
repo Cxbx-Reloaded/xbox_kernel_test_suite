@@ -2,6 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeBugCheck(){
+void test_KeBugCheck()
+{
     /* FIXME: This is a stub! implement this function! */
 }

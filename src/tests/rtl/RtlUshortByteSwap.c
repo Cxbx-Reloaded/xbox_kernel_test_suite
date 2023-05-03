@@ -4,7 +4,8 @@
 #include "global.h" // for (passed|failed)_test vars
 #include "util/output.h"
 
-void test_RtlUshortByteSwap(){
+void test_RtlUshortByteSwap()
+{
     const char* func_num = "0x013E";
     const char* func_name = "RtlUshortByteSwap";
     BOOL tests_passed = 1;

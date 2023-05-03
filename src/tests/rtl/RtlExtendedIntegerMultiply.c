@@ -4,7 +4,8 @@
 #include "global.h" // for (passed|failed)_test vars
 #include "util/output.h"
 
-void test_RtlExtendedIntegerMultiply(){
+void test_RtlExtendedIntegerMultiply()
+{
     const char* func_num = "0x0119";
     const char* func_name = "RtlExtendedIntegerMultiply";
     BOOL tests_passed = 1;

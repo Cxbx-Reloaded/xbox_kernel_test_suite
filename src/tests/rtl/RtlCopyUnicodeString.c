@@ -4,7 +4,8 @@
 #include "util/output.h"
 #include "assertions/rtl.h"
 
-void test_RtlCopyUnicodeString(){
+void test_RtlCopyUnicodeString()
+{
     const char* func_num = "0x0111";
     const char* func_name = "RtlCopyUnicodeString";
     BOOL tests_passed = 1;
