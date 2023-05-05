@@ -30,6 +30,7 @@ static void setDpcRoutineActive(ULONG setter)
 
 static KDPC dpcObject;
 static BOOL dpc_called;
+static ULONG dpc_executing;
 static void __stdcall dpc_callback(
 	IN KDPC* Dpc,
 	IN PVOID DeferredContext,
@@ -40,6 +41,11 @@ static void __stdcall dpc_callback(
     // DPC called variable
     if (SystemArgument1 && (DWORD)SystemArgument1 > 0xFF) {
         *(BOOL*)SystemArgument1 = TRUE;
+    }
+
+    // Request KeIsExecutingDpc return value
+    if (SystemArgument2 && (DWORD)SystemArgument2 > 0xFF) {
+        *(ULONG*)SystemArgument2 = KeIsExecutingDpc();
     }
 }
 
@@ -174,7 +180,56 @@ void test_KeInsertQueueDpc()
 
 void test_KeIsExecutingDpc()
 {
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x0079";
+    const char* func_name = "KeIsExecutingDpc";
+    BOOL test_passed = 1;
+    print_test_header(func_num, func_name);
+
+    // Initialize test
+    KeInitializeDpc(&dpcObject, dpc_callback, NULL);
+    KDPC restore_dpc_object = dpcObject;
+
+    // Test direct call without additional steps
+    dpc_executing = KeIsExecutingDpc();
+    GEN_CHECK(dpc_called, FALSE, "dpc_called");
+    GEN_CHECK(dpc_executing, FALSE, "dpc_executing");
+
+    // Reset test
+    dpc_called = FALSE;
+    dpc_executing = FALSE;
+
+    // Test insertion & executed DPC callback within KeInsertQueueDpc function
+    BOOLEAN inserted = KeInsertQueueDpc(&dpcObject, &dpc_called, &dpc_executing);
+    GEN_CHECK(dpc_called, TRUE, "callback.dpc_called");
+    GEN_CHECK((dpc_executing != FALSE), TRUE, "callback.dpc_executing");
+
+    // Reset test
+    dpc_called = FALSE;
+    dpc_executing = FALSE;
+
+    // Test manual raise to verify if it thinks is running in DPC part 1
+    KIRQL oldIrql = KfRaiseIrql(DPC_DISPATCH_LEVEL);
+    dpc_executing = KeIsExecutingDpc();
+    GEN_CHECK(dpc_called, FALSE, "dpc_called");
+    GEN_CHECK(dpc_executing, FALSE, "dpc_executing");
+    KfLowerIrql(oldIrql);
+
+    // Reset test
+    dpc_called = FALSE;
+    dpc_executing = FALSE;
+
+    // Test manual raise to verify if it thinks is running in DPC part 2
+    oldIrql = KeRaiseIrqlToDpcLevel();
+    dpc_executing = KeIsExecutingDpc();
+    GEN_CHECK(dpc_called, FALSE, "dpc_called");
+    GEN_CHECK(dpc_executing, FALSE, "dpc_executing");
+    KfLowerIrql(oldIrql);
+
+    // Reset test
+    dpc_called = FALSE;
+    dpc_executing = FALSE;
+
+    print_test_footer(func_num, func_name, test_passed);
 }
 
 void test_KeRemoveQueueDpc()
