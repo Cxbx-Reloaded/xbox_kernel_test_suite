@@ -9,6 +9,7 @@
 
 typedef struct _dpc_test {
     BOOLEAN inserted;
+    BOOLEAN removal;
     BOOL dpc_called;
     KDPC dpcObject;
 } dpc_test;
@@ -234,5 +235,45 @@ void test_KeIsExecutingDpc()
 
 void test_KeRemoveQueueDpc()
 {
-    /* FIXME: This is a stub! implement this function! */
+    const char* func_num = "0x0089";
+    const char* func_name = "KeRemoveQueueDpc";
+    BOOL test_passed = 1;
+    print_test_header(func_num, func_name);
+
+    // Initialize test
+    KeInitializeDpc(&dpcObject, dpc_callback, NULL);
+    KDPC restore_dpc_object = dpcObject;
+    ULONG orgDpcRoutineActive = getDpcRoutineActive();
+
+    // Test as if DPC object is remain in queue line.
+    // HACK: Disable internal trigger for DPC callback function.
+    setDpcRoutineActive(1);
+    dpc_test test1;
+    test1.inserted = KeInsertQueueDpc(&dpcObject, &dpc_called, (PVOID)0x50);
+    test1.dpc_called = dpc_called;
+
+    dpc_test test2;
+    test2.removal = KeRemoveQueueDpc(&dpcObject);
+    test2.dpc_called = dpc_called;
+
+    dpc_test test3;
+    test3.removal = KeRemoveQueueDpc(&dpcObject);
+    test3.dpc_called = dpc_called;
+
+    // Reset test
+    dpc_called = FALSE;
+    dpcObject = restore_dpc_object;
+    setDpcRoutineActive(orgDpcRoutineActive);
+
+    // Print all failure tests outside of unsafe codes
+    GEN_CHECK(test1.inserted, TRUE, "1:inserted");
+    GEN_CHECK(test1.dpc_called, FALSE, "1:dpc_called");
+
+    GEN_CHECK(test2.removal, TRUE, "2:removal");
+    GEN_CHECK(test2.dpc_called, FALSE, "2:dpc_called");
+
+    GEN_CHECK(test3.removal, FALSE, "3:removal");
+    GEN_CHECK(test3.dpc_called, FALSE, "3:dpc_called");
+
+    print_test_footer(func_num, func_name, test_passed);
 }
