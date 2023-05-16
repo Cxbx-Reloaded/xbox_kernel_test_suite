@@ -1,7 +1,10 @@
+#include <xboxkrnl/xboxkrnl.h>
 #include <string.h>
 
 #include "global.h"
 #include "output.h"
+#include "assertion_defines.h"
+#include "xc_assertions.h"
 
 
 // Public xbox habibi key (taken from xbedump of XQEMU)
@@ -97,21 +100,6 @@ unsigned char encrypted_string[] = {
 	0x67,0x0d,0x7a,0x7b, 0x00,0x00,0x00,0x00, 0x00,0x00,0x00,0x00
 };
 
-int validate_hashed_result(PUCHAR input, size_t len, PUCHAR res) {
-	unsigned char sha1_ctx[116] = { 0 };
-	unsigned char digest[20]    = { 0 };
-	
-	XcSHAInit(sha1_ctx);
-	XcSHAUpdate(sha1_ctx, input, len);
-	XcSHAFinal(sha1_ctx, digest);
-	if(memcmp(digest, res, 20) == 0) {
-		return 1;
-	}
-	else {
-		return 0;
-	}
-}
-
 void test_XcSHAInit(){
     /* FIXME: This is a stub! implement this function! */
 }
@@ -139,7 +127,7 @@ void test_XcHMAC(){
 void test_XcPKEncPublic(){
     const char* func_num = "0x0155";
     const char* func_name = "XcPKEncPublic";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
 	ULONG ret = 0;
 	UCHAR input_buffer[264]          = { 0 };
 	UCHAR output_buffer[264]         = { 0 };
@@ -154,14 +142,16 @@ void test_XcPKEncPublic(){
 	// Correct usage
 	memcpy(input_buffer, "\x45\x6e\x63\x72\x79\x70\x74\x20\x6d\x65", 10); // "Encrypt me"
 	ret = XcPKEncPublic(pub_key, input_buffer, output_buffer);
-	if(ret == 1 && validate_hashed_result(output_buffer, sizeof(output_buffer),
-	(PUCHAR)"\x1a\x31\x40\xee\x8e\x0b\x07\xff\x36\xe3\xb1\x8e\xc8\x87\xe2\xd7\xb1\x63\x01\xe4")) {
-		tests_passed &= 1;
+	if(ret == 1) {
+		test_passed &= assert_hashed_result(output_buffer,
+		                                    sizeof(output_buffer),
+		                                    (PUCHAR)"\x1a\x31\x40\xee\x8e\x0b\x07\xff\x36\xe3\xb1\x8e\xc8\x87\xe2\xd7\xb1\x63\x01\xe4",
+		                                    "2048 key bit");
 	}
 	else {
-		tests_passed &= 0;
+		test_passed &= 0;
 	}
-	
+
 	// Wrong magic string
 	memcpy(pub_key, bogus_data, 4);
 	memset(input_buffer, 0, 264);
@@ -170,10 +160,10 @@ void test_XcPKEncPublic(){
 	ret = XcPKEncPublic(pub_key, input_buffer, output_buffer);
 	memset(input_buffer, 0, 264);
 	if(ret == 0 && memcmp(output_buffer, input_buffer, 264) == 0) {
-		tests_passed &= 1;
+		test_passed &= 1;
 	}
 	else {
-		tests_passed &= 0;
+		test_passed &= 0;
 	}
 	
 	// Using bogus_data as modulus buffer size freezes (crash?) my xbox so I won't test it
@@ -184,12 +174,14 @@ void test_XcPKEncPublic(){
 	memcpy(input_buffer, "\x45\x6e\x63\x72\x79\x70\x74\x20\x6d\x65", 10);
 	memset(output_buffer, 0, 264);
 	ret = XcPKEncPublic(pub_key, input_buffer, output_buffer);
-	if(ret == 1 && validate_hashed_result(output_buffer, sizeof(output_buffer),
-	(PUCHAR)"\x0c\xd6\x8f\x80\xc2\x04\xca\x68\x0b\x9d\x21\x37\x1c\xcb\x46\x32\x68\xb2\x8a\x92")) {
-		tests_passed &= 1;
+	if(ret == 1) {
+		test_passed &= assert_hashed_result(output_buffer,
+		                                    sizeof(output_buffer),
+		                                    (PUCHAR)"\x0c\xd6\x8f\x80\xc2\x04\xca\x68\x0b\x9d\x21\x37\x1c\xcb\x46\x32\x68\xb2\x8a\x92",
+		                                    "1024 key bit");
 	}
 	else {
-		tests_passed &= 0;
+		test_passed &= 0;
 	}
 	
 	// Wrong max encode size -> same result as if original value
@@ -199,22 +191,24 @@ void test_XcPKEncPublic(){
 	memcpy(input_buffer, "\x45\x6e\x63\x72\x79\x70\x74\x20\x6d\x65", 10);
 	memset(output_buffer, 0, 264);
 	ret = XcPKEncPublic(pub_key, input_buffer, output_buffer);
-	if(ret == 1 && validate_hashed_result(output_buffer, sizeof(output_buffer),
-	(PUCHAR)"\x1a\x31\x40\xee\x8e\x0b\x07\xff\x36\xe3\xb1\x8e\xc8\x87\xe2\xd7\xb1\x63\x01\xe4")) {
-		tests_passed &= 1;
+	if(ret == 1) {
+		test_passed &= assert_hashed_result(output_buffer,
+		                                    sizeof(output_buffer),
+		                                    (PUCHAR)"\x1a\x31\x40\xee\x8e\x0b\x07\xff\x36\xe3\xb1\x8e\xc8\x87\xe2\xd7\xb1\x63\x01\xe4",
+		                                    "wrong max encode size");
 	}
 	else {
-		tests_passed &= 0;
+		test_passed &= 0;
 	}
 	memcpy(&pub_key[12], original_max_encode_size, 4);
 	
-	print_test_footer(func_num, func_name, tests_passed);
+	print_test_footer(func_num, func_name, test_passed);
 }
 
 void test_XcPKDecPrivate(){
 	const char* func_num = "0x0156";
     const char* func_name = "XcPKDecPrivate";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
 	ULONG ret = 0;
 	UCHAR input_buffer[264]          = { 0 };
 	UCHAR output_buffer[264]         = { 0 };
@@ -230,10 +224,10 @@ void test_XcPKDecPrivate(){
 	memcpy(input_buffer, encrypted_string, sizeof(encrypted_string));
 	ret = XcPKDecPrivate(prv_key, input_buffer, output_buffer);
 	if(ret == 1) {
-		tests_passed &= 1;
+		test_passed &= 1;
 	}
 	else {
-		tests_passed &= 0;
+		test_passed &= 0;
 	}
 	
 	// Wrong magic string
@@ -244,20 +238,20 @@ void test_XcPKDecPrivate(){
 	ret = XcPKDecPrivate(prv_key, input_buffer, output_buffer);
 	memset(input_buffer, 0, 264);
 	if(ret == 0 && memcmp(output_buffer, input_buffer, 264) == 0) {
-		tests_passed &= 1;
+		test_passed &= 1;
 	}
 	else {
-		tests_passed &= 0;
+		test_passed &= 0;
 	}
 	memcpy(prv_key, original_magic_string, 4);
 	
-	print_test_footer(func_num, func_name, tests_passed);
+	print_test_footer(func_num, func_name, test_passed);
 }
 
 void test_XcPKGetKeyLen(){
     const char* func_num = "0x0157";
     const char* func_name = "XcPKGetKeyLen";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
 	ULONG ret = 0;
 	UCHAR original_key_size[] = { 0x08,0x01,0x00,0x00 };
 	UCHAR bogus_data[]        = { 0xcc,0xcc,0xcc,0xcc };
@@ -266,40 +260,25 @@ void test_XcPKGetKeyLen(){
 	
 	// Public key
 	ret = XcPKGetKeyLen(pub_key);
-	if(ret == 0x108) {
-        tests_passed &= 1;
-	}
-    else {
-        tests_passed &= 0;
-	}
+	GEN_CHECK(ret, 0x108, "pub_key_len")
 	
 	// Wrong key lenght
 	memcpy(&pub_key[4], bogus_data, 4);
 	ret = XcPKGetKeyLen(pub_key);
-    if(ret == 0xcccccccc) {
-        tests_passed &= 1;
-	}
-    else {
-        tests_passed &= 0;
-	}
+	GEN_CHECK(ret, 0xCCCCCCCC, "pub_key_len (bad)")
 	
 	// Private key
 	memcpy(&pub_key[4], original_key_size, 4);
 	ret = XcPKGetKeyLen(prv_key);
-	if(ret == 0x108) {
-        tests_passed &= 1;
-	}
-    else {
-        tests_passed &= 0;
-	}
+	GEN_CHECK(ret, 0x108, "prv_key_len")
 	
-	print_test_footer(func_num, func_name, tests_passed);
+	print_test_footer(func_num, func_name, test_passed);
 }
 
 void test_XcVerifyPKCS1Signature(){
 	const char* func_num = "0x0158";
     const char* func_name = "XcVerifyPKCS1Signature";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
 	ULONG ret = 0;
 	UCHAR digest[]     = { 0xd2,0x98,0x3c,0x52,0x96,0x43,0x95,0x2f,0xf9,0x5b,0x9a,0xc3,0x67,0x4c,0xb4,0x3a,0xfb,0x3d,0x3d,0x69 };
     UCHAR digest_inv[] = { 0x69,0x3d,0x3d,0xfb,0x3a,0xb4,0x4c,0x67,0xc3,0x9a,0x5b,0xf9,0x2f,0x95,0x43,0x96,0x52,0x3c,0x98,0xd2 };
@@ -320,27 +299,27 @@ void test_XcVerifyPKCS1Signature(){
 	
 	ret = XcVerifyPKCS1Signature(signature, XePublicKeyData, digest);
 	if(ret == 1) {
-        tests_passed &= 1;
+        test_passed &= 1;
 	}
     else {
-        tests_passed &= 0;
+        test_passed &= 0;
 	}
 	
 	ret = XcVerifyPKCS1Signature(signature, XePublicKeyData, digest_inv);
 	if(ret == 0) {
-        tests_passed &= 1;
+        test_passed &= 1;
 	}
     else {
-        tests_passed &= 0;
+        test_passed &= 0;
 	}
 
-	print_test_footer(func_num, func_name, tests_passed);
+	print_test_footer(func_num, func_name, test_passed);
 }
 
 void test_XcModExp(){
 	const char* func_num = "0x0159";
     const char* func_name = "XcModExp";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
 	ULONG ret = 0;
 	ULONG output = 0;
 	ULONG a      = 0x10;
@@ -351,41 +330,41 @@ void test_XcModExp(){
 	
 	ret = XcModExp(&output, &a, &b, &c, 4/sizeof(ULONG));
 	if(ret == 1 && output == 0x10) {
-        tests_passed &= 1;
+        test_passed &= 1;
 	}
     else {
-        tests_passed &= 0;
+        test_passed &= 0;
 	}
 
 	// Passing a size of zero freezes (crash?) my xbox so I won't test it
 	
-	print_test_footer(func_num, func_name, tests_passed);
+	print_test_footer(func_num, func_name, test_passed);
 }
 
 void test_XcDESKeyParity(){
     const char* func_num = "0x015a";
     const char* func_name = "XcDESKeyParity";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
 	UCHAR key_des[8] = { 0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17 };
 	
 	print_test_header(func_num, func_name);
 	
 	XcDESKeyParity(key_des, sizeof(key_des));
 	if(memcmp(key_des, "\x10\x10\x13\x13\x15\x15\x16\x16", 8) == 0){
-        tests_passed &= 1;
+        test_passed &= 1;
 	}
     else {
-        tests_passed &= 0;
+        test_passed &= 0;
 	}
 
-	print_test_footer(func_num, func_name, tests_passed);
+	print_test_footer(func_num, func_name, test_passed);
 }
 
 void test_XcKeyTable(){
     const char* func_num = "0x015b";
     const char* func_name = "XcKeyTable";
-    BOOL tests_passed = 1;
-	ULONG chiper_selector;
+    BOOL test_passed = 1;
+	ULONG cipher_selector;
 	UCHAR key_table_des[128]    = { 0 };
 	UCHAR key_table_3des[128*3] = { 0 };
 	UCHAR key_des[8]            = { 0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17 };
@@ -397,50 +376,41 @@ void test_XcKeyTable(){
 	
 	print_test_header(func_num, func_name);
 	
-	// Des
+	// DES
 	XcDESKeyParity(key_des, sizeof(key_des));
-	chiper_selector = 0;
-	XcKeyTable(chiper_selector, key_table_des, key_des);
-	if(validate_hashed_result(key_table_des, sizeof(key_table_des),
-	(PUCHAR)"\xf4\x45\x75\x1a\xbd\xe0\x89\x3b\xd8\x6f\x5d\x02\xf3\x87\x83\x1f\x7d\xb8\x39\xc4")) {
-		tests_passed &= 1;
-	}
-	else {
-		tests_passed &= 0;
-	}
+	cipher_selector = 0;
+	XcKeyTable(cipher_selector, key_table_des, key_des);
+	test_passed &= assert_hashed_result(key_table_des,
+	                                    sizeof(key_table_des),
+	                                    (PUCHAR)"\xf4\x45\x75\x1a\xbd\xe0\x89\x3b\xd8\x6f\x5d\x02\xf3\x87\x83\x1f\x7d\xb8\x39\xc4",
+	                                    "DES");
 	
 	// 3des
 	XcDESKeyParity(key_3des, sizeof(key_3des));
-	chiper_selector = 1;
-	XcKeyTable(chiper_selector, key_table_3des, key_3des);
-	if(validate_hashed_result(key_table_3des, sizeof(key_table_3des),
-	(PUCHAR)"\xc2\xcd\x96\x3a\x00\x63\x33\x82\xeb\x7c\x25\x78\x8e\x4e\x47\xa6\x52\x72\x1f\xec")) {
-		tests_passed &= 1;
-	}
-	else {
-		tests_passed &= 0;
-	}
+	cipher_selector = 1;
+	XcKeyTable(cipher_selector, key_table_3des, key_3des);
+	test_passed &= assert_hashed_result(key_table_3des,
+	                                    sizeof(key_table_3des),
+	                                    (PUCHAR)"\xc2\xcd\x96\x3a\x00\x63\x33\x82\xeb\x7c\x25\x78\x8e\x4e\x47\xa6\x52\x72\x1f\xec",
+	                                    "3DES");
 	
-	// Bogus chiper selector value (3des)
+	// Bogus cipher selector value (3DES)
 	memset(key_table_3des, 0, sizeof(key_table_3des));
-	chiper_selector = 0xffffffff;
-	XcKeyTable(chiper_selector, key_table_3des, key_3des);
-	if(validate_hashed_result(key_table_3des, sizeof(key_table_3des),
-	(PUCHAR)"\xc2\xcd\x96\x3a\x00\x63\x33\x82\xeb\x7c\x25\x78\x8e\x4e\x47\xa6\x52\x72\x1f\xec")) {
-		tests_passed &= 1;
-	}
-	else {
-		tests_passed &= 0;
-	}
+	cipher_selector = 0xFFFFFFFF;
+	XcKeyTable(cipher_selector, key_table_3des, key_3des);
+	test_passed &= assert_hashed_result(key_table_3des,
+	                                    sizeof(key_table_3des),
+	                                    (PUCHAR)"\xc2\xcd\x96\x3a\x00\x63\x33\x82\xeb\x7c\x25\x78\x8e\x4e\x47\xa6\x52\x72\x1f\xec",
+	                                    "bogus cipher selector (3DES)");
 	
-	print_test_footer(func_num, func_name, tests_passed);
+	print_test_footer(func_num, func_name, test_passed);
 }
 
 void test_XcBlockCrypt(){
     const char* func_num = "0x015c";
     const char* func_name = "XcBlockCrypt";
-    BOOL tests_passed = 1;
-	ULONG chiper_selector;
+    BOOL test_passed = 1;
+	ULONG cipher_selector;
 	UCHAR input_buffer[8]       = { 0x54,0x65,0x73,0x74 }; // "Test"
 	UCHAR output_buffer[8]      = { 0 };
 	UCHAR key_table_des[128]    = { 0 };
@@ -454,118 +424,94 @@ void test_XcBlockCrypt(){
 	
 	print_test_header(func_num, func_name);
 	
-	// Des - enc
+	// DES encrypt
 	XcDESKeyParity(key_des, sizeof(key_des));
-	chiper_selector = 0;
-	XcKeyTable(chiper_selector, key_table_des, key_des);
-	XcBlockCrypt(chiper_selector, output_buffer, input_buffer, key_table_des, 1);
-	if(validate_hashed_result(output_buffer, sizeof(output_buffer),
-	(PUCHAR)"\x2a\x6c\x52\x95\x2c\x94\x23\xe7\x88\x30\x72\x85\xd4\xca\x40\xe4\x56\xe8\xb8\x60")) {
-		tests_passed &= 1;
-	}
-	else {
-		tests_passed &= 0;
-	}
+	cipher_selector = 0;
+	XcKeyTable(cipher_selector, key_table_des, key_des);
+	XcBlockCrypt(cipher_selector, output_buffer, input_buffer, key_table_des, 1);
+	test_passed &= assert_hashed_result(output_buffer,
+	                                    sizeof(output_buffer),
+	                                    (PUCHAR)"\x2a\x6c\x52\x95\x2c\x94\x23\xe7\x88\x30\x72\x85\xd4\xca\x40\xe4\x56\xe8\xb8\x60",
+	                                    "DES encrypt");
 	
-	// Des - dec
+	// DES decrypt
 	memcpy(input_buffer, output_buffer, sizeof(input_buffer));
 	memset(output_buffer, 0, sizeof(output_buffer));
-	XcBlockCrypt(chiper_selector, output_buffer, input_buffer, key_table_des, 0);
-	if(validate_hashed_result(output_buffer, sizeof(output_buffer),
-	(PUCHAR)"\x40\x34\x58\xa2\x26\xff\x6b\x3e\xa6\x49\xde\xc2\x34\x05\x7a\xdf\x58\x57\x38\x4a")) {
-		tests_passed &= 1;
-	}
-	else {
-		tests_passed &= 0;
-	}
+	XcBlockCrypt(cipher_selector, output_buffer, input_buffer, key_table_des, 0);
+	test_passed &= assert_hashed_result(output_buffer,
+	                                    sizeof(output_buffer),
+	                                    (PUCHAR)"\x40\x34\x58\xa2\x26\xff\x6b\x3e\xa6\x49\xde\xc2\x34\x05\x7a\xdf\x58\x57\x38\x4a",
+	                                    "DES decrypt");
 	
-	// Bogus operation value (des)
+	// Bogus operation value (DES)
 	memcpy(input_buffer, output_buffer, sizeof(input_buffer));
 	memset(output_buffer, 0, sizeof(output_buffer));
-	XcBlockCrypt(chiper_selector, output_buffer, input_buffer, key_table_des, 0xffffffff);
-	if(validate_hashed_result(output_buffer, sizeof(output_buffer),
-	(PUCHAR)"\x2a\x6c\x52\x95\x2c\x94\x23\xe7\x88\x30\x72\x85\xd4\xca\x40\xe4\x56\xe8\xb8\x60")) {
-		tests_passed &= 1;
-	}
-	else {
-		tests_passed &= 0;
-	}
+	XcBlockCrypt(cipher_selector, output_buffer, input_buffer, key_table_des, 0xFFFFFFFF); 
+	test_passed &= assert_hashed_result(output_buffer,
+	                                    sizeof(output_buffer),
+	                                    (PUCHAR)"\x2a\x6c\x52\x95\x2c\x94\x23\xe7\x88\x30\x72\x85\xd4\xca\x40\xe4\x56\xe8\xb8\x60",
+	                                    "DES bogus operation");
 
-	// 3des - enc
+	// 3DES encrypt
 	memset(input_buffer, 0, sizeof(input_buffer));
 	memcpy(input_buffer, "\x54\x65\x73\x74", 4);
 	memset(output_buffer, 0, sizeof(output_buffer));
 	XcDESKeyParity(key_3des, sizeof(key_3des));
-	chiper_selector = 1;
-	XcKeyTable(chiper_selector, key_table_3des, key_3des);
-	XcBlockCrypt(chiper_selector, output_buffer, input_buffer, key_table_3des, 1);
-	if(validate_hashed_result(output_buffer, sizeof(output_buffer),
-	(PUCHAR)"\x39\xfd\x7a\xbf\x54\xd2\x59\x30\xbd\x76\xf1\xe3\x75\xe0\xb4\x95\xea\x49\x33\x60")) {
-		tests_passed &= 1;
-	}
-	else {
-		tests_passed &= 0;
-	}
+	cipher_selector = 1;
+	XcKeyTable(cipher_selector, key_table_3des, key_3des);
+	XcBlockCrypt(cipher_selector, output_buffer, input_buffer, key_table_3des, 1);
+	test_passed &= assert_hashed_result(output_buffer,
+	                                    sizeof(output_buffer),
+	                                    (PUCHAR)"\x39\xfd\x7a\xbf\x54\xd2\x59\x30\xbd\x76\xf1\xe3\x75\xe0\xb4\x95\xea\x49\x33\x60",
+	                                    "3DES encrypt");
 	
-	// 3des - dec
+	// 3DES decrypt
 	memcpy(input_buffer, output_buffer, sizeof(input_buffer));
 	memset(output_buffer, 0, sizeof(output_buffer));
-	XcBlockCrypt(chiper_selector, output_buffer, input_buffer, key_table_3des, 0);
-	if(validate_hashed_result(output_buffer, sizeof(output_buffer),
-	(PUCHAR)"\x40\x34\x58\xa2\x26\xff\x6b\x3e\xa6\x49\xde\xc2\x34\x05\x7a\xdf\x58\x57\x38\x4a")) {
-		tests_passed &= 1;
-	}
-	else {
-		tests_passed &= 0;
-	}
+	XcBlockCrypt(cipher_selector, output_buffer, input_buffer, key_table_3des, 0);
+	test_passed &= assert_hashed_result(output_buffer,
+	                                    sizeof(output_buffer),
+	                                    (PUCHAR)"\x40\x34\x58\xa2\x26\xff\x6b\x3e\xa6\x49\xde\xc2\x34\x05\x7a\xdf\x58\x57\x38\x4a",
+	                                    "3DES decrypt");
 
-	// Bogus operation value (3des)
+	// Bogus operation value (3DES)
 	memset(input_buffer, 0, sizeof(input_buffer));
 	memcpy(input_buffer, "\x54\x65\x73\x74", 4);
 	memset(output_buffer, 0, sizeof(output_buffer));
-	XcBlockCrypt(chiper_selector, output_buffer, input_buffer, key_table_3des, 0xffffffff);
-	if(validate_hashed_result(output_buffer, sizeof(output_buffer),
-	(PUCHAR)"\xda\x5d\x18\x4f\xd1\x0f\x2e\x33\xa1\xd1\x29\xfe\x8b\x29\xc2\x7a\x48\x81\x3c\xa2")) {
-		tests_passed &= 1;
-	}
-	else {
-		tests_passed &= 0;
-	}
+	XcBlockCrypt(cipher_selector, output_buffer, input_buffer, key_table_3des, 0xFFFFFFFF);
+	test_passed &= assert_hashed_result(output_buffer,
+	                                    sizeof(output_buffer),
+	                                    (PUCHAR)"\xda\x5d\x18\x4f\xd1\x0f\x2e\x33\xa1\xd1\x29\xfe\x8b\x29\xc2\x7a\x48\x81\x3c\xa2",
+	                                    "3DES bogus operation");
 
-	// Bogus chiper selector value (3des-enc)
+	// Bogus cipher selector value (3DES encrypt)
 	memset(input_buffer, 0, sizeof(input_buffer));
 	memcpy(input_buffer, "\x54\x65\x73\x74", 4);
 	memset(output_buffer, 0, sizeof(output_buffer));
-	chiper_selector = 0xffffffff;
-	XcBlockCrypt(chiper_selector, output_buffer, input_buffer, key_table_3des, 1);
-	if(validate_hashed_result(output_buffer, sizeof(output_buffer),
-	(PUCHAR)"\x39\xfd\x7a\xbf\x54\xd2\x59\x30\xbd\x76\xf1\xe3\x75\xe0\xb4\x95\xea\x49\x33\x60")) {
-		tests_passed &= 1;
-	}
-	else {
-		tests_passed &= 0;
-	}
+	cipher_selector = 0xFFFFFFFF;
+	XcBlockCrypt(cipher_selector, output_buffer, input_buffer, key_table_3des, 1);
+	test_passed &= assert_hashed_result(output_buffer,
+	                                    sizeof(output_buffer),
+	                                    (PUCHAR)"\x39\xfd\x7a\xbf\x54\xd2\x59\x30\xbd\x76\xf1\xe3\x75\xe0\xb4\x95\xea\x49\x33\x60",
+	                                    "bogus cipher selector (3DES encrypt)");
 
-	// Bogus chiper selector value (3des-dec)
+	// Bogus cipher selector value (3DES decrypt)
 	memcpy(input_buffer, output_buffer, sizeof(input_buffer));
 	memset(output_buffer, 0, sizeof(output_buffer));
-	XcBlockCrypt(chiper_selector, output_buffer, input_buffer, key_table_3des, 0);
-	if(validate_hashed_result(output_buffer, sizeof(output_buffer),
-	(PUCHAR)"\x40\x34\x58\xa2\x26\xff\x6b\x3e\xa6\x49\xde\xc2\x34\x05\x7a\xdf\x58\x57\x38\x4a")) {
-		tests_passed &= 1;
-	}
-	else {
-		tests_passed &= 0;
-	}
+	XcBlockCrypt(cipher_selector, output_buffer, input_buffer, key_table_3des, 0);
+	test_passed &= assert_hashed_result(output_buffer,
+	                                    sizeof(output_buffer),
+	                                    (PUCHAR)"\x40\x34\x58\xa2\x26\xff\x6b\x3e\xa6\x49\xde\xc2\x34\x05\x7a\xdf\x58\x57\x38\x4a",
+	                                    "bogus cipher selector (3DES decrypt)");
 
-	print_test_footer(func_num, func_name, tests_passed);
+	print_test_footer(func_num, func_name, test_passed);
 }
 
 void test_XcBlockCryptCBC(){
     const char* func_num = "0x015d";
     const char* func_name = "XcBlockCryptCBC";
-    BOOL tests_passed = 1;
-	ULONG chiper_selector;
+    BOOL test_passed = 1;
+	ULONG cipher_selector;
 	UCHAR input_buffer[8*5]     = { 0x53,0x65,0x63,0x72,0x65,0x74,0x20,0x73,0x74,0x72,0x69,0x6e,0x67 }; // "Secret string"
 	UCHAR output_buffer[8*5]    = { 0 };
 	UCHAR iv[8]                 = { 0xcc,0xcc,0xcc,0xcc,0xcc,0xcc,0xcc,0xcc };
@@ -580,139 +526,112 @@ void test_XcBlockCryptCBC(){
 	
 	print_test_header(func_num, func_name);
 	
-	// Des - enc
+	// DES encrypt
 	XcDESKeyParity(key_des, sizeof(key_des));
-	chiper_selector = 0;
-	XcKeyTable(chiper_selector, key_table_des, key_des);
-	XcBlockCryptCBC(chiper_selector, sizeof(input_buffer), output_buffer, input_buffer, key_table_des, 1, iv);
-	if(validate_hashed_result(output_buffer, sizeof(output_buffer),
-	(PUCHAR)"\x70\xd9\x06\xb7\x88\x89\xca\x0a\x1f\x10\xa7\xcc\xc0\x5f\xf3\xfd\xa3\xd0\x9e\x79")) {
-		tests_passed &= 1;
-	}
-	else {
-		tests_passed &= 0;
-	}
+	cipher_selector = 0;
+	XcKeyTable(cipher_selector, key_table_des, key_des);
+	XcBlockCryptCBC(cipher_selector, sizeof(input_buffer), output_buffer, input_buffer, key_table_des, 1, iv);
+	test_passed &= assert_hashed_result(output_buffer,
+	                                    sizeof(output_buffer),
+	                                    (PUCHAR)"\x70\xd9\x06\xb7\x88\x89\xca\x0a\x1f\x10\xa7\xcc\xc0\x5f\xf3\xfd\xa3\xd0\x9e\x79",
+	                                    "DES encrypt");
 
-	// Des - dec
+	// DES decrypt
 	memcpy(input_buffer, output_buffer, sizeof(input_buffer));
 	memset(output_buffer, 0, sizeof(output_buffer));
 	memset(iv, 0xcc, sizeof(iv));
-	XcBlockCryptCBC(chiper_selector, sizeof(input_buffer), output_buffer, input_buffer, key_table_des, 0, iv);
-	if(validate_hashed_result(output_buffer, sizeof(output_buffer),
-	(PUCHAR)"\x8f\x11\x6d\xc7\x6a\xf3\xb1\x28\xa2\xca\x83\x0f\x1e\x1f\xe3\xc8\x4a\xe1\xe3\xce")) {
-		tests_passed &= 1;
-	}
-	else {
-		tests_passed &= 0;
-	}
+	XcBlockCryptCBC(cipher_selector, sizeof(input_buffer), output_buffer, input_buffer, key_table_des, 0, iv);
+	test_passed &= assert_hashed_result(output_buffer,
+	                                    sizeof(output_buffer),
+	                                    (PUCHAR)"\x8f\x11\x6d\xc7\x6a\xf3\xb1\x28\xa2\xca\x83\x0f\x1e\x1f\xe3\xc8\x4a\xe1\xe3\xce",
+	                                    "DES decrypt");
 
-	// Des - dec plaintext
+	// DES decrypt plaintext
 	memset(input_buffer, 0, sizeof(input_buffer));
 	memcpy(input_buffer, "\x53\x65\x63\x72\x65\x74\x20\x73\x74\x72\x69\x6e\x67", 13);
 	memset(output_buffer, 0, sizeof(output_buffer));
 	memset(iv, 0xcc, sizeof(iv));
-	XcBlockCryptCBC(chiper_selector, sizeof(input_buffer), output_buffer, input_buffer, key_table_des, 0, iv);
-	if(validate_hashed_result(output_buffer, sizeof(output_buffer),
-	(PUCHAR)"\x1f\x28\xfc\x62\x17\xc2\x46\xa5\x10\x8c\xf1\xd8\xc5\x7a\xf6\x24\x30\xf6\x48\xf5")) {
-		tests_passed &= 1;
-	}
-	else {
-		tests_passed &= 0;
-	}
+	XcBlockCryptCBC(cipher_selector, sizeof(input_buffer), output_buffer, input_buffer, key_table_des, 0, iv);
+	test_passed &= assert_hashed_result(output_buffer,
+	                                    sizeof(output_buffer),
+	                                    (PUCHAR)"\x1f\x28\xfc\x62\x17\xc2\x46\xa5\x10\x8c\xf1\xd8\xc5\x7a\xf6\x24\x30\xf6\x48\xf5",
+	                                    "DES decyption plaintext");
 
-	// Bogus operation value (des) -> same as decrypting the plaintext
+	// Bogus operation value (DES) -> same as decrypting the plaintext
 	memset(input_buffer, 0, sizeof(input_buffer));
 	memcpy(input_buffer, "\x53\x65\x63\x72\x65\x74\x20\x73\x74\x72\x69\x6e\x67", 13);
 	memset(output_buffer, 0, sizeof(output_buffer));
 	memset(iv, 0xcc, sizeof(iv));
-	XcBlockCryptCBC(chiper_selector, sizeof(input_buffer), output_buffer, input_buffer, key_table_des, 0xffffffff, iv);
-	if(validate_hashed_result(output_buffer, sizeof(output_buffer),
-	(PUCHAR)"\x1f\x28\xfc\x62\x17\xc2\x46\xa5\x10\x8c\xf1\xd8\xc5\x7a\xf6\x24\x30\xf6\x48\xf5")) {
-		tests_passed &= 1;
-	}
-	else {
-		tests_passed &= 0;
-	}
+	XcBlockCryptCBC(cipher_selector, sizeof(input_buffer), output_buffer, input_buffer, key_table_des, 0xFFFFFFFF, iv);
+	test_passed &= assert_hashed_result(output_buffer,
+	                                    sizeof(output_buffer),
+	                                    (PUCHAR)"\x1f\x28\xfc\x62\x17\xc2\x46\xa5\x10\x8c\xf1\xd8\xc5\x7a\xf6\x24\x30\xf6\x48\xf5",
+	                                    "bogus operation (DES)");
 
-	// 3des - enc
+	// 3DES encrypt
 	memset(input_buffer, 0, sizeof(input_buffer));
 	memcpy(input_buffer, "\x53\x65\x63\x72\x65\x74\x20\x73\x74\x72\x69\x6e\x67", 13);
 	memset(output_buffer, 0, sizeof(output_buffer));
 	memset(iv, 0xcc, sizeof(iv));
 	XcDESKeyParity(key_3des, sizeof(key_3des));
-	chiper_selector = 1;
-	XcKeyTable(chiper_selector, key_table_3des, key_3des);
-	XcBlockCryptCBC(chiper_selector, sizeof(input_buffer), output_buffer, input_buffer, key_table_3des, 1, iv);
-	if(validate_hashed_result(output_buffer, sizeof(output_buffer),
-	(PUCHAR)"\x31\x34\xe5\xa6\x5f\x3b\x96\xef\x0e\x76\xe7\xea\xf4\xd3\x4e\x19\xf9\xc1\x1a\x1d")) {
-		tests_passed &= 1;
-	}
-	else {
-		tests_passed &= 0;
-	}
+	cipher_selector = 1;
+	XcKeyTable(cipher_selector, key_table_3des, key_3des);
+	XcBlockCryptCBC(cipher_selector, sizeof(input_buffer), output_buffer, input_buffer, key_table_3des, 1, iv);
+	test_passed &= assert_hashed_result(output_buffer,
+	                                    sizeof(output_buffer),
+	                                    (PUCHAR)"\x31\x34\xe5\xa6\x5f\x3b\x96\xef\x0e\x76\xe7\xea\xf4\xd3\x4e\x19\xf9\xc1\x1a\x1d",
+	                                    "3DES encrypt");
 
-	// 3des - dec
+	// 3DES decrypt
 	memcpy(input_buffer, output_buffer, sizeof(input_buffer));
 	memset(output_buffer, 0, sizeof(output_buffer));
 	memset(iv, 0xcc, sizeof(iv));
-	XcBlockCryptCBC(chiper_selector, sizeof(input_buffer), output_buffer, input_buffer, key_table_3des, 0, iv);
-	if(validate_hashed_result(output_buffer, sizeof(output_buffer),
-	(PUCHAR)"\x8f\x11\x6d\xc7\x6a\xf3\xb1\x28\xa2\xca\x83\x0f\x1e\x1f\xe3\xc8\x4a\xe1\xe3\xce")) {
-		tests_passed &= 1;
-	}
-	else {
-		tests_passed &= 0;
-	}
+	XcBlockCryptCBC(cipher_selector, sizeof(input_buffer), output_buffer, input_buffer, key_table_3des, 0, iv);
+	test_passed &= assert_hashed_result(output_buffer,
+	                                    sizeof(output_buffer),
+	                                    (PUCHAR)"\x8f\x11\x6d\xc7\x6a\xf3\xb1\x28\xa2\xca\x83\x0f\x1e\x1f\xe3\xc8\x4a\xe1\xe3\xce",
+	                                    "3DES decrypt");
 
-	// 3des - dec plaintext
+	// 3DES decrypt plaintext
 	memset(input_buffer, 0, sizeof(input_buffer));
 	memcpy(input_buffer, "\x53\x65\x63\x72\x65\x74\x20\x73\x74\x72\x69\x6e\x67", 13);
 	memset(output_buffer, 0, sizeof(output_buffer));
 	memset(iv, 0xcc, sizeof(iv));
-	XcBlockCryptCBC(chiper_selector, sizeof(input_buffer), output_buffer, input_buffer, key_table_3des, 0, iv);
-	if(validate_hashed_result(output_buffer, sizeof(output_buffer),
-	(PUCHAR)"\x42\xe5\x98\xc0\x66\x93\x1e\x81\xd0\xc4\xe2\x47\x00\x7a\x0c\x1f\x6b\x7a\x16\xbb")) {
-		tests_passed &= 1;
-	}
-	else {
-		tests_passed &= 0;
-	}
+	XcBlockCryptCBC(cipher_selector, sizeof(input_buffer), output_buffer, input_buffer, key_table_3des, 0, iv);
+	test_passed &= assert_hashed_result(output_buffer,
+	                                    sizeof(output_buffer),
+	                                    (PUCHAR)"\x42\xe5\x98\xc0\x66\x93\x1e\x81\xd0\xc4\xe2\x47\x00\x7a\x0c\x1f\x6b\x7a\x16\xbb",
+	                                    "3DES decrypt plaintext");
 
-	// Bogus operation value (3des) -> same as decrypting the plaintext
+	// Bogus operation value (3DES) -> same as decrypting the plaintext
 	memset(input_buffer, 0, sizeof(input_buffer));
 	memcpy(input_buffer, "\x53\x65\x63\x72\x65\x74\x20\x73\x74\x72\x69\x6e\x67", 13);
 	memset(output_buffer, 0, sizeof(output_buffer));
 	memset(iv, 0xcc, sizeof(iv));
-	XcBlockCryptCBC(chiper_selector, sizeof(input_buffer), output_buffer, input_buffer, key_table_3des, 0xffffffff, iv);
-	if(validate_hashed_result(output_buffer, sizeof(output_buffer),
-	(PUCHAR)"\x42\xe5\x98\xc0\x66\x93\x1e\x81\xd0\xc4\xe2\x47\x00\x7a\x0c\x1f\x6b\x7a\x16\xbb")) {
-		tests_passed &= 1;
-	}
-	else {
-		tests_passed &= 0;
-	}
+	XcBlockCryptCBC(cipher_selector, sizeof(input_buffer), output_buffer, input_buffer, key_table_3des, 0xFFFFFFFF, iv);
+	test_passed &= assert_hashed_result(output_buffer,
+	                                    sizeof(output_buffer),
+	                                    (PUCHAR)"\x42\xe5\x98\xc0\x66\x93\x1e\x81\xd0\xc4\xe2\x47\x00\x7a\x0c\x1f\x6b\x7a\x16\xbb",
+	                                    "bogus operation (3DES)");
 
-	// Bogus input length value (3des-enc) -> it encrypts up to des_block (length + 7) / 8
+	// Bogus input length value (3DES encrypt) -> it encrypts up to des_block (length + 7) / 8
 	memset(input_buffer, 0, sizeof(input_buffer));
 	memcpy(input_buffer, "\x53\x65\x63\x72\x65\x74\x20\x73\x74\x72\x69\x6e\x67", 13);
 	memset(output_buffer, 0, sizeof(output_buffer));
 	memset(iv, 0xcc, sizeof(iv));
-	XcBlockCryptCBC(chiper_selector, 11, output_buffer, input_buffer, key_table_3des, 1, iv);
-	if(validate_hashed_result(output_buffer, sizeof(output_buffer),
-	(PUCHAR)"\x4e\x9c\x6d\xf9\xcc\xac\xa8\xfe\x33\xba\x6a\x30\xb4\x17\x09\x0a\x9b\x3b\x82\x59")) {
-		tests_passed &= 1;
-	}
-	else {
-		tests_passed &= 0;
-	}
+	XcBlockCryptCBC(cipher_selector, 11, output_buffer, input_buffer, key_table_3des, 1, iv);
+	test_passed &= assert_hashed_result(output_buffer,
+	                                    sizeof(output_buffer),
+	                                    (PUCHAR)"\x4e\x9c\x6d\xf9\xcc\xac\xa8\xfe\x33\xba\x6a\x30\xb4\x17\x09\x0a\x9b\x3b\x82\x59",
+	                                    "bogus input length (3DES encrypt)");
 
-	print_test_footer(func_num, func_name, tests_passed);
+	print_test_footer(func_num, func_name, test_passed);
 }
 
 void test_XcCryptService(){
     const char* func_num = "0x015e";
     const char* func_name = "XcCryptService";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
 	ULONG a;
 	void* b;
 	ULONG ret;
@@ -724,43 +643,43 @@ void test_XcCryptService(){
 	b = NULL;
 	ret = XcCryptService(a, b);
 	if(ret == 0 && a == 0 && b == NULL) {
-		tests_passed &= 1;
+		test_passed &= 1;
 	}
 	else {
-		tests_passed &= 0;
+		test_passed &= 0;
 	}
 	
-	a = 0xffffffff;
+	a = 0xFFFFFFFF;
 	b = NULL;
 	ret = XcCryptService(a, b);
-	if(ret == 0 && a == 0xffffffff && b == NULL) {
-		tests_passed &= 1;
+	if(ret == 0 && a == 0xFFFFFFFF && b == NULL) {
+		test_passed &= 1;
 	}
 	else {
-		tests_passed &= 0;
+		test_passed &= 0;
 	}
 	
-	a = 0xffffffff;
+	a = 0xFFFFFFFF;
 	b = test_buffer;
 	ret = XcCryptService(a, b);
-	if(ret == 0 && a == 0xffffffff && (memcmp(b, "\x00\x00\x00\x00\x00\x00\x00\x00", 8) == 0)) {
-		tests_passed &= 1;
+	if(ret == 0 && a == 0xFFFFFFFF && (memcmp(b, "\x00\x00\x00\x00\x00\x00\x00\x00", 8) == 0)) {
+		test_passed &= 1;
 	}
 	else {
-		tests_passed &= 0;
+		test_passed &= 0;
 	}
 	
 	a = 0;
 	b = test_buffer;
 	ret = XcCryptService(a, b);
 	if(ret == 0 && a == 0 && (memcmp(b, "\x00\x00\x00\x00\x00\x00\x00\x00", 8) == 0)) {
-		tests_passed &= 1;
+		test_passed &= 1;
 	}
 	else {
-		tests_passed &= 0;
+		test_passed &= 0;
 	}
 	
-	print_test_footer(func_num, func_name, tests_passed);
+	print_test_footer(func_num, func_name, test_passed);
 }
 
 void test_XcUpdateCrypto(){
