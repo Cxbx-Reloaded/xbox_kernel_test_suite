@@ -29,23 +29,29 @@ static void setDpcRoutineActive(ULONG setter)
             : "a"(setter));
 }
 
+// These global variables need to be outside of thread's stack.
+// And does not need any special handling care due to KfLowerIrql
+// will transfer control to higher IRQL interrupt requested process
+// then lower each one until back to owner of the thread.
 static KDPC dpcObject;
 static BOOL dpc_called;
 static ULONG dpc_executing;
 static void __stdcall dpc_callback(
-	IN KDPC* Dpc,
-	IN PVOID DeferredContext,
-	IN PVOID SystemArgument1,
-	IN PVOID SystemArgument2
+    IN KDPC* Dpc,
+    IN PVOID DeferredContext,
+    IN PVOID SystemArgument1,
+    IN PVOID SystemArgument2
 )
 {
     // DPC called variable
-    if (SystemArgument1 && (DWORD)SystemArgument1 > 0xFF) {
+    // Skip any input that is 0xFF or less value in order to avoid fatal crash for series of KeInsertQueueDpc tests.
+    if ((DWORD)SystemArgument1 > 0xFF) {
         *(BOOL*)SystemArgument1 = TRUE;
     }
 
     // Request KeIsExecutingDpc return value
-    if (SystemArgument2 && (DWORD)SystemArgument2 > 0xFF) {
+    // Skip any input that is 0xFF or less value in order to avoid fatal crash for series of KeInsertQueueDpc tests.
+    if ((DWORD)SystemArgument2 > 0xFF) {
         *(ULONG*)SystemArgument2 = KeIsExecutingDpc();
     }
 }
@@ -93,13 +99,13 @@ void test_KeInsertQueueDpc()
     KDPC restore_dpc_object = dpcObject;
 
     // Test insertion & executed DPC within KeInsertQueueDpc function
-    BOOLEAN inserted = KeInsertQueueDpc(&dpcObject, &dpc_called, (PVOID)0x20);
+    BOOLEAN inserted = KeInsertQueueDpc(&dpcObject, &dpc_called, (PVOID)0x15);
     GEN_CHECK(inserted, TRUE, "1:inserted");
     GEN_CHECK(dpc_called, TRUE, "1:dpc_called");
     GEN_CHECK(dpcObject.Inserted, FALSE, "1:dpcObject.Inserted");
     // Leftover storage, kernel doesn't reset any member variables except for Inserted variable.
     GEN_CHECK(dpcObject.SystemArgument1, &dpc_called, "1:dpcObject.SystemArgument1");
-    GEN_CHECK(dpcObject.SystemArgument2, (PVOID)0x20, "1:dpcObject.SystemArgument2");
+    GEN_CHECK(dpcObject.SystemArgument2, (PVOID)0x15, "1:dpcObject.SystemArgument2");
 
     // Reset test
     dpc_called = FALSE;
@@ -108,7 +114,7 @@ void test_KeInsertQueueDpc()
     // Test as if DPC object had been inserted to receive proper response back.
     // HACK: Perform fake inserted which will not trigger DPC callback function.
     dpcObject.Inserted = TRUE;
-    inserted = KeInsertQueueDpc(&dpcObject, (PVOID)0x30, (PVOID)0x40);
+    inserted = KeInsertQueueDpc(&dpcObject, (PVOID)0x20, (PVOID)0x25);
     GEN_CHECK(inserted, FALSE, "2:inserted");
     GEN_CHECK(dpc_called, FALSE, "2:dpc_called");
     GEN_CHECK(dpcObject.Inserted, TRUE, "2:dpcObject.Inserted");
@@ -125,7 +131,7 @@ void test_KeInsertQueueDpc()
     // HACK: Disable internal trigger for DPC callback function.
     setDpcRoutineActive(1);
     dpc_test test3a;
-    test3a.inserted = KeInsertQueueDpc(&dpcObject, &dpc_called, (PVOID)0x50);
+    test3a.inserted = KeInsertQueueDpc(&dpcObject, &dpc_called, (PVOID)0x35);
     test3a.dpc_called = dpc_called;
     test3a.dpcObject = dpcObject;
 
@@ -158,13 +164,13 @@ void test_KeInsertQueueDpc()
     GEN_CHECK(test3a.dpc_called, FALSE, "3a:dpc_called (before)");
     GEN_CHECK(test3a.dpcObject.Inserted, TRUE, "3a:dpcObject.Inserted");
     GEN_CHECK(test3a.dpcObject.SystemArgument1, &dpc_called, "3a:dpcObject.SystemArgument1");
-    GEN_CHECK(test3a.dpcObject.SystemArgument2, (PVOID)0x50, "3a:dpcObject.SystemArgument2");
+    GEN_CHECK(test3a.dpcObject.SystemArgument2, (PVOID)0x35, "3a:dpcObject.SystemArgument2");
 
     GEN_CHECK(test3b.inserted, FALSE, "3b:inserted");
     GEN_CHECK(test3b.dpc_called, FALSE, "3b:dpc_called (before)");
     GEN_CHECK(test3b.dpcObject.Inserted, TRUE, "3b:dpcObject.Inserted");
     GEN_CHECK(test3b.dpcObject.SystemArgument1, &dpc_called, "3b:dpcObject.SystemArgument1");
-    GEN_CHECK(test3b.dpcObject.SystemArgument2, (PVOID)0x50, "3b:dpcObject.SystemArgument2");
+    GEN_CHECK(test3b.dpcObject.SystemArgument2, (PVOID)0x35, "3b:dpcObject.SystemArgument2");
 
     GEN_CHECK(test3c_dpc_called, FALSE, "3c:dpc_called (after)");
 
@@ -249,7 +255,7 @@ void test_KeRemoveQueueDpc()
     // HACK: Disable internal trigger for DPC callback function.
     setDpcRoutineActive(1);
     dpc_test test1;
-    test1.inserted = KeInsertQueueDpc(&dpcObject, &dpc_called, (PVOID)0x50);
+    test1.inserted = KeInsertQueueDpc(&dpcObject, &dpc_called, NULL);
     test1.dpc_called = dpc_called;
 
     dpc_test test2;
