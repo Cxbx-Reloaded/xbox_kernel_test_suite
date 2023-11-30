@@ -42,6 +42,9 @@
 *.idb
 *.pdb
 
+# Compiled binary folder
+bin/
+
 # Kernel Module Compile Results
 *.mod*
 *.cmd
