@@ -1,7 +1,7 @@
 #include <xboxkrnl/xboxkrnl.h>
-#include <stdint.h>
 
 #include "global.h" // for (passed|failed)_test vars
+#include "assertions/defines.h"
 #include "util/output.h"
 #include "util/misc.h"
 
@@ -16,7 +16,7 @@ void test_RtlCaptureContext()
 {
     const char* func_num = "0x0109";
     const char* func_name = "RtlCaptureContext";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
     CONTEXT result_context;
@@ -71,21 +71,27 @@ void test_RtlCaptureContext()
           "m" (edi_val), "m" (RtlCaptureContext_address)
     );
 
-    DWORD* expected_vals[]  = {&eax_val, &ebx_val, &ecx_val, &edx_val, &esi_val, &edi_val,
-                               &cs_val, &ss_val, &flags_val};
-    DWORD* result_vals[]    = {&result_context.Eax, &result_context.Ebx, &result_context.Ecx,
-                               &result_context.Edx, &result_context.Esi, &result_context.Edi,
-                               &result_context.SegCs, &result_context.SegSs, &result_context.EFlags};
-    const char* reg_names[] = {"Eax", "Ebx", "Ecx", "Edx", "Esi", "Edi", "SegCs", "SegSs", "EFlags"};
+    typedef struct _context_test {
+        const DWORD* expected;
+        const DWORD* actual;
+        const char* const reg_name;
+    } context_test;
 
-    for(uint8_t i = 0; i < ARRAY_SIZE(expected_vals); i++) {
-        const char* result_text = passed_text;
-        if(*result_vals[i] != *expected_vals[i]) {
-            tests_passed = 0;
-            result_text = failed_text;
-        }
-        print("  Test %s Expected %s = 0x%x, got = 0x%x", result_text, reg_names[i], *expected_vals[i], *result_vals[i]);
+    context_test context_tests[] = {
+        { .expected = &eax_val, .actual = &result_context.Eax, .reg_name = "Eax" },
+        { .expected = &ebx_val, .actual = &result_context.Ebx, .reg_name = "Ebx" },
+        { .expected = &ecx_val, .actual = &result_context.Ecx, .reg_name = "Ecx" },
+        { .expected = &edx_val, .actual = &result_context.Edx, .reg_name = "Edx" },
+        { .expected = &esi_val, .actual = &result_context.Esi, .reg_name = "Esi" },
+        { .expected = &edi_val, .actual = &result_context.Edi, .reg_name = "Edi" },
+        { .expected = &cs_val, .actual = &result_context.SegCs, .reg_name = "SegCs" },
+        { .expected = &ss_val, .actual = &result_context.SegSs, .reg_name = "SegSs" },
+        { .expected = &flags_val, .actual = &result_context.EFlags, .reg_name = "EFlags" }
+    };
+
+    for (unsigned i = 0; i < ARRAY_SIZE(context_tests); i++) {
+        GEN_CHECK(*context_tests[i].actual, *context_tests[i].expected, context_tests[i].reg_name);
     }
 
-    print_test_footer(func_num, func_name, tests_passed);
+    print_test_footer(func_num, func_name, test_passed);
 }
