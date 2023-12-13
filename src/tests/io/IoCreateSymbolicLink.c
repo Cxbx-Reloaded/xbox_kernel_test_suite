@@ -76,7 +76,7 @@ void test_IoCreateSymbolicLink()
     };
     size_t device_test_str_size = ARRAY_SIZE(device_test_str);
 
-    print("  Running tests for symbolic link inputs");
+    // Perform tests for symbolic link inputs
     for (unsigned i = 0; i < symlink_test_size; i++) {
         result = IoCreateSymbolicLink(symlink_test_str[i].pStr, &device_str);
         if (result == STATUS_SUCCESS) {
@@ -86,7 +86,7 @@ void test_IoCreateSymbolicLink()
         tests_passed &= assert_NTSTATUS(result, symlink_test_str[i].expected_result, func_name);
     }
 
-    print("  Running tests for device inputs");
+    // Perform tests for device inputs
     for (unsigned i = 0; i < device_test_str_size; i++) {
         result = IoCreateSymbolicLink(&symlink_str, device_test_str[i].pStr);
         if (result == STATUS_SUCCESS) {
