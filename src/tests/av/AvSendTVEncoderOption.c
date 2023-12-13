@@ -1,6 +1,6 @@
 #include <xboxkrnl/xboxkrnl.h>
 
-#include "global.h"
+#include "global.h" // for NV2A_MMIO_BASE var
 #include "util/output.h"
 
 void test_AvSendTVEncoderOption()
