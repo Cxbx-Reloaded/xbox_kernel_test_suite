@@ -125,7 +125,7 @@ void test_RtlAppendUnicodeToString()
     BOOL tests_passed = 1;
     print_test_header(func_num, func_name);
 
-    const WCHAR src_text[] = L"Xbox";
+    const WCHAR* src_text = L"Xbox";
     const uint8_t num_chars_in_src = wcslen(src_text) + 1;
     WCHAR buffer[num_chars_in_src * 2];
     WCHAR expected_result[num_chars_in_src * 2];
