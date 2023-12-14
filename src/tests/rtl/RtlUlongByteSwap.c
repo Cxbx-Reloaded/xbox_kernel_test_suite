@@ -3,6 +3,7 @@
 
 #include "global.h" // for (passed|failed)_test vars
 #include "util/output.h"
+#include "util/misc.h"
 
 void test_RtlUlongByteSwap()
 {
@@ -15,7 +16,7 @@ void test_RtlUlongByteSwap()
     const ULONG expected_results[] = {0x00FF00FF, 0x78563412, 0xA1B2C3D4};
     ULONG result;
 
-    for(uint8_t i = 0; i < sizeof(inputs) / sizeof(ULONG); i++) {
+    for(uint8_t i = 0; i < ARRAY_SIZE(inputs); i++) {
         const char* result_text = passed_text;
         result = RtlUlongByteSwap(inputs[i]);
         if(result != expected_results[i]) {

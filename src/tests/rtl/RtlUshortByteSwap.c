@@ -3,6 +3,7 @@
 
 #include "global.h" // for (passed|failed)_test vars
 #include "util/output.h"
+#include "util/misc.h"
 
 void test_RtlUshortByteSwap()
 {
@@ -15,7 +16,7 @@ void test_RtlUshortByteSwap()
     const USHORT expected_results[] = {0x00FF, 0xFF00, 0x3412, 0xE0F0};
     USHORT result;
 
-    for(uint8_t i = 0; i < sizeof(inputs) / sizeof(USHORT); i++) {
+    for(uint8_t i = 0; i < ARRAY_SIZE(inputs); i++) {
         const char* result_text = passed_text;
         result = RtlUshortByteSwap(inputs[i]);
         if(result != expected_results[i]) {

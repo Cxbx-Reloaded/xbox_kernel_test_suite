@@ -3,6 +3,7 @@
 
 #include "global.h" // for (passed|failed)_test vars
 #include "util/output.h"
+#include "util/misc.h"
 
 // A few things to note about this function:
 // 1. Passing NULL into the remainder field is legal.
@@ -24,7 +25,7 @@ void test_RtlExtendedLargeIntegerDivide()
     LARGE_INTEGER dividend, result, e_result;
     ULONG remainder;
 
-    for(uint8_t i = 0; i < sizeof(expected_results) / sizeof(LONGLONG); i++) {
+    for(uint8_t i = 0; i < ARRAY_SIZE(expected_results); i++) {
         const char* result_text = passed_text;
         dividend.QuadPart = dividends[i];
         e_result.QuadPart = expected_results[i];

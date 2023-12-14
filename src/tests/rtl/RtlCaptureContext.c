@@ -3,6 +3,7 @@
 
 #include "global.h" // for (passed|failed)_test vars
 #include "util/output.h"
+#include "util/misc.h"
 
 // Notes about this function: The official kernel allocates 0x440 bytes for the CONTEXT structure.
 // That does not match with any other implementation of CONTEXT that I have been able to find.
@@ -77,7 +78,7 @@ void test_RtlCaptureContext()
                                &result_context.SegCs, &result_context.SegSs, &result_context.EFlags};
     const char* reg_names[] = {"Eax", "Ebx", "Ecx", "Edx", "Esi", "Edi", "SegCs", "SegSs", "EFlags"};
 
-    for(uint8_t i = 0; i < sizeof(expected_vals) / sizeof(DWORD*); i++) {
+    for(uint8_t i = 0; i < ARRAY_SIZE(expected_vals); i++) {
         const char* result_text = passed_text;
         if(*result_vals[i] != *expected_vals[i]) {
             tests_passed = 0;
