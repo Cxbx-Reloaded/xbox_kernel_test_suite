@@ -1,6 +1,6 @@
 #include <xboxkrnl/xboxkrnl.h>
 #include <windows.h>
-#include <stdint.h>
+#include <stddef.h>
 
 #include "util/output.h"
 #include "assertions/common.h"

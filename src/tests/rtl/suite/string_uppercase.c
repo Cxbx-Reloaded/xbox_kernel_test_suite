@@ -4,7 +4,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "global.h"
+#include "global.h" // for seed var
 #include "util/output.h"
 #include "assertions/defines.h"
 

@@ -1,4 +1,5 @@
 #include <xboxkrnl/xboxkrnl.h>
+#include <stddef.h>
 
 #include "util/output.h"
 #include "assertions/defines.h"

@@ -19,7 +19,7 @@ void print(char* str, ...)
     vsnprintf (buffer, 499, str, args);
     va_end(args);
     /**** PRINT ON TV (REAL HW) ****/
-    debugPrint(buffer);
+    debugPrint("%s", buffer);
     debugPrint("\n");
     /*******************************/
 
@@ -89,7 +89,7 @@ int write_to_output_file(
         debugPrint("ERROR: Could not write to output file");
     }
     if(bytes_written != num_bytes_to_print) {
-        debugPrint("ERROR: Bytes written = %u, bytes expected to write = %u",
+        debugPrint("ERROR: Bytes written = %lu, bytes expected to write = %lu",
                    bytes_written, num_bytes_to_print);
         ret = 1;
     }

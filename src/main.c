@@ -89,6 +89,7 @@ static void run_tests()
             kernel_thunk_table[vector_get(&tests_to_run, k)]();
         }
     }
+    print("------------------------ End of Tests -----------------------");
 }
 
 void main(void){

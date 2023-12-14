@@ -1,7 +1,7 @@
 #include <xboxkrnl/xboxkrnl.h>
 #include <stdlib.h>
 
-#include "global.h"
+#include "global.h" // for seed var
 #include "util/output.h"
 
 void test_RtlMoveMemory()

@@ -1,6 +1,6 @@
 #include <xboxkrnl/xboxkrnl.h>
 
-#include "global.h"
+#include "global.h" // for NV2A_MMIO_BASE var
 #include "util/output.h"
 
 void test_AvSendTVEncoderOption()
@@ -14,7 +14,7 @@ void test_AvSendTVEncoderOption()
 
     unsigned long res = 0;
     AvSendTVEncoderOption((void *)NV2A_MMIO_BASE, 6, 0, &res);
-    print("AvSendTVEncoderOption: %d (0=AV_PACK_NONE 1=AV_PACK_STANDARD 2=AV_PACK_RFU 3=AV_PACK_SCART 4=AV_PACK_HDTV 5=AV_PACK_VGA 6=AV_PACK_SVIDEO)", (int)res);
+    print("AvSendTVEncoderOption: %lu (0=AV_PACK_NONE 1=AV_PACK_STANDARD 2=AV_PACK_RFU 3=AV_PACK_SCART 4=AV_PACK_HDTV 5=AV_PACK_VGA 6=AV_PACK_SVIDEO)", res);
 
     print_test_footer(func_num, func_name, tests_passed);
 }
