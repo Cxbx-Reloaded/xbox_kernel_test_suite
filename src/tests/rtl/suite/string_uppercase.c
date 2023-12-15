@@ -6,6 +6,7 @@
 
 #include "global.h" // for seed var
 #include "util/output.h"
+#include "util/misc.h"
 #include "assertions/defines.h"
 
 void test_RtlUpcaseUnicodeChar()
@@ -67,25 +68,28 @@ void test_RtlUpperString()
 {
     const char* func_num = "0x013D";
     const char* func_name = "RtlUpperString";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
     char rnd_letter;
     char rnd_letters[101];
+    char rnd_letters_upper[101];
 
     srand(seed);
-    for(int k=0; k<100; k++){
+    for (int k = 0; k < 100; k++) {
         rnd_letter = "abcdefghijklmnopqrstuvwxyz"[rand() % 26];
         rnd_letters[k] = rnd_letter;
+        rnd_letters_upper[k] = toupper(rnd_letter);
     }
     rnd_letters[100] = '\0';
+    rnd_letters_upper[100] = '\0';
 
     ANSI_STRING src_str;
     ANSI_STRING res_str;
     char res_buf[256];
 
     /* Initialize res_buf so RtlInitAnsiString works correctly */
-    for (int i=0; i<255; i++)
+    for (int i = 0; i < 255; i++)
         res_buf[i] = '0';
     res_buf[255] = 0;
 
@@ -94,47 +98,32 @@ void test_RtlUpperString()
     /* Empty String Test */
     RtlInitAnsiString(&src_str, "");
     RtlUpperString(&res_str, &src_str);
-    tests_passed &= strncmp(res_str.Buffer, "", res_str.Length) == 0 ? 1 : 0;
-    if(!tests_passed)
-        print("RtlUpperString Lowercase String Test Failed");
+    GEN_CHECK(strncmp(res_str.Buffer, "", res_str.Length) == 0, TRUE, "empty");
 
     /* Lowercase String Test */
     RtlInitAnsiString(&src_str, "xbox");
     RtlUpperString(&res_str, &src_str);
-    tests_passed &= strncmp(res_str.Buffer, "XBOX", res_str.Length) == 0 ? 1 : 0;
-    if(!tests_passed)
-        print("RtlUpperString Lowercase String Test Failed");
+    GEN_CHECK(strncmp(res_str.Buffer, "XBOX", res_str.Length) == 0, TRUE, "compare");
 
     /* Lowercase Single Character Test */
     RtlInitAnsiString(&src_str, "x");
     RtlUpperString(&res_str, &src_str);
-    tests_passed &= strncmp(res_str.Buffer, "X", res_str.Length) == 0 ? 1 : 0;
-    if(!tests_passed)
-        print("RtlUpperString Lowercase Single Character Test Failed");
+    GEN_CHECK(strncmp(res_str.Buffer, "X", res_str.Length) == 0, TRUE, "compare");
 
     /* Uppercase Single Character Test */
     RtlInitAnsiString(&src_str, "X");
     RtlUpperString(&res_str, &src_str);
-    tests_passed &= strncmp(res_str.Buffer, "X", res_str.Length) == 0 ? 1 : 0;
-    if(!tests_passed)
-        print("RtlUpperString Uppercase Single Character Test Failed"); 
+    GEN_CHECK(strncmp(res_str.Buffer, "X", res_str.Length) == 0, TRUE, "compare");
 
     /* 100 Lowercase Characters Test */
     RtlInitAnsiString(&src_str, rnd_letters);
     RtlUpperString(&res_str, &src_str);
-    for(int k=0; k<100; k++){
-        if(res_str.Buffer[k] != toupper(rnd_letters[k]))
-            tests_passed = 0;
-    }
-    if(!tests_passed)
-        print("RtlUpperString 100 Lowercase Characters Test Failed");
+    GEN_CHECK_ARRAY(res_str.Buffer, rnd_letters_upper, ARRAY_SIZE(rnd_letters_upper) - 1, "compare");
 
     /* Uppercase String Test */
     RtlInitAnsiString(&src_str, "XBOX");
     RtlUpperString(&res_str, &src_str);
-    tests_passed &= strncmp(res_str.Buffer, "XBOX", res_str.Length) == 0 ? 1 : 0;
-    if(!tests_passed)
-        print("RtlUpperString Uppercase String Test Failed");
+    GEN_CHECK(strncmp(res_str.Buffer, "XBOX", res_str.Length) == 0, TRUE, "compare");
 
-    print_test_footer(func_num, func_name, tests_passed);
+    print_test_footer(func_num, func_name, test_passed);
 }
