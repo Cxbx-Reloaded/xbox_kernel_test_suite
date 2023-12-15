@@ -116,7 +116,7 @@ void test_RtlCompareUnicodeString()
 {
     const char* func_num = "0x010F";
     const char* func_name = "RtlCompareUnicodeString";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
     const BOOL case_sensitive = 0;
@@ -131,45 +131,27 @@ void test_RtlCompareUnicodeString()
 
     result = RtlCompareUnicodeString(&base_str, &base_str, case_sensitive);
     result += RtlCompareUnicodeString(&base_str, &base_str, case_insensitive);
-    if(result != 0) {
-        print("  Comparing a string to itself failed with result: %d", result);
-        tests_passed = 0;
-    }
+    GEN_CHECK(result, 0, "result");
 
     result = RtlCompareUnicodeString(&base_str, &lowercase_base_str, case_sensitive);
-    if( !(result < 0) ) {
-        print("  Case sensitive compare of case mismatching strings failed with result %d", result);
-        tests_passed = 0;
-    }
+    GEN_CHECK(result, -32, "result");
+
     result = RtlCompareUnicodeString(&base_str, &lowercase_base_str, case_insensitive);
-    if(result != 0) {
-        print("  Case insensitive compare of case mismatching strings failed with result %d", result);
-        tests_passed = 0;
-    }
+    GEN_CHECK(result, 0, "result");
 
     result = RtlCompareUnicodeString(&base_str, &shorter_str, case_sensitive);
-    if( !(result > 0) ) {
-        print("  Case sensitive compare of shorter string failed with result %d", result);
-        tests_passed = 0;
-    }
+    GEN_CHECK(result, 4, "result");
+
     result = RtlCompareUnicodeString(&base_str, &shorter_str, case_insensitive);
-    if( !(result > 0) ) {
-        print("  Case insensitive compare of shorter string failed with result %d", result);
-        tests_passed = 0;
-    }
+    GEN_CHECK(result, 4, "result");
 
     result = RtlCompareUnicodeString(&base_str, &longer_str, case_sensitive);
-    if( !(result < 0) ) {
-        print("  Case sensitive compare of longer string failed with result %d", result);
-        tests_passed = 0;
-    }
-    result = RtlCompareUnicodeString(&base_str, &longer_str, case_insensitive);
-    if( !(result < 0) ) {
-        print("  Case insensitive compare of longer string failed with result %d", result);
-        tests_passed = 0;
-    }
+    GEN_CHECK(result, -18, "result");
 
-    print_test_footer(func_num, func_name, tests_passed);
+    result = RtlCompareUnicodeString(&base_str, &longer_str, case_insensitive);
+    GEN_CHECK(result, -18, "result");
+
+    print_test_footer(func_num, func_name, test_passed);
 }
 static const char* str1_str = "str1";
 static const char* str2_str = "str2";
