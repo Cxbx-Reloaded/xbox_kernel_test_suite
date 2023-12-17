@@ -3,6 +3,7 @@
 
 #include "global.h" // for (passed|failed)_test vars
 #include "util/output.h"
+#include "util/misc.h"
 
 void test_RtlDowncaseUnicodeChar()
 {
@@ -15,7 +16,7 @@ void test_RtlDowncaseUnicodeChar()
     WCHAR input[]           = {L' ', L'w', L'W', L'X', L']', L'$'};
     WCHAR expected_output[] = {L' ', L'w', L'w', L'x', L']', L'$'};
 
-    for(uint8_t i = 0; i < sizeof(input) / sizeof(WCHAR); i++) {
+    for(uint8_t i = 0; i < ARRAY_SIZE(input); i++) {
         const char* result_text = passed_text;
         result = RtlDowncaseUnicodeChar(input[i]);
         if(result != expected_output[i]) {

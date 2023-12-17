@@ -8,6 +8,7 @@
 #include <windows.h>
 
 #include "util/output.h"
+#include "util/misc.h"
 #include "util/vector.h"
 #include "util/string_extra.h"
 #include "global.h"
@@ -77,7 +78,7 @@ static void run_tests()
     if(tests_to_run.size == 0) {
         print("No Specific tests specified. Running all tests (Single Pass).");
         print("-------------------------------------------------------------");
-        int table_size = sizeof(kernel_thunk_table) / sizeof(*kernel_thunk_table);
+        int table_size = ARRAY_SIZE(kernel_thunk_table);
         for(int k=0;k<table_size;k++){
             kernel_thunk_table[k]();
         }

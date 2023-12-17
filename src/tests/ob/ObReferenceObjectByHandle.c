@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "util/output.h"
+#include "util/misc.h"
 #include "assertions/defines.h"
 #include "assertions/common.h"
 
@@ -41,7 +42,7 @@ void test_ObReferenceObjectByHandle()
         // test with valid special handle (NtCurrentThread) with symbolic link object type
         { "thread (-2 aka NtCurrentThread / ObSymbolicLinkObjectType)", (HANDLE)-2, &ObSymbolicLinkObjectType, STATUS_OBJECT_TYPE_MISMATCH, NULL },
     };
-    size_t reference_object_handle_test_size = sizeof(reference_object_handle_test) / sizeof(reference_object_handle_test[0]);
+    size_t reference_object_handle_test_size = ARRAY_SIZE(reference_object_handle_test);
 
     for (unsigned i = 0; i < reference_object_handle_test_size; i++) {
         result = ObReferenceObjectByHandle(reference_object_handle_test[i].handle, reference_object_handle_test[i].object_type, &object_return);

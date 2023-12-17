@@ -3,6 +3,7 @@
 
 #include "global.h" // for (passed|failed)_test vars
 #include "util/output.h"
+#include "util/misc.h"
 
 void test_RtlExtendedIntegerMultiply()
 {
@@ -16,7 +17,7 @@ void test_RtlExtendedIntegerMultiply()
     const LONGLONG expected_results[] = {0,  0, 225, -225, 225};
     LARGE_INTEGER multiplicand, result;
 
-    for(uint8_t i = 0; i < sizeof(expected_results) / sizeof(LONGLONG); i++) {
+    for(uint8_t i = 0; i < ARRAY_SIZE(expected_results); i++) {
         const char* result_text = passed_text;
         multiplicand.QuadPart = multiplicands[i];
         result = RtlExtendedIntegerMultiply(multiplicand, multipliers[i]);

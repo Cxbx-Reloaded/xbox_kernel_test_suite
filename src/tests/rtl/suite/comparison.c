@@ -3,6 +3,7 @@
 
 #include "global.h" // for (passed|failed)_test vars
 #include "util/output.h"
+#include "util/misc.h"
 #include "assertions/rtl.h"
 
 void test_RtlCompareMemory()
@@ -170,7 +171,7 @@ void test_RtlEqualString()
     BOOLEAN      expected_result[]  = {1    , 1    , 0    , 1    , 0    , 0    };
 
     BOOLEAN result;
-    for(uint8_t i = 0; i < sizeof(str1_inputs) / sizeof(ANSI_STRING*); i++) {
+    for(uint8_t i = 0; i < ARRAY_SIZE(str1_inputs); i++) {
         const char* result_text = passed_text;
         result = RtlEqualString(str1_inputs[i], str2_inputs[i], case_insensitive[i]);
         if(result != expected_result[i]) {

@@ -3,6 +3,7 @@
 
 #include "global.h" // for (passed|failed)_test vars
 #include "util/output.h"
+#include "util/misc.h"
 
 void test_RtlFillMemoryUlong()
 {
@@ -18,7 +19,7 @@ void test_RtlFillMemoryUlong()
     BOOL individual_test_passes = 1;
 
     RtlZeroMemory(buffer, buf_len * sizeof(ULONG));
-    for(uint8_t i = 0; i < sizeof(lengths) / sizeof(SIZE_T); i++) {
+    for(uint8_t i = 0; i < ARRAY_SIZE(lengths); i++) {
         const char* result_text = passed_text;
         RtlFillMemoryUlong(buffer, lengths[i] * sizeof(ULONG), patterns[i]);
         for(uint8_t y = 0; y < buf_len; y++) {

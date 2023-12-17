@@ -5,6 +5,7 @@
 #include <wchar.h>
 
 #include "util/output.h"
+#include "util/misc.h"
 #include "assertions/common.h"
 #include "assertions/rtl.h"
 
@@ -86,7 +87,7 @@ void test_RtlCharToInteger()
     NTSTATUS base_ret, neg_base_ret, format_ret, neg_format_ret;
     ULONG    base_result, neg_base_result, format_result, neg_format_result, neg_expected_result;
     CHAR     neg_base_buffer[50], format_buffer[50], neg_format_buffer[50];
-    for(uint8_t i = 0; i < sizeof(expected_results) / sizeof(ULONG); i++) {
+    for(uint8_t i = 0; i < ARRAY_SIZE(expected_results); i++) {
         strcpy(neg_base_buffer, "-");
         strcat(neg_base_buffer, inputs[i]);
 
@@ -228,8 +229,8 @@ void test_RtlUnicodeStringToAnsiString()
     tests_passed &= assert_NTSTATUS(result, STATUS_SUCCESS, func_name);
     tests_passed &= assert_ansi_string(
         &ansi_string,
-        sizeof(unicode_text) / sizeof(WCHAR) - 1,
-        sizeof(unicode_text) / sizeof(WCHAR),
+        ARRAY_SIZE(unicode_text) - 1,
+        ARRAY_SIZE(unicode_text),
         ansi_text,
         "Convert full unicode to ansi string."
     );
@@ -254,7 +255,7 @@ void test_RtlUnicodeStringToAnsiString()
     tests_passed &= assert_NTSTATUS(result, STATUS_SUCCESS, func_name);
     tests_passed &= assert_ansi_string(
         &ansi_string,
-        sizeof(unicode_text) / sizeof(WCHAR) - 1,
+        ARRAY_SIZE(unicode_text) - 1,
         UINT16_MAX,
         ansi_text_max,
         "Unicode to max ansi string."

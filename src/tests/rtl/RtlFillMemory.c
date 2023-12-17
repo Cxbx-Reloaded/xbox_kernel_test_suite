@@ -3,6 +3,7 @@
 
 #include "global.h" // for (passed|failed)_test vars
 #include "util/output.h"
+#include "util/misc.h"
 
 void test_RtlFillMemory()
 {
@@ -18,7 +19,7 @@ void test_RtlFillMemory()
     BOOL individual_test_passes = 1;
 
     RtlZeroMemory(buffer, buf_len);
-    for(uint8_t i = 0; i < sizeof(lengths) / sizeof(DWORD); i++) {
+    for(uint8_t i = 0; i < ARRAY_SIZE(lengths); i++) {
         const char* result_text = passed_text;
         RtlFillMemory(buffer, lengths[i], fills[i]);
         for(uint8_t y = 0; y < buf_len; y++) {

@@ -3,6 +3,7 @@
 #include <stddef.h>
 
 #include "util/output.h"
+#include "util/misc.h"
 #include "assertions/common.h"
 
 /* possible missing
@@ -61,7 +62,7 @@ void test_IoCreateSymbolicLink()
         { &device_str, STATUS_OBJECT_PATH_NOT_FOUND },
         { &device_bad_path_nonexistent_str, STATUS_OBJECT_PATH_NOT_FOUND },
     };
-    size_t symlink_test_size = sizeof(symlink_test_str)/sizeof(symlink_test_str[0]);
+    size_t symlink_test_size = ARRAY_SIZE(symlink_test_str);
 
     str_array device_test_str[] = {
         { &null_str, STATUS_INVALID_PARAMETER },
@@ -73,7 +74,7 @@ void test_IoCreateSymbolicLink()
         { &symlink_str, STATUS_INVALID_PARAMETER },
         { &symlink_no_slash_str, STATUS_INVALID_PARAMETER },
     };
-    size_t device_test_str_size = sizeof(device_test_str)/sizeof(device_test_str[0]);
+    size_t device_test_str_size = ARRAY_SIZE(device_test_str);
 
     print("  Running tests for symbolic link inputs");
     for (unsigned i = 0; i < symlink_test_size; i++) {
