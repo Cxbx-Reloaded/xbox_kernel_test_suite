@@ -6,6 +6,7 @@
 
 #include "util/output.h"
 #include "util/misc.h"
+#include "assertions/defines.h"
 #include "assertions/common.h"
 #include "assertions/rtl.h"
 
@@ -46,71 +47,88 @@ void test_RtlAnsiStringToUnicodeString()
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-static BOOL check_RtlCharToInteger_result(
-    CHAR* input,
-    ULONG base,
-    ULONG expected_result,
-    ULONG result,
-    NTSTATUS retval)
-{
-    if((retval == STATUS_SUCCESS) && (result == expected_result)) {
-        print("  Test PASSED for input = %s, base = %u, expected_result = %d", input, base, expected_result);
-        return 1;
-    }
-    print("  Test FAILED for input = %s, base = %u, expected_result = %d, result = %d, NTSTATUS = 0x%x",
-            input, base, expected_result, result, retval);
-    return 0;
-}
-
 void test_RtlCharToInteger()
 {
     const char* func_num = "0x010B";
     const char* func_name = "RtlCharToInteger";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
     // if base != (2 | 8 | 10 | 16) return STATUS_INVALID_PARAMETER
     // SPECIAL CASE: Base = 0 will not throw this error as base = 0 signifies that the base will be included
     // in the input string: '0b' = binary, '0o' = octal, '0x' = hex
     NTSTATUS ret = RtlCharToInteger("1", 1, NULL);
-    tests_passed &= assert_NTSTATUS(ret, STATUS_INVALID_PARAMETER, func_name);
+    test_passed &= assert_NTSTATUS(ret, STATUS_INVALID_PARAMETER, func_name);
+
+    typedef struct _char_to_int_test {
+        CHAR* const input;
+        CHAR* const base_format;
+        const ULONG base;
+        const ULONG expected_value;
+        const NTSTATUS expected_return;
+        ULONG neg_expected_value;
+        // call's results
+        ULONG base_value;
+        ULONG neg_base_value;
+        ULONG format_value;
+        ULONG neg_format_value;
+        NTSTATUS base_ret;
+        NTSTATUS neg_base_ret;
+        NTSTATUS format_ret;
+        NTSTATUS neg_format_ret;
+    } char_to_int_test;
 
     // Test all of the different bases with positive and negative results, including base = 0.
     // In test cases where there are invalid numbers for the specified base, the RtlCharToInteger will
     // convert the valid numbers up to invalid number.
     // For example, base = 2, input = '1015C' will return 0x5
-    CHAR* inputs[]           = {"11001010", "7631", "1100", "5FAC2", "101C813", "76BA787", "1000B1"};
-    CHAR* base_formats[]     = {"0b"      , "0o"  , ""    , "0x"   , "0b"     , "0o"     , ""      };
-    ULONG base[]             = {2         , 8     , 10    , 16     , 2        , 8        , 10      };
-    ULONG expected_results[] = {0xCA      , 0xF99 , 1100  , 0x5FAC2, 0x5      , 0x3E     , 1000    };
+    char_to_int_test char_to_int_tests[] = {
+        { .input = "11001010", .base_format = "0b", .base = 2, .expected_value = 0xCA, .expected_return = STATUS_SUCCESS },
+        { .input = "7631", .base_format = "0o", .base = 8, .expected_value = 0xF99, .expected_return = STATUS_SUCCESS },
+        { .input = "1100", .base_format = "", .base = 10, .expected_value = 1100, .expected_return = STATUS_SUCCESS },
+        { .input = "5FAC2", .base_format = "0x", .base = 16, .expected_value = 0x5FAC2, .expected_return = STATUS_SUCCESS },
+        { .input = "101C813", .base_format = "0b", .base = 2, .expected_value = 0x5, .expected_return = STATUS_SUCCESS },
+        { .input = "76BA787", .base_format = "0o", .base = 8, .expected_value = 0x3E, .expected_return = STATUS_SUCCESS },
+        { .input = "1000B1", .base_format = "", .base = 10, .expected_value = 1000, .expected_return = STATUS_SUCCESS },
+    };
+    enum { char_to_int_tests_size = ARRAY_SIZE(char_to_int_tests) };
 
-    NTSTATUS base_ret, neg_base_ret, format_ret, neg_format_ret;
-    ULONG    base_result, neg_base_result, format_result, neg_format_result, neg_expected_result;
-    CHAR     neg_base_buffer[50], format_buffer[50], neg_format_buffer[50];
-    for(uint8_t i = 0; i < ARRAY_SIZE(expected_results); i++) {
-        strcpy(neg_base_buffer, "-");
-        strcat(neg_base_buffer, inputs[i]);
+    CHAR buffer[50];
+    for (unsigned i = 0; i < char_to_int_tests_size; i++) {
+        // Easier way to convert provided expected_value to negative without need to manually input for each one.
+        char_to_int_tests[i].neg_expected_value = -1 * char_to_int_tests[i].expected_value;
 
-        strcpy(format_buffer, base_formats[i]);
-        strcat(format_buffer, inputs[i]);
+        // Use base input directly test
+        char_to_int_tests[i].base_ret = RtlCharToInteger(char_to_int_tests[i].input, char_to_int_tests[i].base, &char_to_int_tests[i].base_value);
 
-        strcpy(neg_format_buffer, "-");
-        strcat(neg_format_buffer, base_formats[i]);
-        strcat(neg_format_buffer, inputs[i]);
+        // Convert base input to negative input test
+        strcpy(buffer, "-");
+        strcat(buffer, char_to_int_tests[i].input);
+        char_to_int_tests[i].neg_base_ret = RtlCharToInteger(buffer, char_to_int_tests[i].base, &char_to_int_tests[i].neg_base_value);
 
-        base_ret        = RtlCharToInteger(inputs[i]        , base[i], &base_result);
-        neg_base_ret    = RtlCharToInteger(neg_base_buffer  , base[i], &neg_base_result);
-        format_ret      = RtlCharToInteger(format_buffer    , 0      , &format_result);
-        neg_format_ret  = RtlCharToInteger(neg_format_buffer, 0      , &neg_format_result);
+        // Use format input directly test
+        strcpy(buffer, char_to_int_tests[i].base_format);
+        strcat(buffer, char_to_int_tests[i].input);
+        char_to_int_tests[i].format_ret = RtlCharToInteger(buffer, 0, &char_to_int_tests[i].format_value);
 
-        neg_expected_result = -1 * expected_results[i];
-        tests_passed &= check_RtlCharToInteger_result(inputs[i]        , base[i], expected_results[i], base_result      , base_ret);
-        tests_passed &= check_RtlCharToInteger_result(neg_base_buffer  , base[i], neg_expected_result, neg_base_result  , neg_base_ret);
-        tests_passed &= check_RtlCharToInteger_result(format_buffer    , 0      , expected_results[i], format_result    , format_ret);
-        tests_passed &= check_RtlCharToInteger_result(neg_format_buffer, 0      , neg_expected_result, neg_format_result, neg_format_ret);
+        // Convert format input to negative format input test
+        strcpy(buffer, "-");
+        strcat(buffer, char_to_int_tests[i].base_format);
+        strcat(buffer, char_to_int_tests[i].input);
+        char_to_int_tests[i].neg_format_ret = RtlCharToInteger(buffer, 0, &char_to_int_tests[i].neg_format_value);
     }
+    // Verify base input's output
+    GEN_CHECK_ARRAY_MEMBER(char_to_int_tests, base_value, expected_value, char_to_int_tests_size, "char_to_int_tests");
+    GEN_CHECK_ARRAY_MEMBER(char_to_int_tests, base_ret, expected_return, char_to_int_tests_size, "char_to_int_tests");
+    GEN_CHECK_ARRAY_MEMBER(char_to_int_tests, neg_base_value, neg_expected_value, char_to_int_tests_size, "char_to_int_tests");
+    GEN_CHECK_ARRAY_MEMBER(char_to_int_tests, neg_base_ret, expected_return, char_to_int_tests_size, "char_to_int_tests");
+    // Verify format input's output
+    GEN_CHECK_ARRAY_MEMBER(char_to_int_tests, format_value, expected_value, char_to_int_tests_size, "char_to_int_tests");
+    GEN_CHECK_ARRAY_MEMBER(char_to_int_tests, format_ret, expected_return, char_to_int_tests_size, "char_to_int_tests");
+    GEN_CHECK_ARRAY_MEMBER(char_to_int_tests, neg_format_value, neg_expected_value, char_to_int_tests_size, "char_to_int_tests");
+    GEN_CHECK_ARRAY_MEMBER(char_to_int_tests, neg_format_ret, expected_return, char_to_int_tests_size, "char_to_int_tests");
 
-    print_test_footer(func_num, func_name, tests_passed);
+    print_test_footer(func_num, func_name, test_passed);
 }
 
 void test_RtlIntegerToChar()
