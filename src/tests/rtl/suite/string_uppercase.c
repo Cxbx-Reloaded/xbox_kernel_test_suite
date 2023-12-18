@@ -28,7 +28,7 @@ void test_RtlUpperChar()
 {
     const char* func_num = "0x013C";
     const char* func_name = "RtlUpperChar";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
     // These results are taken from running inputs 0 through 255 on a NTSC Xbox
@@ -50,18 +50,15 @@ void test_RtlUpperChar()
         0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF,
         0xD0, 0xD1, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xF7, 0xD8, 0xD9, 0xDA, 0xDB, 0xDC, 0xDD, 0xDE, 0x3F,
     };
-    CHAR result;
+    enum { expected_length = ARRAY_SIZE(expected_outputs) };
+    CHAR results[expected_length];
 
-    for(uint16_t i = 0; i < 0x100; i++) {
-        result = RtlUpperChar((CHAR)i);
-        if(result != expected_outputs[i]) {
-            tests_passed = 0;
-            print("  Test FAILED. Input = '%c'(0x%x), result = '%c'(0x%x), expected ='%c'(0x%x)",
-                 (CHAR)i, i, result, (uint8_t)result, expected_outputs[i], (uint8_t)expected_outputs[i]);
-        }
+    for (unsigned i = 0; i < expected_length; i++) {
+        results[i] = RtlUpperChar((CHAR)i);
     }
+    GEN_CHECK_ARRAY(results, expected_outputs, expected_length, "results");
 
-    print_test_footer(func_num, func_name, tests_passed);
+    print_test_footer(func_num, func_name, test_passed);
 }
 
 void test_RtlUpperString()
