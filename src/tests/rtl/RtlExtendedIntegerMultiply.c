@@ -1,32 +1,36 @@
 #include <xboxkrnl/xboxkrnl.h>
-#include <stdint.h>
 
-#include "global.h" // for (passed|failed)_test vars
 #include "util/output.h"
 #include "util/misc.h"
+#include "assertions/defines.h"
 
 void test_RtlExtendedIntegerMultiply()
 {
     const char* func_num = "0x0119";
     const char* func_name = "RtlExtendedIntegerMultiply";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
-    const LONGLONG multiplicands[]    = {1,  0,  15,   15, -15};
-    const LONG multipliers[]          = {0, -1,  15,  -15, -15};
-    const LONGLONG expected_results[] = {0,  0, 225, -225, 225};
-    LARGE_INTEGER multiplicand, result;
+    typedef struct _int_multiply_test {
+        const LARGE_INTEGER multiplicand;
+        const LONG multiplier;
+        const LONGLONG expected_result;
+        LARGE_INTEGER return_result;
+    } int_multiply_test;
 
-    for(uint8_t i = 0; i < ARRAY_SIZE(expected_results); i++) {
-        const char* result_text = passed_text;
-        multiplicand.QuadPart = multiplicands[i];
-        result = RtlExtendedIntegerMultiply(multiplicand, multipliers[i]);
-        if(result.QuadPart != expected_results[i]) {
-            tests_passed = 0;
-            result_text = failed_text;
-        }
-        print("  Test %s: Expected = %d for multiplicand = %d and multipler = %d, result = %d",
-              result_text, (LONG)expected_results[i], (LONG)multiplicands[i], (LONG)multipliers[i], (LONG)result.QuadPart);
+    int_multiply_test int_multiply_tests[] = {
+        { .multiplicand.QuadPart = 1, .multiplier = 0, .expected_result = 0 },
+        { .multiplicand.QuadPart = 0, .multiplier = -1, .expected_result = 0 },
+        { .multiplicand.QuadPart = 15, .multiplier = 15, .expected_result = 225 },
+        { .multiplicand.QuadPart = 15, .multiplier = -15, .expected_result = -225 },
+        { .multiplicand.QuadPart = -15, .multiplier = -15, .expected_result = 225 }
+    };
+    unsigned int_multiply_tests_size = ARRAY_SIZE(int_multiply_tests);
+
+    for (unsigned i = 0; i < ARRAY_SIZE(int_multiply_tests); i++) {
+        int_multiply_tests[i].return_result = RtlExtendedIntegerMultiply(int_multiply_tests[i].multiplicand, int_multiply_tests[i].multiplier);
     }
-    print_test_footer(func_num, func_name, tests_passed);
+    GEN_CHECK_ARRAY_MEMBER(int_multiply_tests, return_result.QuadPart, expected_result, int_multiply_tests_size, "int_multiply_tests");
+
+    print_test_footer(func_num, func_name, test_passed);
 }

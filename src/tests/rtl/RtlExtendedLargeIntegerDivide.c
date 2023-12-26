@@ -1,9 +1,9 @@
 #include <xboxkrnl/xboxkrnl.h>
 #include <stdint.h>
 
-#include "global.h" // for (passed|failed)_test vars
 #include "util/output.h"
 #include "util/misc.h"
+#include "assertions/defines.h"
 
 // A few things to note about this function:
 // 1. Passing NULL into the remainder field is legal.
@@ -15,39 +15,38 @@ void test_RtlExtendedLargeIntegerDivide()
 {
     const char* func_num = "0x011A";
     const char* func_name = "RtlExtendedLargeIntegerDivide";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
-    const LONGLONG dividends[]        = {1, 5, 300,                -300, 300,        -300};
-    const ULONG divisors[]            = {1, 8,   8,                   8,  -8,          -8};
-    const ULONG expected_remainders[] = {0, 5,   4,                 0x4, 300,        -244};
-    const LONGLONG expected_results[] = {1, 0,  37,  0x1fffffffffffffda,   0, 0x100000007};
-    LARGE_INTEGER dividend, result, e_result;
-    ULONG remainder;
+    typedef struct _int_divide_test {
+        const LARGE_INTEGER dividend;
+        const ULONG divisor;
+        const ULONG expected_remainder;
+        const LONGLONG expected_result;
+        LARGE_INTEGER return_result;
+        ULONG return_remainder;
+    } int_divide_test;
 
-    for(uint8_t i = 0; i < ARRAY_SIZE(expected_results); i++) {
-        const char* result_text = passed_text;
-        dividend.QuadPart = dividends[i];
-        e_result.QuadPart = expected_results[i];
-        result = RtlExtendedLargeIntegerDivide(dividend, divisors[i], &remainder);
-        if((result.QuadPart != e_result.QuadPart) || (remainder != expected_remainders[i])) {
-            tests_passed = 0;
-            result_text = failed_text;
-        }
-        // Dec 19th, 2018 - nxdk's printf does not support any format that will print 64 bits.
-        // Split the print into the high dword and low dword until nxdk can print them combined.
-        print("  Test %s: Expected Result = 0x%x %x with remainder = 0x%x for dividend = 0x%x %x and divisor = 0x%x, result = 0x%x %x with remainder = 0x%x",
-              result_text, e_result.u.HighPart, e_result.u.LowPart, expected_remainders[i],
-              dividend.u.HighPart, dividend.u.LowPart, divisors[i], result.u.HighPart, result.u.LowPart, remainder);
+    int_divide_test int_divide_tests[] = {
+        { .dividend.QuadPart = 1, .divisor = 1, .expected_remainder = 0, .expected_result = 1 },
+        { .dividend.QuadPart = 5, .divisor = 8, .expected_remainder = 5, .expected_result = 0 },
+        { .dividend.QuadPart = 300, .divisor = 8, .expected_remainder = 4, .expected_result = 37 },
+        { .dividend.QuadPart = -300, .divisor = 8, .expected_remainder = 4, .expected_result = 0x1fffffffffffffda },
+        { .dividend.QuadPart = 300, .divisor = -8, .expected_remainder = 300, .expected_result = 0 },
+        { .dividend.QuadPart = -300, .divisor = -8, .expected_remainder = -244, .expected_result = 0x100000007 }
+    };
+    unsigned int_divide_tests_size = ARRAY_SIZE(int_divide_tests);
+
+    for (unsigned i = 0; i < int_divide_tests_size; i++) {
+        int_divide_tests[i].return_result = RtlExtendedLargeIntegerDivide(int_divide_tests[i].dividend, int_divide_tests[i].divisor, &int_divide_tests[i].return_remainder);
     }
+    GEN_CHECK_ARRAY_MEMBER(int_divide_tests, return_result.QuadPart, expected_result, int_divide_tests_size, "int_divide_tests");
+    GEN_CHECK_ARRAY_MEMBER(int_divide_tests, return_remainder, expected_remainder, int_divide_tests_size, "int_divide_tests");
 
     // Test remainder = NULL
-    dividend.QuadPart = 5;
-    result = RtlExtendedLargeIntegerDivide(dividend, 2, NULL);
-    if(result.QuadPart != 2) {
-        tests_passed = 0;
-        print("  Test with NULL remainder FAILED. Expected result = 0x2, got = 0x%x %x",
-              result.u.HighPart, result.u.LowPart);
-    }
-    print_test_footer(func_num, func_name, tests_passed);
+    LARGE_INTEGER dividend = { .QuadPart = 5 };
+    LARGE_INTEGER result = RtlExtendedLargeIntegerDivide(dividend, 2, NULL);
+    GEN_CHECK(result.QuadPart, 2, "result");
+
+    print_test_footer(func_num, func_name, test_passed);
 }

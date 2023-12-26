@@ -150,8 +150,10 @@ void test_RtlWalkFrameChain()
 
     // Output any remaining parent calls occur from the stack.
     // We do not make any parent calls address verification as they can change at any time.
-    for (ULONG i = 4; i < total; i++) {
-        print("  INFO: callers[%u] = 0x%08x", i, callers[i]);
+    if (!test_passed) {
+        for (ULONG i = 4; i < total; i++) {
+            print("  DEBUG: callers[%u] = 0x%08x", i, callers[i]);
+        }
     }
 
     print_test_footer(func_num, func_name, test_passed);

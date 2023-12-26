@@ -1,31 +1,34 @@
 #include <xboxkrnl/xboxkrnl.h>
-#include <stdint.h>
 
-#include "global.h" // for (passed|failed)_test vars
 #include "util/output.h"
 #include "util/misc.h"
+#include "assertions/defines.h"
 
 void test_RtlUshortByteSwap()
 {
     const char* func_num = "0x013E";
     const char* func_name = "RtlUshortByteSwap";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
-    const USHORT inputs[]           = {0xFF00, 0x00FF, 0x1234, 0xF0E0};
-    const USHORT expected_results[] = {0x00FF, 0xFF00, 0x3412, 0xE0F0};
-    USHORT result;
+    typedef struct _byte_swap_test {
+        const USHORT input;
+        const USHORT expected_result;
+        USHORT return_result;
+    } byte_swap_test;
 
-    for(uint8_t i = 0; i < ARRAY_SIZE(inputs); i++) {
-        const char* result_text = passed_text;
-        result = RtlUshortByteSwap(inputs[i]);
-        if(result != expected_results[i]) {
-            tests_passed = 0;
-            result_text = failed_text;
-        }
-        print("  Test %s: Expected = 0x%x for Input = 0x%x, Result = 0x%x",
-              result_text, expected_results[i], inputs[i], result);
+    byte_swap_test byte_swap_tests[] = {
+        { .input = 0xFF00, .expected_result = 0x00FF },
+        { .input = 0x00FF, .expected_result = 0xFF00 },
+        { .input = 0x1234, .expected_result = 0x3412 },
+        { .input = 0xF0E0, .expected_result = 0xE0F0 }
+    };
+    unsigned byte_swap_tests_size = ARRAY_SIZE(byte_swap_tests);
+
+    for (unsigned i = 0; i < byte_swap_tests_size; i++) {
+        byte_swap_tests[i].return_result = RtlUshortByteSwap(byte_swap_tests[i].input);
     }
+    GEN_CHECK_ARRAY_MEMBER(byte_swap_tests, return_result, expected_result, byte_swap_tests_size, "byte_swap_tests");
 
-    print_test_footer(func_num, func_name, tests_passed);
+    print_test_footer(func_num, func_name, test_passed);
 }

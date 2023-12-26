@@ -1,9 +1,9 @@
 #include <xboxkrnl/xboxkrnl.h>
 #include <stdint.h>
 
-#include "global.h" // for (passed|failed)_test vars
 #include "util/output.h"
 #include "util/misc.h"
+#include "assertions/defines.h"
 #include "assertions/rtl.h"
 
 void test_RtlCompareMemory()
@@ -44,7 +44,7 @@ void test_RtlCompareMemoryUlong()
 {
     const char* func_num = "0x010D";
     const char* func_name = "RtlCompareMemoryUlong";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
     ULONG mem[4];
@@ -54,25 +54,36 @@ void test_RtlCompareMemoryUlong()
     mem[2]= 0x89ab;
     mem[3]= 0xcdef;
 
-    tests_passed &= RtlCompareMemoryUlong(mem, 0, 0x0123) == 0 ? 1 : 0;
-    tests_passed &= RtlCompareMemoryUlong(mem, 3, 0x0123) == 0 ? 1 : 0;
-    tests_passed &= RtlCompareMemoryUlong(mem, 4, 0x0123) == 4 ? 1 : 0;
-    tests_passed &= RtlCompareMemoryUlong(mem, 5, 0x0123) == 4 ? 1 : 0;
-    tests_passed &= RtlCompareMemoryUlong(mem, 7, 0x0123) == 4 ? 1 : 0;
-    tests_passed &= RtlCompareMemoryUlong(mem, 8, 0x0123) == 4 ? 1 : 0;
-    tests_passed &= RtlCompareMemoryUlong(mem, 9, 0x0123) == 4 ? 1 : 0;
-    tests_passed &= RtlCompareMemoryUlong(mem, 4, 0x0127) == 0 ? 1 : 0;
-    tests_passed &= RtlCompareMemoryUlong(mem, 4, 0x7123) == 0 ? 1 : 0;
-    tests_passed &= RtlCompareMemoryUlong(mem, 16, 0x4567) == 0 ? 1 : 0;
+    SIZE_T result;
+    result = RtlCompareMemoryUlong(mem, 0, 0x0123);
+    GEN_CHECK(result, 0, "result");
+    result = RtlCompareMemoryUlong(mem, 3, 0x0123);
+    GEN_CHECK(result, 0, "result");
+    result = RtlCompareMemoryUlong(mem, 4, 0x0123);
+    GEN_CHECK(result, 4, "result");
+    result = RtlCompareMemoryUlong(mem, 5, 0x0123);
+    GEN_CHECK(result, 4, "result");
+    result = RtlCompareMemoryUlong(mem, 7, 0x0123);
+    GEN_CHECK(result, 4, "result");
+    result = RtlCompareMemoryUlong(mem, 8, 0x0123);
+    GEN_CHECK(result, 4, "result");
+    result = RtlCompareMemoryUlong(mem, 9, 0x0123);
+    GEN_CHECK(result, 4, "result");
+    result = RtlCompareMemoryUlong(mem, 4, 0x0127);
+    GEN_CHECK(result, 0, "result");
+    result = RtlCompareMemoryUlong(mem, 4, 0x7123);
+    GEN_CHECK(result, 0, "result");
+    result = RtlCompareMemoryUlong(mem, 16, 0x4567);
+    GEN_CHECK(result, 0, "result");
 
-    print_test_footer(func_num, func_name, tests_passed);
+    print_test_footer(func_num, func_name, test_passed);
 }
 
 void test_RtlCompareString()
 {
     const char* func_num = "0x010E";
     const char* func_name = "RtlCompareString";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
     ANSI_STRING lower_case_string;
@@ -83,21 +94,29 @@ void test_RtlCompareString()
     RtlInitAnsiString(&upper_case_string, "TEST_STRING");
     RtlInitAnsiString(&long_string, "this_is_a_long_string");
 
-    tests_passed &= RtlCompareString(&lower_case_string, &upper_case_string, 1) == 0 ? 1 : 0;
-    tests_passed &= RtlCompareString(&lower_case_string, &upper_case_string, 0) != 0 ? 1 : 0;
-    tests_passed &= RtlCompareString(&lower_case_string, &lower_case_string, 1) == 0 ? 1 : 0;
-    tests_passed &= RtlCompareString(&lower_case_string, &lower_case_string, 0) == 0 ? 1 : 0;
-    tests_passed &= RtlCompareString(&lower_case_string, &long_string, 1) < 0 ? 1 : 0;
-    tests_passed &= RtlCompareString(&long_string, &lower_case_string, 1) > 0 ? 1 : 0;
+    LONG result;
 
-    print_test_footer(func_num, func_name, tests_passed);
+    result = RtlCompareString(&lower_case_string, &upper_case_string, 1);
+    GEN_CHECK(result, 0, "result");
+    result = RtlCompareString(&lower_case_string, &upper_case_string, 0);
+    GEN_CHECK(result, 32, "result");
+    result = RtlCompareString(&lower_case_string, &lower_case_string, 1);
+    GEN_CHECK(result, 0, "result");
+    result = RtlCompareString(&lower_case_string, &lower_case_string, 0);
+    GEN_CHECK(result, 0, "result");
+    result = RtlCompareString(&lower_case_string, &long_string, 1);
+    GEN_CHECK(result, -3, "result");
+    result = RtlCompareString(&long_string, &lower_case_string, 1);
+    GEN_CHECK(result, 3, "result");
+
+    print_test_footer(func_num, func_name, test_passed);
 }
 
 void test_RtlCompareUnicodeString()
 {
     const char* func_num = "0x010F";
     const char* func_name = "RtlCompareUnicodeString";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
     const BOOL case_sensitive = 0;
@@ -112,52 +131,39 @@ void test_RtlCompareUnicodeString()
 
     result = RtlCompareUnicodeString(&base_str, &base_str, case_sensitive);
     result += RtlCompareUnicodeString(&base_str, &base_str, case_insensitive);
-    if(result != 0) {
-        print("  Comparing a string to itself failed with result: %d", result);
-        tests_passed = 0;
-    }
+    GEN_CHECK(result, 0, "result");
 
     result = RtlCompareUnicodeString(&base_str, &lowercase_base_str, case_sensitive);
-    if( !(result < 0) ) {
-        print("  Case sensitive compare of case mismatching strings failed with result %d", result);
-        tests_passed = 0;
-    }
+    GEN_CHECK(result, -32, "result");
+
     result = RtlCompareUnicodeString(&base_str, &lowercase_base_str, case_insensitive);
-    if(result != 0) {
-        print("  Case insensitive compare of case mismatching strings failed with result %d", result);
-        tests_passed = 0;
-    }
+    GEN_CHECK(result, 0, "result");
 
     result = RtlCompareUnicodeString(&base_str, &shorter_str, case_sensitive);
-    if( !(result > 0) ) {
-        print("  Case sensitive compare of shorter string failed with result %d", result);
-        tests_passed = 0;
-    }
+    GEN_CHECK(result, 4, "result");
+
     result = RtlCompareUnicodeString(&base_str, &shorter_str, case_insensitive);
-    if( !(result > 0) ) {
-        print("  Case insensitive compare of shorter string failed with result %d", result);
-        tests_passed = 0;
-    }
+    GEN_CHECK(result, 4, "result");
 
     result = RtlCompareUnicodeString(&base_str, &longer_str, case_sensitive);
-    if( !(result < 0) ) {
-        print("  Case sensitive compare of longer string failed with result %d", result);
-        tests_passed = 0;
-    }
-    result = RtlCompareUnicodeString(&base_str, &longer_str, case_insensitive);
-    if( !(result < 0) ) {
-        print("  Case insensitive compare of longer string failed with result %d", result);
-        tests_passed = 0;
-    }
+    GEN_CHECK(result, -18, "result");
 
-    print_test_footer(func_num, func_name, tests_passed);
+    result = RtlCompareUnicodeString(&base_str, &longer_str, case_insensitive);
+    GEN_CHECK(result, -18, "result");
+
+    print_test_footer(func_num, func_name, test_passed);
 }
+static const char* str1_str = "str1";
+static const char* str2_str = "str2";
+static const char* str3_str = "str3";
+static const char* case_insensitive_str = "insensitive";
+static const char* case_sensitive_str = "sensitive";
 
 void test_RtlEqualString()
 {
     const char* func_num = "0x0117";
     const char* func_name = "RtlEqualString";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
     ANSI_STRING str1, str2, str3;
@@ -165,32 +171,37 @@ void test_RtlEqualString()
     RtlInitAnsiString(&str2, "XBOX IS COOL");
     RtlInitAnsiString(&str3, "is xbox cool?");
 
-    ANSI_STRING* str1_inputs[]      = {&str1, &str1, &str1, &str1, &str1, &str1};
-    ANSI_STRING* str2_inputs[]      = {&str1, &str1, &str2, &str2, &str3, &str3};
-    BOOLEAN      case_insensitive[] = {0    , 1    , 0    , 1    , 0    , 1    };
-    BOOLEAN      expected_result[]  = {1    , 1    , 0    , 1    , 0    , 0    };
+    typedef struct _eq_str_test {
+        const char* var_name;
+        ANSI_STRING* str_compare;
+        BOOLEAN case_insensitive;
+        BOOLEAN expected_result;
+        BOOLEAN return_result;
+    } eq_str_test;
 
-    BOOLEAN result;
-    for(uint8_t i = 0; i < ARRAY_SIZE(str1_inputs); i++) {
-        const char* result_text = passed_text;
-        result = RtlEqualString(str1_inputs[i], str2_inputs[i], case_insensitive[i]);
-        if(result != expected_result[i]) {
-            tests_passed = 0;
-            result_text = failed_text;
-        }
-        print("  Test %s for str1 = %s, str2 = %s, case insensitive = %x. Expected = %x, got = %x",
-              result_text, str1_inputs[i]->Buffer, str2_inputs[i]->Buffer, case_insensitive[i], expected_result[i],
-              result);
+    eq_str_test str_tests[] = {
+        { .var_name = str1_str, .str_compare = &str1, .case_insensitive = 0, .expected_result = 1 },
+        { .var_name = str1_str, .str_compare = &str1, .case_insensitive = 1, .expected_result = 1 },
+        { .var_name = str2_str, .str_compare = &str2, .case_insensitive = 0, .expected_result = 0 },
+        { .var_name = str2_str, .str_compare = &str2, .case_insensitive = 1, .expected_result = 1 },
+        { .var_name = str3_str, .str_compare = &str3, .case_insensitive = 0, .expected_result = 0 },
+        { .var_name = str3_str, .str_compare = &str3, .case_insensitive = 1, .expected_result = 0 }
+    };
+    unsigned str_tests_size = ARRAY_SIZE(str_tests);
+
+    for (unsigned i = 0; i < str_tests_size; i++) {
+        str_tests[i].return_result = RtlEqualString(&str1, str_tests[i].str_compare, str_tests[i].case_insensitive);
     }
+    GEN_CHECK_ARRAY_MEMBER(str_tests, return_result, expected_result, str_tests_size, "str_tests");
 
-    print_test_footer(func_num, func_name, tests_passed);
+    print_test_footer(func_num, func_name, test_passed);
 }
 
 void test_RtlEqualUnicodeString()
 {
     const char* func_num = "0x0118";
     const char* func_name = "RtlEqualUnicodeString";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
     UNICODE_STRING str1;
@@ -201,10 +212,28 @@ void test_RtlEqualUnicodeString()
     RtlInitUnicodeString(&str2, L"XBOX IS COOL");
     RtlInitUnicodeString(&str3, L"is xbox cool?");
 
-    tests_passed &= !RtlEqualUnicodeString(&str1, &str2, 0);
-    tests_passed &= RtlEqualUnicodeString(&str1, &str2, 1);
-    tests_passed &= !RtlEqualUnicodeString(&str1, &str3, 1);
-    tests_passed &= !RtlEqualUnicodeString(&str1, &str3, 0);
+    typedef struct _eq_str_test {
+        const char* var_name;
+        UNICODE_STRING* str_compare;
+        BOOLEAN case_insensitive;
+        BOOLEAN expected_result;
+        BOOLEAN return_result;
+    } eq_str_test;
 
-    print_test_footer(func_num, func_name, tests_passed);
+    eq_str_test str_tests[] = {
+        { .var_name = str1_str, .str_compare = &str1, .case_insensitive = 0, .expected_result = 1 },
+        { .var_name = str1_str, .str_compare = &str1, .case_insensitive = 1, .expected_result = 1 },
+        { .var_name = str2_str, .str_compare = &str2, .case_insensitive = 0, .expected_result = 0 },
+        { .var_name = str2_str, .str_compare = &str2, .case_insensitive = 1, .expected_result = 1 },
+        { .var_name = str3_str, .str_compare = &str3, .case_insensitive = 0, .expected_result = 0 },
+        { .var_name = str3_str, .str_compare = &str3, .case_insensitive = 1, .expected_result = 0 }
+    };
+    unsigned str_tests_size = ARRAY_SIZE(str_tests);
+
+    for (unsigned i = 0; i < str_tests_size; i++) {
+        str_tests[i].return_result = RtlEqualUnicodeString(&str1, str_tests[i].str_compare, str_tests[i].case_insensitive);
+    }
+    GEN_CHECK_ARRAY_MEMBER(str_tests, return_result, expected_result, str_tests_size, "str_tests");
+
+    print_test_footer(func_num, func_name, test_passed);
 }

@@ -14,6 +14,10 @@
 #include "global.h"
 #include "include/func_table.h"
 
+#ifndef GIT_VERSION
+#define GIT_VERSION "unknown"
+#endif
+
 int load_conf_file(char *file_path)
 {
     print("Trying to open config file: %s", file_path);
@@ -112,6 +116,7 @@ void main(void){
     open_output_file("D:\\kernel_tests.log");
 
     print("Kernel Test Suite");
+    print("build: " GIT_VERSION);
     run_tests();
 
 

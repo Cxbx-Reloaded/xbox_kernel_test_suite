@@ -2,28 +2,87 @@
 
 #include <xboxkrnl/xboxkrnl.h>
 
-BOOL assert_critical_section_equals(
+BOOL assert_critical_section_equals_ex(
     PRTL_CRITICAL_SECTION,
     LONG,
     LONG,
     HANDLE,
-    const char*
+    const char*,
+    int
 );
+#define assert_critical_section_equals( \
+    crit_section, \
+    expected_LockCount, \
+    expected_RecursionCount, \
+    expected_OwningThread, \
+    test_name \
+) \
+assert_critical_section_equals_ex( \
+    crit_section, \
+    expected_LockCount, \
+    expected_RecursionCount, \
+    expected_OwningThread, \
+    test_name, \
+    __LINE__ \
+)
 
-BOOL assert_ansi_string(
+BOOL assert_ansi_string_ex(
     PANSI_STRING,
     USHORT,
     USHORT,
     PCHAR,
-    const char*
+    const char*,
+    int
 );
+#define assert_ansi_string( \
+    string, \
+    expected_Length, \
+    expected_MaximumLength, \
+    expected_Buffer, \
+    test_name \
+) \
+assert_ansi_string_ex( \
+    string, \
+    expected_Length, \
+    expected_MaximumLength, \
+    expected_Buffer, \
+    test_name, \
+    __LINE__ \
+)
 
-BOOL assert_unicode_string(
+BOOL assert_unicode_string_ex(
     PUNICODE_STRING,
     USHORT,
     USHORT,
     PWSTR,
-    const char*
+    const char*,
+    int
 );
+#define assert_unicode_string( \
+    string, \
+    expected_Length, \
+    expected_MaximumLength, \
+    expected_Buffer, \
+    test_name \
+) \
+assert_unicode_string_ex( \
+    string, \
+    expected_Length, \
+    expected_MaximumLength, \
+    expected_Buffer, \
+    test_name, \
+    __LINE__ \
+)
 
-BOOL assert_rtl_compared_bytes(SIZE_T, SIZE_T, const char*);
+BOOL assert_rtl_compared_bytes_ex(SIZE_T, SIZE_T, const char*, int);
+#define assert_rtl_compared_bytes( \
+    num_matching_bytes, \
+    expected_matching_bytes, \
+    test_name \
+) \
+assert_rtl_compared_bytes_ex( \
+    num_matching_bytes, \
+    expected_matching_bytes, \
+    test_name, \
+    __LINE__ \
+)

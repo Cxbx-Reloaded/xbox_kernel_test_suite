@@ -1,33 +1,38 @@
 #include <xboxkrnl/xboxkrnl.h>
-#include <stdint.h>
 
-#include "global.h" // for (passed|failed)_test vars
 #include "util/output.h"
 #include "util/misc.h"
+#include "assertions/defines.h"
 
 void test_RtlDowncaseUnicodeChar()
 {
     const char* func_num = "0x0113";
     const char* func_name = "RtlDowncaseUnicodeChar";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
-    WCHAR result;
-    WCHAR input[]           = {L' ', L'w', L'W', L'X', L']', L'$'};
-    WCHAR expected_output[] = {L' ', L'w', L'w', L'x', L']', L'$'};
+    typedef struct _downcase_test {
+        WCHAR input;
+        WCHAR expected_output;
+        WCHAR return_result;
+    } downcase_test;
 
-    for(uint8_t i = 0; i < ARRAY_SIZE(input); i++) {
-        const char* result_text = passed_text;
-        result = RtlDowncaseUnicodeChar(input[i]);
-        if(result != expected_output[i]) {
-            tests_passed = 0;
-            result_text = failed_text;
-        }
-        // Change %u to %S when printf supports %S in nxdk
-        print("  Test %s for input #%u", result_text, i);
+    downcase_test downcase_tests[] = {
+        { .input = L' ', .expected_output = L' ' },
+        { .input = L'w', .expected_output = L'w' },
+        { .input = L'W', .expected_output = L'w' },
+        { .input = L'X', .expected_output = L'x' },
+        { .input = L']', .expected_output = L']' },
+        { .input = L'$', .expected_output = L'$' }
+    };
+    unsigned results_size = ARRAY_SIZE(downcase_tests);
+
+    for (unsigned i = 0; i < results_size; i++) {
+        downcase_tests[i].return_result = RtlDowncaseUnicodeChar(downcase_tests[i].input);
     }
+    GEN_CHECK_ARRAY_MEMBER(downcase_tests, return_result, expected_output, results_size, "downcase_tests");
 
-    print_test_footer(func_num, func_name, tests_passed);
+    print_test_footer(func_num, func_name, test_passed);
 }
 
 void test_RtlDowncaseUnicodeString()
@@ -39,7 +44,7 @@ void test_RtlLowerChar()
 {
     const char* func_num = "0x0128";
     const char* func_name = "RtlLowerChar";
-    BOOL tests_passed = 1;
+    BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
     // These results are taken from running inputs 0 through 255 on a NTSC Xbox
@@ -61,15 +66,13 @@ void test_RtlLowerChar()
         0xE0, 0xE1, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xE8, 0xE9, 0xEA, 0xEB, 0xEC, 0xED, 0xEE, 0xEF,
         0xF0, 0xF1, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA, 0xFB, 0xFC, 0xFD, 0xFE, 0xFF
     };
-    CHAR result;
+    enum { expected_length = ARRAY_SIZE(expected_outputs) };
+    CHAR results[expected_length];
 
-    for(uint16_t i = 0; i < 0x100; i++) {
-        result = RtlLowerChar((CHAR)i);
-        if(result != expected_outputs[i]) {
-            tests_passed = 0;
-            print("  Test FAILED. Input = '%c'(0x%x), result = '%c'(0x%x), expected ='%c'(0x%x)",
-                 (CHAR)i, i, result, (uint8_t)result, expected_outputs[i], (uint8_t)expected_outputs[i]);
-        }
+    for (unsigned i = 0; i < expected_length; i++) {
+        results[i] = RtlLowerChar((CHAR)i);
     }
-    print_test_footer(func_num, func_name, tests_passed);
+    GEN_CHECK_ARRAY(results, expected_outputs, expected_length, "results");
+
+    print_test_footer(func_num, func_name, test_passed);
 }
