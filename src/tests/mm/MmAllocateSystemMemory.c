@@ -25,31 +25,31 @@ void test_MmAllocateSystemMemory()
 
     // Test #1 - RW and no cache
     PVOID sys_addr = MmAllocateSystemMemory(100, PAGE_READWRITE | PAGE_NOCACHE);
-    GEN_CHECK(sys_addr != NULL, TRUE, "SystemMemoryAddress (RW, No Cache)");
+    GEN_CHECK(sys_addr != NULL, TRUE, "SystemMemoryAddress");
     if (sys_addr) {
         is_system_address = IS_SYSTEM_ADDRESS(sys_addr);
-        GEN_CHECK(is_system_address, TRUE, "is_system_address (RW, No Cache)");
+        GEN_CHECK(is_system_address, TRUE, "is_system_address");
 
         is_page_alignment = CHECK_ALIGNMENT((ULONG)sys_addr, PAGE_SIZE);
-        GEN_CHECK(is_page_alignment, TRUE, "is_page_alignment (RW, No Cache)");
+        GEN_CHECK(is_page_alignment, TRUE, "is_page_alignment");
 
         num_of_pages = MmFreeSystemMemory(sys_addr, 100);
-        GEN_CHECK(num_of_pages, 1, "num_of_pages (RW, No Cache)");
+        GEN_CHECK(num_of_pages, 1, "num_of_pages");
     }
 
     // Test #2 - expected failure to allocate memory
     sys_addr = MmAllocateSystemMemory(1, PAGE_READWRITE | PAGE_READONLY);
-    GEN_CHECK(sys_addr != NULL, FALSE, "SystemMemoryAddress (RW, RO - invalid)");
+    GEN_CHECK(sys_addr != NULL, FALSE, "SystemMemoryAddress");
     if (sys_addr) {
         MmFreeSystemMemory(sys_addr, 0);
     }
     sys_addr = MmAllocateSystemMemory(1, PAGE_READWRITE | PAGE_EXECUTE);
-    GEN_CHECK(sys_addr != NULL, FALSE, "SystemMemoryAddress (E - invalid)");
+    GEN_CHECK(sys_addr != NULL, FALSE, "SystemMemoryAddress");
     if (sys_addr) {
         MmFreeSystemMemory(sys_addr, 0);
     }
     sys_addr = MmAllocateSystemMemory(1, PAGE_READWRITE | PAGE_NOCACHE | PAGE_WRITECOMBINE);
-    GEN_CHECK(sys_addr != NULL, FALSE, "SystemMemoryAddress (No Cache, Write Combine - invalid)");
+    GEN_CHECK(sys_addr != NULL, FALSE, "SystemMemoryAddress");
     if (sys_addr) {
         MmFreeSystemMemory(sys_addr, 0);
     }
