@@ -14,9 +14,13 @@ static HANDLE output_filehandle = INVALID_HANDLE_VALUE;
 void print(char* str, ...)
 {
     va_list args;
-    char buffer[500];
+    enum {
+        buffer_size = 512,
+        buffer_format_reserve = buffer_size - 2
+    };
+    char buffer[buffer_size];
     va_start (args, str);
-    vsnprintf (buffer, 499, str, args);
+    vsnprintf (buffer, buffer_format_reserve, str, args);
     va_end(args);
     /**** PRINT ON TV (REAL HW) ****/
     debugPrint("%s", buffer);
