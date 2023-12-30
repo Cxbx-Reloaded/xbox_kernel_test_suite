@@ -19,24 +19,23 @@ void print(char* str, ...)
         buffer_format_reserve = buffer_size - 2
     };
     char buffer[buffer_size];
-    va_start (args, str);
-    vsnprintf (buffer, buffer_format_reserve, str, args);
+    va_start(args, str);
+    vsnprintf(buffer, buffer_format_reserve, str, args);
     va_end(args);
-    /**** PRINT ON TV (REAL HW) ****/
-    debugPrint("%s", buffer);
-    debugPrint("\n");
-    /*******************************/
 
-    /*** PRINT ON CONSOLE (CXBX) ***/
+    /** PRINT ON DEBUGGER CONSOLE **/
     DbgPrint("%s", buffer);
     /*******************************/
 
-    // Write information to logfile
+    // Append newline once for calls below.
     strcat(buffer, "\n");
-    write_to_output_file(
-        buffer,
-        strlen(buffer)
-    );
+
+    /** PRINT ON HARDWARE SCREEN ***/
+    debugPrint("%s", buffer);
+    /*******************************/
+
+    // Write information to logfile
+    write_to_output_file(buffer, strlen(buffer));
 }
 
 void print_test_header(
