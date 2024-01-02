@@ -13,8 +13,10 @@
 #define GEN_CHECK_EX(check_var, expected_var, varname, func_line) \
     if(check_var != expected_var) { \
         print( \
-            "  ERROR(line %d): Expected %s = 0x%x, Got = 0x%x", \
-             func_line, varname, expected_var, check_var \
+            ((sizeof(check_var) > 4) ? \
+            "  ERROR(line %d): Expected %s = 0x%llx, Got = 0x%llx" : \
+            "  ERROR(line %d): Expected %s = 0x%x, Got = 0x%x") \
+            , func_line, varname, expected_var, check_var \
         ); \
         test_passed = 0; \
     }
@@ -23,8 +25,10 @@
 #define GEN_CHECK_RANGE_EX(check_var, expected_var, size, varname, func_line) \
     if(check_var < expected_var || check_var > expected_var + size) { \
         print( \
-            "  ERROR(line %d): Expected range %s = 0x%x-0x%x, Got = 0x%x", \
-            func_line, varname, expected_var, expected_var + size, check_var \
+            ((sizeof(check_var) > 4) ? \
+            "  ERROR(line %d): Expected range %s = 0x%x-0x%llx, Got = 0x%llx" : \
+            "  ERROR(line %d): Expected range %s = 0x%x-0x%x, Got = 0x%x") \
+            , func_line, varname, expected_var, expected_var + size, check_var \
         ); \
         test_passed = 0; \
     }
@@ -34,8 +38,10 @@
     for (unsigned i = 0; i < size; i++) { \
         if (check_var[i] != expected_var[i]) { \
             print( \
-                "  ERROR(line %d): Expected array %s[%u] = 0x%x, Got = 0x%x", \
-                func_line, varname, i, expected_var[i], check_var[i] \
+                ((sizeof(check_var[i]) > 4) ? \
+                "  ERROR(line %d): Expected array %s[%u] = 0x%llx, Got = 0x%llx" : \
+                "  ERROR(line %d): Expected array %s[%u] = 0x%x, Got = 0x%x") \
+                , func_line, varname, i, expected_var[i], check_var[i] \
             ); \
             test_passed = 0; \
         } \
@@ -46,8 +52,10 @@
     for (unsigned i = 0; i < size; i++) { \
         if (var[i].m_check != var[i].m_expected) { \
             print( \
-                "  ERROR(line %d): Expected array %s[%u].%s = 0x%x, Got %s[%u].%s = 0x%x", \
-                func_line, varname, i, #m_expected, var[i].m_expected, varname, i, #m_check, var[i].m_check \
+                ((sizeof(var[i].m_check) > 4) ? \
+                "  ERROR(line %d): Expected array %s[%u].%s = 0x%llx, Got %s[%u].%s = 0x%llx" : \
+                "  ERROR(line %d): Expected array %s[%u].%s = 0x%x, Got %s[%u].%s = 0x%x") \
+                , func_line, varname, i, #m_expected, var[i].m_expected, varname, i, #m_check, var[i].m_check \
             ); \
             test_passed = 0; \
         } \
