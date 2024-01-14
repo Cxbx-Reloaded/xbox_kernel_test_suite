@@ -60,7 +60,7 @@ void print_test_footer(
 
 void open_output_file(char* file_path)
 {
-    debugPrint("Creating file %s", file_path);
+    debugPrint("Creating file %s\n", file_path);
     output_filehandle = CreateFile(
         file_path,
         GENERIC_WRITE,
@@ -72,7 +72,7 @@ void open_output_file(char* file_path)
     );
 
     if(output_filehandle == INVALID_HANDLE_VALUE) {
-        debugPrint("ERROR: Could not create file %s", file_path);
+        debugPrint("ERROR: Could not create file %s\n", file_path);
     }
 }
 
@@ -89,10 +89,10 @@ int write_to_output_file(
         NULL
     );
     if(!ret) {
-        debugPrint("ERROR: Could not write to output file");
+        debugPrint("ERROR: Could not write to output file\n");
     }
     if(bytes_written != num_bytes_to_print) {
-        debugPrint("ERROR: Bytes written = %lu, bytes expected to write = %lu",
+        debugPrint("ERROR: Bytes written = %lu, bytes expected to write = %lu\n",
                    bytes_written, num_bytes_to_print);
         ret = 1;
     }
@@ -103,7 +103,7 @@ BOOL close_output_file()
 {
     BOOL ret = CloseHandle(output_filehandle);
     if(!ret) {
-        debugPrint("ERROR: Could not close output file");
+        debugPrint("ERROR: Could not close output file\n");
     }
     return ret;
 }
