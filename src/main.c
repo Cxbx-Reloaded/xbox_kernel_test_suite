@@ -112,8 +112,8 @@ void main(void){
     pb_show_debug_screen();
 
     vector_init(&tests_to_run);
-    load_conf_file("D:\\config.txt");
     open_output_file("D:\\kernel_tests.log");
+    load_conf_file("D:\\config.txt");
 
     print("Kernel Test Suite");
     print("build: " GIT_VERSION);
