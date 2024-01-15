@@ -1,23 +1,40 @@
 #include <xboxkrnl/xboxkrnl.h>
 
 #include "util/output.h"
+#include "assertions/object_type.h"
 
 TEST_FUNC(ExEventObjectType)
 {
-    /* FIXME: This is a stub! implement this function! */
+    TEST_BEGIN();
+
+    test_passed &= assert_object_type(&ExEventObjectType, 'vevE', FALSE, FALSE, FALSE);
+
+    TEST_END();
 }
 
 TEST_FUNC(ExMutantObjectType)
 {
-    /* FIXME: This is a stub! implement this function! */
+    TEST_BEGIN();
+
+    test_passed &= assert_object_type(&ExMutantObjectType, 'atuM', FALSE, TRUE, FALSE);
+
+    TEST_END();
 }
 
 TEST_FUNC(ExSemaphoreObjectType)
 {
-    /* FIXME: This is a stub! implement this function! */
+    TEST_BEGIN();
+
+    test_passed &= assert_object_type(&ExSemaphoreObjectType, 'ameS', FALSE, FALSE, FALSE);
+
+    TEST_END();
 }
 
 TEST_FUNC(ExTimerObjectType)
 {
-    /* FIXME: This is a stub! implement this function! */
+    TEST_BEGIN();
+
+    test_passed &= assert_object_type(&ExTimerObjectType, 'emiT', FALSE, TRUE, FALSE);
+
+    TEST_END();
 }
