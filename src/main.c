@@ -26,6 +26,8 @@ static void init_default_values()
     output_video = TRUE;
 }
 
+static char *submitter = NULL;
+
 int load_conf_file(char *file_path)
 {
     print("Trying to open config file: %s", file_path);
@@ -83,6 +85,12 @@ int load_conf_file(char *file_path)
         if (strcmp("disable-video", current_key) == 0) {
             output_video = !strtoul(strtok(NULL, "\n"), NULL, 16);
         }
+        if (strcmp("submitter", current_key) == 0) {
+            char *value = strtok(NULL, "\n");
+            size_t length = strlen(value);
+            submitter = calloc(length + 1, sizeof(char));
+            strncpy(submitter, value, length);
+        }
     }
 
     free(buffer);
@@ -133,6 +141,11 @@ void main(void)
 
     print("Kernel Test Suite");
     print("build: " GIT_VERSION);
+    print("submitter: %s", (submitter ? submitter : ""));
+    if (submitter) {
+        free(submitter);
+        submitter = NULL;
+    }
     run_tests();
 
     vector_free(&tests_to_run);
