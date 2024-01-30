@@ -17,6 +17,15 @@
 #define GIT_VERSION "unknown"
 #endif
 
+// defined in util/output.h file, used privately here only
+extern BOOL output_video;
+// Initialize the actual default values here if the config file is either successfully loaded before reading inputs or it failed to load.
+static void init_default_values()
+{
+    // NOTE: Pre-init is set to FALSE because video initialization doesn't occur until after the config file is loaded.
+    output_video = TRUE;
+}
+
 int load_conf_file(char *file_path)
 {
     print("Trying to open config file: %s", file_path);
@@ -54,6 +63,8 @@ int load_conf_file(char *file_path)
     }
 
     CloseHandle(handle);
+    // Once the config file is loaded successfully, then initialize the actual default values (if any). 
+    init_default_values();
 
     char *line;
     char *rest = buffer;
@@ -68,6 +79,9 @@ int load_conf_file(char *file_path)
             while ((current_test = strtok_r(tests, ",", &tests))) {
                 vector_append(&tests_to_run, strtol(current_test, NULL, 16));
             }
+        }
+        if (strcmp("disable-video", current_key) == 0) {
+            output_video = !strtoul(strtok(NULL, "\n"), NULL, 16);
         }
     }
 
@@ -98,22 +112,24 @@ static void run_tests()
 
 void main(void)
 {
+    vector_init(&tests_to_run);
+    if (!open_output_file("D:\\kernel_tests.log")) {
+        return;
+    }
+    if (load_conf_file("D:\\config.txt")) {
+        init_default_values();
+    }
 
-    XVideoSetMode(640, 480, 32, REFRESH_DEFAULT);
-
-    switch (pb_init()) {
-        case 0: break;
-        default:
+    if (output_video) {
+        XVideoSetMode(640, 480, 32, REFRESH_DEFAULT);
+        // If the pb_init call returns non-zero, then something went wrong from nxdk's end.
+        if (pb_init()) {
             Sleep(2000);
             XReboot();
             return;
+        }
+        pb_show_debug_screen();
     }
-
-    pb_show_debug_screen();
-
-    vector_init(&tests_to_run);
-    open_output_file("D:\\kernel_tests.log");
-    load_conf_file("D:\\config.txt");
 
     print("Kernel Test Suite");
     print("build: " GIT_VERSION);
@@ -122,6 +138,8 @@ void main(void)
     vector_free(&tests_to_run);
     close_output_file();
 
-    Sleep(10000);
-    pb_kill();
+    if (output_video) {
+        Sleep(10000);
+        pb_kill();
+    }
 }
