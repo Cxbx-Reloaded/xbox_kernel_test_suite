@@ -9,6 +9,8 @@
 #include "global.h"
 #include "util/output.h"
 
+BOOL output_video = FALSE; // NOTE: Must be set to a default of FALSE until config file is loaded and before video initialization.
+
 static HANDLE output_filehandle = INVALID_HANDLE_VALUE;
 
 void print(char* str, ...)
@@ -31,7 +33,9 @@ void print(char* str, ...)
     strcat(buffer, "\n");
 
     /** PRINT ON HARDWARE SCREEN ***/
-    debugPrint("%s", buffer);
+    if (output_video) {
+        debugPrint("%s", buffer);
+    }
     /*******************************/
 
     // Write information to logfile
@@ -58,9 +62,8 @@ void print_test_footer(
     }
 }
 
-void open_output_file(char* file_path)
+BOOL open_output_file(char* file_path)
 {
-    debugPrint("Creating file %s\n", file_path);
     output_filehandle = CreateFile(
         file_path,
         GENERIC_WRITE,
@@ -71,9 +74,7 @@ void open_output_file(char* file_path)
         NULL
     );
 
-    if(output_filehandle == INVALID_HANDLE_VALUE) {
-        debugPrint("ERROR: Could not create file %s\n", file_path);
-    }
+    return output_filehandle != INVALID_HANDLE_VALUE;
 }
 
 int write_to_output_file(
@@ -88,22 +89,23 @@ int write_to_output_file(
         &bytes_written,
         NULL
     );
-    if(!ret) {
+    if(!ret && output_video) {
         debugPrint("ERROR: Could not write to output file\n");
     }
     if(bytes_written != num_bytes_to_print) {
-        debugPrint("ERROR: Bytes written = %lu, bytes expected to write = %lu\n",
-                   bytes_written, num_bytes_to_print);
+        if (output_video) {
+            debugPrint("ERROR: Bytes written = %lu, bytes expected to write = %lu\n",
+                       bytes_written, num_bytes_to_print);
+        }
         ret = 1;
     }
     return ret;
 }
 
-BOOL close_output_file()
+void close_output_file()
 {
     BOOL ret = CloseHandle(output_filehandle);
     if(!ret) {
-        debugPrint("ERROR: Could not close output file\n");
+        print("ERROR: Could not close output file");
     }
-    return ret;
 }
