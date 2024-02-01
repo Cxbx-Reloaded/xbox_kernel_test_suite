@@ -156,6 +156,9 @@ void main(void)
           XboxHardwareInfo.Flags,
           XboxHardwareInfo.GpuRevision,
           XboxHardwareInfo.McpRevision);
+    char pic_version[4];
+    getPICVersion(pic_version);
+    print("PIC version: %s (%s)", pic_version, getConsoleType(pic_version));
     run_tests();
 
     vector_free(&tests_to_run);
