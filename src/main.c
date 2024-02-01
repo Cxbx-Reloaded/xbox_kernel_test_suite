@@ -6,6 +6,7 @@
 #include <string.h>
 #include <windows.h>
 
+#include "util/hardware.h"
 #include "util/output.h"
 #include "util/misc.h"
 #include "util/vector.h"
@@ -146,6 +147,15 @@ void main(void)
         free(submitter);
         submitter = NULL;
     }
+    print("kernel: %hu.%hu.%hu.%hu",
+          XboxKrnlVersion.Major,
+          XboxKrnlVersion.Minor,
+          XboxKrnlVersion.Build,
+          XboxKrnlVersion.Qfe);
+    print("hardware info: flags = 0x%08X, GPU rev = %hhu, MCPX rev = %hhu",
+          XboxHardwareInfo.Flags,
+          XboxHardwareInfo.GpuRevision,
+          XboxHardwareInfo.McpRevision);
     run_tests();
 
     vector_free(&tests_to_run);
