@@ -6,6 +6,7 @@
 #include <string.h>
 #include <windows.h>
 
+#include "util/hardware.h"
 #include "util/output.h"
 #include "util/misc.h"
 #include "util/vector.h"
@@ -25,6 +26,8 @@ static void init_default_values()
     // NOTE: Pre-init is set to FALSE because video initialization doesn't occur until after the config file is loaded.
     output_video = TRUE;
 }
+
+static char *submitter = NULL;
 
 int load_conf_file(char *file_path)
 {
@@ -83,6 +86,12 @@ int load_conf_file(char *file_path)
         if (strcmp("disable-video", current_key) == 0) {
             output_video = !strtoul(strtok(NULL, "\n"), NULL, 16);
         }
+        if (strcmp("submitter", current_key) == 0) {
+            char *value = strtok(NULL, "\n");
+            size_t length = strlen(value);
+            submitter = calloc(length + 1, sizeof(char));
+            strncpy(submitter, value, length);
+        }
     }
 
     free(buffer);
@@ -133,6 +142,23 @@ void main(void)
 
     print("Kernel Test Suite");
     print("build: " GIT_VERSION);
+    print("submitter: %s", (submitter ? submitter : ""));
+    if (submitter) {
+        free(submitter);
+        submitter = NULL;
+    }
+    print("kernel: %hu.%hu.%hu.%hu",
+          XboxKrnlVersion.Major,
+          XboxKrnlVersion.Minor,
+          XboxKrnlVersion.Build,
+          XboxKrnlVersion.Qfe);
+    print("hardware info: flags = 0x%08X, GPU rev = %hhu, MCPX rev = %hhu",
+          XboxHardwareInfo.Flags,
+          XboxHardwareInfo.GpuRevision,
+          XboxHardwareInfo.McpRevision);
+    char pic_version[4];
+    getPICVersion(pic_version);
+    print("PIC version: %s (%s)", pic_version, getConsoleType(pic_version));
     run_tests();
 
     vector_free(&tests_to_run);
