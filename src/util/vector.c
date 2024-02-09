@@ -7,10 +7,10 @@
 // This vector implementation is greatly inspired from a tutorial by hbs
 // Ref: https://www.happybearsoftware.com/implementing-a-dynamic-array
 
-void vector_init(vector *vec)
+void vector_init(vector *vec, int capacity)
 {
     vec->size = 0;
-    vec->capacity = 379;
+    vec->capacity = capacity;
     vec->data = malloc(sizeof(int) * vec->capacity);
 }
 

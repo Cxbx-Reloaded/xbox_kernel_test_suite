@@ -35,6 +35,7 @@ static void init_default_values()
 static char *submitter = NULL;
 
 static vector tests_to_run;
+static vector tests_exclude;
 
 int load_conf_file(char *file_path)
 {
@@ -90,6 +91,13 @@ int load_conf_file(char *file_path)
                 vector_append(&tests_to_run, strtol(current_test, NULL, 16));
             }
         }
+        if (strcmp("tests-exclude", current_key) == 0) {
+            char *current_test;
+            char *tests = strtok(NULL, NEWLINE_DELIMITER);
+            while ((current_test = strtok_r(tests, ",", &tests))) {
+                vector_append(&tests_exclude, strtol(current_test, NULL, 16));
+            }
+        }
         if (strcmp("disable-video", current_key) == 0) {
             output_video = !strtoul(strtok(NULL, NEWLINE_DELIMITER), NULL, 16);
         }
@@ -105,22 +113,57 @@ int load_conf_file(char *file_path)
     return 0;
 }
 
+static void run_test(int test_n) {
+    for (int i = 0; i < tests_exclude.size; i++) {
+        // If a match is found in the exclusion list, then we skip the test.
+        if (test_n == vector_get(&tests_exclude, i)) {
+            test_n = -1;
+            break;
+        }
+    }
+    // Skip the test if test_n is a negative number.
+    if (test_n >= 0) {
+        kernel_thunk_table[test_n]();
+    }
+}
+
 static void run_tests()
 {
     print("Random seed used is %u", seed);
     if (tests_to_run.size == 0) {
-        print("No Specific tests specified. Running all tests (Single Pass).");
+        print("No specific tests were requested. Running all tests (Single Pass).");
+        if (tests_exclude.size) {
+            int remainder_size = 0;
+            for (int i = 0; i < tests_exclude.size; i++) {
+                if (kernel_thunk_table_size > vector_get(&tests_exclude, i)) {
+                    remainder_size++;
+                }
+            }
+            print("%d test(s) will be exclude.", remainder_size);
+        }
         print("-------------------------------------------------------------");
-        int table_size = ARRAY_SIZE(kernel_thunk_table);
-        for (int k = 0; k < table_size; k++) {
-            kernel_thunk_table[k]();
+        for (int k = 0; k < kernel_thunk_table_size; k++) {
+            run_test(k);
         }
     }
     else {
-        print("Config File Was Loaded. Only running requested tests.");
+        print("A config file was loaded. Only running requested tests.");
+        if (tests_exclude.size) {
+            int remainder_size = 0;
+            for (int k = 0; k < tests_to_run.size; k++) {
+                int test_n = vector_get(&tests_to_run, k);
+                for (int i = 0; i < tests_exclude.size; i++) {
+                    if (test_n == vector_get(&tests_exclude, i)) {
+                        remainder_size++;
+                        break;
+                    }
+                }
+            }
+            print("%d test(s) will be exclude.", remainder_size);
+        }
         print("-----------------------------------------------------");
         for (int k = 0; k < tests_to_run.size; k++) {
-            kernel_thunk_table[vector_get(&tests_to_run, k)]();
+            run_test(vector_get(&tests_to_run, k));
         }
     }
     print("------------------------ End of Tests -----------------------");
@@ -128,7 +171,8 @@ static void run_tests()
 
 void main(void)
 {
-    vector_init(&tests_to_run);
+    vector_init(&tests_to_run, kernel_thunk_table_size);
+    vector_init(&tests_exclude, 20);
     if (!open_output_file("D:\\kernel_tests.log")) {
         return;
     }
@@ -169,6 +213,7 @@ void main(void)
     run_tests();
 
     vector_free(&tests_to_run);
+    vector_free(&tests_exclude);
     close_output_file();
 
     if (output_video) {
