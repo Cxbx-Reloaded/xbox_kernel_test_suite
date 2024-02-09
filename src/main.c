@@ -34,6 +34,8 @@ static void init_default_values()
 
 static char *submitter = NULL;
 
+static vector tests_to_run;
+
 int load_conf_file(char *file_path)
 {
     print("Trying to open config file: %s", file_path);
@@ -110,14 +112,14 @@ static void run_tests()
         print("No Specific tests specified. Running all tests (Single Pass).");
         print("-------------------------------------------------------------");
         int table_size = ARRAY_SIZE(kernel_thunk_table);
-        for (int k=0; k<table_size; k++) {
+        for (int k = 0; k < table_size; k++) {
             kernel_thunk_table[k]();
         }
     }
     else {
         print("Config File Was Loaded. Only running requested tests.");
         print("-----------------------------------------------------");
-        for (int k=0; k<tests_to_run.size; k++) {
+        for (int k = 0; k < tests_to_run.size; k++) {
             kernel_thunk_table[vector_get(&tests_to_run, k)]();
         }
     }
