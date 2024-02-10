@@ -1,4 +1,4 @@
 #pragma once
 
-void test_XProfpControl();
-void test_XProfpGetData();
+void test_XProfpControl(int, const char*);
+void test_XProfpGetData(int, const char*);

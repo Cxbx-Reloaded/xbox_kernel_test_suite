@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeConnectInterrupt()
+void test_KeConnectInterrupt(int func_num, const char* func_name)
 {
     /* FIXME: This is a stub! implement this function! */
 }

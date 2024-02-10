@@ -56,10 +56,8 @@ static void __stdcall dpc_callback(
     }
 }
 
-void test_KeInitializeDpc()
+void test_KeInitializeDpc(int func_num, const char* func_name)
 {
-    const char* func_num = "0x006B";
-    const char* func_name = "KeInitializeDpc";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
@@ -87,10 +85,8 @@ void test_KeInitializeDpc()
     print_test_footer(func_num, func_name, test_passed);
 }
 
-void test_KeInsertQueueDpc()
+void test_KeInsertQueueDpc(int func_num, const char* func_name)
 {
-    const char* func_num = "0x0077";
-    const char* func_name = "KeInsertQueueDpc";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
@@ -185,10 +181,8 @@ void test_KeInsertQueueDpc()
     print_test_footer(func_num, func_name, test_passed);
 }
 
-void test_KeIsExecutingDpc()
+void test_KeIsExecutingDpc(int func_num, const char* func_name)
 {
-    const char* func_num = "0x0079";
-    const char* func_name = "KeIsExecutingDpc";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
@@ -239,10 +233,8 @@ void test_KeIsExecutingDpc()
     print_test_footer(func_num, func_name, test_passed);
 }
 
-void test_KeRemoveQueueDpc()
+void test_KeRemoveQueueDpc(int func_num, const char* func_name)
 {
-    const char* func_num = "0x0089";
-    const char* func_name = "KeRemoveQueueDpc";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 

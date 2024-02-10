@@ -10,10 +10,8 @@
 #include "assertions/common.h"
 #include "assertions/rtl.h"
 
-void test_RtlAnsiStringToUnicodeString()
+void test_RtlAnsiStringToUnicodeString(int func_num, const char* func_name)
 {
-    const char* func_num = "0x0104";
-    const char* func_name = "RtlAnsiStringToUnicodeString";
     BOOL tests_passed = 1;
 
     print_test_header(func_num, func_name);
@@ -47,10 +45,8 @@ void test_RtlAnsiStringToUnicodeString()
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlCharToInteger()
+void test_RtlCharToInteger(int func_num, const char* func_name)
 {
-    const char* func_num = "0x010B";
-    const char* func_name = "RtlCharToInteger";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
@@ -131,30 +127,28 @@ void test_RtlCharToInteger()
     print_test_footer(func_num, func_name, test_passed);
 }
 
-void test_RtlIntegerToChar()
+void test_RtlIntegerToChar(int func_num, const char* func_name)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlIntegerToUnicodeString()
+void test_RtlIntegerToUnicodeString(int func_num, const char* func_name)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlMultiByteToUnicodeN()
+void test_RtlMultiByteToUnicodeN(int func_num, const char* func_name)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlMultiByteToUnicodeSize()
+void test_RtlMultiByteToUnicodeSize(int func_num, const char* func_name)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlUnicodeStringToAnsiString()
+void test_RtlUnicodeStringToAnsiString(int func_num, const char* func_name)
 {
-    const char* func_num = "0x0134";
-    const char* func_name = "RtlUnicodeStringToAnsiString";
     BOOL tests_passed = 1;
     print_test_header(func_num, func_name);
 
@@ -303,17 +297,17 @@ void test_RtlUnicodeStringToAnsiString()
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlUnicodeStringToInteger()
+void test_RtlUnicodeStringToInteger(int func_num, const char* func_name)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlUnicodeToMultiByteN()
+void test_RtlUnicodeToMultiByteN(int func_num, const char* func_name)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlUnicodeToMultiByteSize()
+void test_RtlUnicodeToMultiByteSize(int func_num, const char* func_name)
 {
     /* FIXME: This is a stub! implement this function! */
 }

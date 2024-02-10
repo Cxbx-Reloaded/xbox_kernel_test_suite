@@ -100,10 +100,8 @@ static void NTAPI ExAcquireReadWriteLockShared_thread3(void* arg)
     increment_thread3_status(control, func_name);
 }
 
-void test_ExAcquireReadWriteLockShared()
+void test_ExAcquireReadWriteLockShared(int func_num, const char* func_name)
 {
-    const char* func_num = "0x000D";
-    const char* func_name = "ExAcquireReadWriteLockShared";
     BOOL tests_passed = 1;
     print_test_header(func_num, func_name);
 

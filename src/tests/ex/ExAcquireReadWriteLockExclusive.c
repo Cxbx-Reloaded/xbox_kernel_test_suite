@@ -58,10 +58,8 @@ static void NTAPI ExAcquireReadWriteLockExclusive_thread2(void* arg)
     increment_thread2_status(control, func_name);
 }
 
-void test_ExAcquireReadWriteLockExclusive()
+void test_ExAcquireReadWriteLockExclusive(int func_num, const char* func_name)
 {
-    const char* func_num = "0x000C";
-    const char* func_name = "ExAcquireReadWriteLockExclusive";
     BOOL tests_passed = 1;
     print_test_header(func_num, func_name);
 

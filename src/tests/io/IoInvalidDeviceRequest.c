@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoInvalidDeviceRequest()
+void test_IoInvalidDeviceRequest(int func_num, const char* func_name)
 {
     /* FIXME: This is a stub! implement this function! */
 }

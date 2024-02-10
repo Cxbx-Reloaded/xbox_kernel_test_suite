@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoRemoveShareAccess()
+void test_IoRemoveShareAccess(int func_num, const char* func_name)
 {
     /* FIXME: This is a stub! implement this function! */
 }

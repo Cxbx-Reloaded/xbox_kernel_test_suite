@@ -3,10 +3,8 @@
 #include "util/output.h"
 #include "assertions/rtl.h"
 
-void test_RtlFreeAnsiString()
+void test_RtlFreeAnsiString(int func_num, const char* func_name)
 {
-    const char* func_num = "0x011E";
-    const char* func_name = "RtlFreeAnsiString";
     BOOL tests_passed = 1;
     print_test_header(func_num, func_name);
 

@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IdexChannelObject()
+void test_IdexChannelObject(int func_num, const char* func_name)
 {
     /* FIXME: This is a stub! implement this function! */
 }

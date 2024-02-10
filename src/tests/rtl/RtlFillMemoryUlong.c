@@ -4,10 +4,8 @@
 #include "util/misc.h"
 #include "assertions/defines.h"
 
-void test_RtlFillMemoryUlong()
+void test_RtlFillMemoryUlong(int func_num, const char* func_name)
 {
-    const char* func_num = "0x011D";
-    const char* func_name = "RtlFillMemoryUlong";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 

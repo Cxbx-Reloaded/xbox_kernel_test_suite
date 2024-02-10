@@ -10,10 +10,8 @@
 
 #define CHECK_ALIGNMENT(size, alignment) (((size) % (alignment)) == 0)
 
-void test_MmAllocateSystemMemory()
+void test_MmAllocateSystemMemory(int func_num, const char* func_name)
 {
-    const char* func_num = "0x00A7";
-    const char* func_name = "MmAllocateSystemMemory";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 

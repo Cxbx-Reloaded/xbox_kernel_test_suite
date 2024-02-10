@@ -4,10 +4,8 @@
 #include "assertions/defines.h"
 #include "util/misc.h"
 
-void test_RtlTimeFieldsToTime()
+void test_RtlTimeFieldsToTime(int func_num, const char* func_name)
 {
-    const char* func_num = "0x0130";
-    const char* func_name = "RtlTimeFieldsToTime";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
@@ -115,10 +113,8 @@ void test_RtlTimeFieldsToTime()
     print_test_footer(func_num, func_name, test_passed);
 }
 
-void test_RtlTimeToTimeFields()
+void test_RtlTimeToTimeFields(int func_num, const char* func_name)
 {
-    const char* func_num = "0x0131";
-    const char* func_name = "RtlTimeToTimeFields";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 

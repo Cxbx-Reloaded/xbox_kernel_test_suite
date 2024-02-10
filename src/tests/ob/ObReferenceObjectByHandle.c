@@ -6,10 +6,8 @@
 #include "assertions/defines.h"
 #include "assertions/common.h"
 
-void test_ObReferenceObjectByHandle()
+void test_ObReferenceObjectByHandle(int func_num, const char* func_name)
 {
-    const char* func_num = "0x00F6";
-    const char* func_name = "ObReferenceObjectByHandle";
     BOOL test_passed = 1;
     PVOID object_return;
     NTSTATUS result;

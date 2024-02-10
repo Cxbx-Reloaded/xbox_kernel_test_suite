@@ -1,4 +1,4 @@
 #pragma once
 
-void test_KfRaiseIrql();
-void test_KfLowerIrql();
+void test_KfRaiseIrql(int, const char*);
+void test_KfLowerIrql(int, const char*);

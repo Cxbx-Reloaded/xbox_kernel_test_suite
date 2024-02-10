@@ -98,10 +98,8 @@ unsigned char encrypted_string[] = {
 	0x67,0x0d,0x7a,0x7b, 0x00,0x00,0x00,0x00, 0x00,0x00,0x00,0x00
 };
 
-void test_XcPKEncPublic()
+void test_XcPKEncPublic(int func_num, const char* func_name)
 {
-	const char* func_num = "0x0155";
-	const char* func_name = "XcPKEncPublic";
 	BOOL test_passed = 1;
 	ULONG ret = 0;
 	UCHAR input_buffer[264]          = { 0 };
@@ -180,10 +178,8 @@ void test_XcPKEncPublic()
 	print_test_footer(func_num, func_name, test_passed);
 }
 
-void test_XcPKDecPrivate()
+void test_XcPKDecPrivate(int func_num, const char* func_name)
 {
-	const char* func_num = "0x0156";
-	const char* func_name = "XcPKDecPrivate";
 	BOOL test_passed = 1;
 	ULONG ret = 0;
 	UCHAR input_buffer[264]          = { 0 };
@@ -224,10 +220,8 @@ void test_XcPKDecPrivate()
 	print_test_footer(func_num, func_name, test_passed);
 }
 
-void test_XcPKGetKeyLen()
+void test_XcPKGetKeyLen(int func_num, const char* func_name)
 {
-	const char* func_num = "0x0157";
-	const char* func_name = "XcPKGetKeyLen";
 	BOOL test_passed = 1;
 	ULONG ret = 0;
 	UCHAR original_key_size[] = { 0x08,0x01,0x00,0x00 };
@@ -252,10 +246,8 @@ void test_XcPKGetKeyLen()
 	print_test_footer(func_num, func_name, test_passed);
 }
 
-void test_XcVerifyPKCS1Signature()
+void test_XcVerifyPKCS1Signature(int func_num, const char* func_name)
 {
-	const char* func_num = "0x0158";
-	const char* func_name = "XcVerifyPKCS1Signature";
 	BOOL test_passed = 1;
 	ULONG ret = 0;
 	UCHAR digest[]     = { 0xd2,0x98,0x3c,0x52,0x96,0x43,0x95,0x2f,0xf9,0x5b,0x9a,0xc3,0x67,0x4c,0xb4,0x3a,0xfb,0x3d,0x3d,0x69 };

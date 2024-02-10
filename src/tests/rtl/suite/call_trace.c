@@ -5,10 +5,8 @@
 #include "util/output.h"
 #include "assertions/defines.h"
 
-void test_RtlCaptureStackBackTrace()
+void test_RtlCaptureStackBackTrace(int func_num, const char* func_name)
 {
-    const char* func_num = "0x010A";
-    const char* func_name = "RtlCaptureStackBackTrace";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
@@ -86,10 +84,8 @@ void stub_RtlGetCallersAddress(PVOID* CallerAddress_test, PVOID* CallersCaller_t
     RtlGetCallersAddress(CallerAddress_test, CallersCaller_test);
 }
 
-void test_RtlGetCallersAddress()
+void test_RtlGetCallersAddress(int func_num, const char* func_name)
 {
-    const char* func_num = "0x0120";
-    const char* func_name = "RtlGetCallersAddress";
     BOOL test_passed = 1;
 
     print_test_header(func_num, func_name);
@@ -124,10 +120,8 @@ static ULONG stub_RtlWalkFrameChain1of4(PVOID* Callers, ULONG Count)
     return stub_RtlWalkFrameChain2of4(Callers, Count);
 }
 
-void test_RtlWalkFrameChain()
+void test_RtlWalkFrameChain(int func_num, const char* func_name)
 {
-    const char* func_num = "0x013F";
-    const char* func_name = "RtlWalkFrameChain";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 

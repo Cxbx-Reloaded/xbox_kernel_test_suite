@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_XcHMAC()
+void test_XcHMAC(int func_num, const char* func_name)
 {
     /* FIXME: This is a stub! implement this function! */
 }

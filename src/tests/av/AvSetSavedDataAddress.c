@@ -2,11 +2,9 @@
 
 #include "util/output.h"
 
-void test_AvSetSavedDataAddress()
+void test_AvSetSavedDataAddress(int func_num, const char* func_name)
 {
     // FIXME this test is broken - We shouldn't pass NULL to AvSetSavedDataAddress. This is just an hack to avoid a system crash.
-    const char* func_num = "0x0004";
-    const char* func_name = "AvSetSavedDataAddress";
     BOOL tests_passed = 1;
     print_test_header(func_num, func_name);
 

@@ -4,10 +4,8 @@
 #include "util/output.h"
 #include "assertions/xc.h"
 
-void test_XcBlockCrypt()
+void test_XcBlockCrypt(int func_num, const char* func_name)
 {
-	const char* func_num = "0x015c";
-	const char* func_name = "XcBlockCrypt";
 	BOOL test_passed = 1;
 	ULONG cipher_selector;
 	UCHAR input_buffer[8]       = { 0x54,0x65,0x73,0x74 }; // "Test"
@@ -106,10 +104,8 @@ void test_XcBlockCrypt()
 	print_test_footer(func_num, func_name, test_passed);
 }
 
-void test_XcBlockCryptCBC()
+void test_XcBlockCryptCBC(int func_num, const char* func_name)
 {
-	const char* func_num = "0x015d";
-	const char* func_name = "XcBlockCryptCBC";
 	BOOL test_passed = 1;
 	ULONG cipher_selector;
 	UCHAR input_buffer[8*5]     = { 0x53,0x65,0x63,0x72,0x65,0x74,0x20,0x73,0x74,0x72,0x69,0x6e,0x67 }; // "Secret string"

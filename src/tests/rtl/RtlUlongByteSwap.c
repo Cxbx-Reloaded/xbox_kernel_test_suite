@@ -4,10 +4,8 @@
 #include "util/misc.h"
 #include "assertions/defines.h"
 
-void test_RtlUlongByteSwap()
+void test_RtlUlongByteSwap(int func_num, const char* func_name)
 {
-    const char* func_num = "0x0133";
-    const char* func_name = "RtlUlongByteSwap";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 

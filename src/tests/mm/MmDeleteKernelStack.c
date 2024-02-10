@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_MmDeleteKernelStack()
+void test_MmDeleteKernelStack(int func_num, const char* func_name)
 {
     /* FIXME: This is a stub! implement this function! */
 }

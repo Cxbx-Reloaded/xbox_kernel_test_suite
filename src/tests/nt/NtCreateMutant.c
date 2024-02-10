@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtCreateMutant()
+void test_NtCreateMutant(int func_num, const char* func_name)
 {
     /* FIXME: This is a stub! implement this function! */
 }

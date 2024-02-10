@@ -12,10 +12,8 @@
 //
 // FIXME: RtlCaptureContext also sets Ebp, Eip, and Esp in the context record. No checks are enabled for them
 // currently.
-void test_RtlCaptureContext()
+void test_RtlCaptureContext(int func_num, const char* func_name)
 {
-    const char* func_num = "0x0109";
-    const char* func_name = "RtlCaptureContext";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 

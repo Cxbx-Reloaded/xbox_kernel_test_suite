@@ -1,19 +1,19 @@
 #pragma once
 
-void test_XcSHAInit();
-void test_XcSHAUpdate();
-void test_XcSHAFinal();
-void test_XcRC4Key();
-void test_XcRC4Crypt();
-void test_XcHMAC();
-void test_XcPKEncPublic();
-void test_XcPKDecPrivate();
-void test_XcPKGetKeyLen();
-void test_XcVerifyPKCS1Signature();
-void test_XcModExp();
-void test_XcDESKeyParity();
-void test_XcKeyTable();
-void test_XcBlockCrypt();
-void test_XcBlockCryptCBC();
-void test_XcCryptService();
-void test_XcUpdateCrypto();
+void test_XcSHAInit(int, const char*);
+void test_XcSHAUpdate(int, const char*);
+void test_XcSHAFinal(int, const char*);
+void test_XcRC4Key(int, const char*);
+void test_XcRC4Crypt(int, const char*);
+void test_XcHMAC(int, const char*);
+void test_XcPKEncPublic(int, const char*);
+void test_XcPKDecPrivate(int, const char*);
+void test_XcPKGetKeyLen(int, const char*);
+void test_XcVerifyPKCS1Signature(int, const char*);
+void test_XcModExp(int, const char*);
+void test_XcDESKeyParity(int, const char*);
+void test_XcKeyTable(int, const char*);
+void test_XcBlockCrypt(int, const char*);
+void test_XcBlockCryptCBC(int, const char*);
+void test_XcCryptService(int, const char*);
+void test_XcUpdateCrypto(int, const char*);

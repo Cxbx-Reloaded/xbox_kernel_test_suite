@@ -2,10 +2,8 @@
 
 #include "util/output.h"
 
-void test_XcModExp()
+void test_XcModExp(int func_num, const char* func_name)
 {
-	const char* func_num = "0x0159";
-    const char* func_name = "XcModExp";
     BOOL test_passed = 1;
 	ULONG ret = 0;
 	ULONG output = 0;

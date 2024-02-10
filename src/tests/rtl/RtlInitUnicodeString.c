@@ -3,10 +3,8 @@
 #include "util/output.h"
 #include "assertions/rtl.h"
 
-void test_RtlInitUnicodeString()
+void test_RtlInitUnicodeString(int func_num, const char* func_name)
 {
-    const char* func_num = "0x0122";
-    const char* func_name = "RtlInitUnicodeString";
     BOOL tests_passed = 1;
     UNICODE_STRING unicode_string;
     WCHAR string[] = L"Xbox";

@@ -11,10 +11,8 @@
 - STATUS_OBJECT_NAME_EXISTS
 - STATUS_OBJECT_TYPE_MISMATCH
 */
-void test_IoCreateSymbolicLink()
+void test_IoCreateSymbolicLink(int func_num, const char* func_name)
 {
-    const char* func_num = "0x0043";
-    const char* func_name = "IoCreateSymbolicLink";
     BOOL tests_passed = 1;
     print_test_header(func_num, func_name);
 

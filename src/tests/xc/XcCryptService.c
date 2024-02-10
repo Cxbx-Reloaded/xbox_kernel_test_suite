@@ -3,10 +3,8 @@
 
 #include "util/output.h"
 
-void test_XcCryptService()
+void test_XcCryptService(int func_num, const char* func_name)
 {
-	const char* func_num = "0x015e";
-	const char* func_name = "XcCryptService";
 	BOOL test_passed = 1;
 	ULONG a;
 	void* b;

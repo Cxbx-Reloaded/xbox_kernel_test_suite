@@ -3,10 +3,8 @@
 
 #include "util/output.h"
 
-void test_XcDESKeyParity()
+void test_XcDESKeyParity(int func_num, const char* func_name)
 {
-	const char* func_num = "0x015a";
-	const char* func_name = "XcDESKeyParity";
 	BOOL test_passed = 1;
 	UCHAR key_des[8] = { 0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17 };
 	

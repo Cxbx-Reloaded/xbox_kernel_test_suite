@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_ObInsertObject()
+void test_ObInsertObject(int func_num, const char* func_name)
 {
     /* FIXME: This is a stub! implement this function! */
 }

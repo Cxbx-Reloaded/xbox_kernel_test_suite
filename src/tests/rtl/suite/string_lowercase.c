@@ -4,10 +4,8 @@
 #include "util/misc.h"
 #include "assertions/defines.h"
 
-void test_RtlDowncaseUnicodeChar()
+void test_RtlDowncaseUnicodeChar(int func_num, const char* func_name)
 {
-    const char* func_num = "0x0113";
-    const char* func_name = "RtlDowncaseUnicodeChar";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
@@ -35,15 +33,13 @@ void test_RtlDowncaseUnicodeChar()
     print_test_footer(func_num, func_name, test_passed);
 }
 
-void test_RtlDowncaseUnicodeString()
+void test_RtlDowncaseUnicodeString(int func_num, const char* func_name)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlLowerChar()
+void test_RtlLowerChar(int func_num, const char* func_name)
 {
-    const char* func_num = "0x0128";
-    const char* func_name = "RtlLowerChar";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 

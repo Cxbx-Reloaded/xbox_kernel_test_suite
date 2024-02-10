@@ -123,7 +123,7 @@ static void run_test(int test_n) {
     }
     // Skip the test if test_n is a negative number.
     if (test_n >= 0) {
-        kernel_thunk_table[test_n]();
+        kernel_api_tests[test_n].func(test_n, kernel_api_tests[test_n].name);
     }
 }
 
@@ -135,14 +135,14 @@ static void run_tests()
         if (tests_exclude.size) {
             int exclude_count = 0;
             for (int i = 0; i < tests_exclude.size; i++) {
-                if (kernel_thunk_table_size > vector_get(&tests_exclude, i)) {
+                if (kernel_api_tests_size > vector_get(&tests_exclude, i)) {
                     exclude_count++;
                 }
             }
             print("%d test(s) will be excluded.", exclude_count);
         }
         print("-------------------------------------------------------------");
-        for (int k = 0; k < kernel_thunk_table_size; k++) {
+        for (int k = 0; k < kernel_api_tests_size; k++) {
             run_test(k);
         }
     }
@@ -171,7 +171,7 @@ static void run_tests()
 
 void main(void)
 {
-    vector_init(&tests_to_run, kernel_thunk_table_size);
+    vector_init(&tests_to_run, kernel_api_tests_size);
     vector_init(&tests_exclude, 20);
     if (!open_output_file("D:\\kernel_tests.log")) {
         return;

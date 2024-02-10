@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_DbgPrompt()
+void test_DbgPrompt(int func_num, const char* func_name)
 {
     /* FIXME: This is a stub! implement this function! */
 }

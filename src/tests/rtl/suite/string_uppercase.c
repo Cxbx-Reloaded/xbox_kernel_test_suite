@@ -9,25 +9,23 @@
 #include "util/misc.h"
 #include "assertions/defines.h"
 
-void test_RtlUpcaseUnicodeChar()
+void test_RtlUpcaseUnicodeChar(int func_num, const char* func_name)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlUpcaseUnicodeString()
+void test_RtlUpcaseUnicodeString(int func_num, const char* func_name)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlUpcaseUnicodeToMultiByteN()
+void test_RtlUpcaseUnicodeToMultiByteN(int func_num, const char* func_name)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlUpperChar()
+void test_RtlUpperChar(int func_num, const char* func_name)
 {
-    const char* func_num = "0x013C";
-    const char* func_name = "RtlUpperChar";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
@@ -61,10 +59,8 @@ void test_RtlUpperChar()
     print_test_footer(func_num, func_name, test_passed);
 }
 
-void test_RtlUpperString()
+void test_RtlUpperString(int func_num, const char* func_name)
 {
-    const char* func_num = "0x013D";
-    const char* func_name = "RtlUpperString";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 

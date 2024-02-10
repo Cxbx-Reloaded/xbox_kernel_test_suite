@@ -6,10 +6,8 @@
 #include "assertions/defines.h"
 #include "assertions/rtl.h"
 
-void test_RtlCompareMemory()
+void test_RtlCompareMemory(int func_num, const char* func_name)
 {
-    const char* func_num = "0x010C";
-    const char* func_name = "RtlCompareMemory";
     BOOL tests_passed = 1;
     print_test_header(func_num, func_name);
 
@@ -40,10 +38,8 @@ void test_RtlCompareMemory()
     print_test_footer(func_num, func_name, tests_passed);
 }
 
-void test_RtlCompareMemoryUlong()
+void test_RtlCompareMemoryUlong(int func_num, const char* func_name)
 {
-    const char* func_num = "0x010D";
-    const char* func_name = "RtlCompareMemoryUlong";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
@@ -79,10 +75,8 @@ void test_RtlCompareMemoryUlong()
     print_test_footer(func_num, func_name, test_passed);
 }
 
-void test_RtlCompareString()
+void test_RtlCompareString(int func_num, const char* func_name)
 {
-    const char* func_num = "0x010E";
-    const char* func_name = "RtlCompareString";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
@@ -112,10 +106,8 @@ void test_RtlCompareString()
     print_test_footer(func_num, func_name, test_passed);
 }
 
-void test_RtlCompareUnicodeString()
+void test_RtlCompareUnicodeString(int func_num, const char* func_name)
 {
-    const char* func_num = "0x010F";
-    const char* func_name = "RtlCompareUnicodeString";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
@@ -159,10 +151,8 @@ static const char* str3_str = "str3";
 static const char* case_insensitive_str = "insensitive";
 static const char* case_sensitive_str = "sensitive";
 
-void test_RtlEqualString()
+void test_RtlEqualString(int func_num, const char* func_name)
 {
-    const char* func_num = "0x0117";
-    const char* func_name = "RtlEqualString";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
@@ -197,10 +187,8 @@ void test_RtlEqualString()
     print_test_footer(func_num, func_name, test_passed);
 }
 
-void test_RtlEqualUnicodeString()
+void test_RtlEqualUnicodeString(int func_num, const char* func_name)
 {
-    const char* func_num = "0x0118";
-    const char* func_name = "RtlEqualUnicodeString";
     BOOL test_passed = 1;
     print_test_header(func_num, func_name);
 
