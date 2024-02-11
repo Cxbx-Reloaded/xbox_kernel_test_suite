@@ -18,6 +18,11 @@
 #define GIT_VERSION "unknown"
 #endif
 
+// To read line by line properly from all platforms' line-endings with their text editor software.
+// Newline delimiter reader requires "\r\n" to find whichever character is found first.
+// Windows (\r\n), POSIX (\n), (legacy) Mac OS (\r)
+#define NEWLINE_DELIMITER "\r\n"
+
 // defined in util/output.h file, used privately here only
 extern BOOL output_video;
 // Initialize the actual default values here if the config file is either successfully loaded before reading inputs or it failed to load.
@@ -71,23 +76,23 @@ int load_conf_file(char *file_path)
 
     char *line;
     char *rest = buffer;
-    while ((line = strtok_r(rest, "\n", &rest))) {
+    while ((line = strtok_r(rest, NEWLINE_DELIMITER, &rest))) {
         char *current_key = strtok(line, "=");
         if (strcmp("seed", current_key) == 0) {
-            seed = strtoul(strtok(NULL, "\n"), NULL, 16);
+            seed = strtoul(strtok(NULL, NEWLINE_DELIMITER), NULL, 16);
         }
         if (strcmp("tests", current_key) == 0) {
             char *current_test;
-            char *tests = strtok(NULL, "\n");
+            char *tests = strtok(NULL, NEWLINE_DELIMITER);
             while ((current_test = strtok_r(tests, ",", &tests))) {
                 vector_append(&tests_to_run, strtol(current_test, NULL, 16));
             }
         }
         if (strcmp("disable-video", current_key) == 0) {
-            output_video = !strtoul(strtok(NULL, "\n"), NULL, 16);
+            output_video = !strtoul(strtok(NULL, NEWLINE_DELIMITER), NULL, 16);
         }
         if (strcmp("submitter", current_key) == 0) {
-            char *value = strtok(NULL, "\n");
+            char *value = strtok(NULL, NEWLINE_DELIMITER);
             size_t length = strlen(value);
             submitter = calloc(length + 1, sizeof(char));
             strncpy(submitter, value, length);
