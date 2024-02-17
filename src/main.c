@@ -133,13 +133,13 @@ static void run_tests()
     if (tests_to_run.size == 0) {
         print("No specific tests were requested. Running all tests (Single Pass).");
         if (tests_exclude.size) {
-            int remainder_size = 0;
+            int exclude_count = 0;
             for (int i = 0; i < tests_exclude.size; i++) {
                 if (kernel_thunk_table_size > vector_get(&tests_exclude, i)) {
-                    remainder_size++;
+                    exclude_count++;
                 }
             }
-            print("%d test(s) will be exclude.", remainder_size);
+            print("%d test(s) will be excluded.", exclude_count);
         }
         print("-------------------------------------------------------------");
         for (int k = 0; k < kernel_thunk_table_size; k++) {
@@ -149,17 +149,17 @@ static void run_tests()
     else {
         print("A config file was loaded. Only running requested tests.");
         if (tests_exclude.size) {
-            int remainder_size = 0;
+            int exclude_count = 0;
             for (int k = 0; k < tests_to_run.size; k++) {
                 int test_n = vector_get(&tests_to_run, k);
                 for (int i = 0; i < tests_exclude.size; i++) {
                     if (test_n == vector_get(&tests_exclude, i)) {
-                        remainder_size++;
+                        exclude_count++;
                         break;
                     }
                 }
             }
-            print("%d test(s) will be exclude.", remainder_size);
+            print("%d test(s) will be excluded.", exclude_count);
         }
         print("-----------------------------------------------------");
         for (int k = 0; k < tests_to_run.size; k++) {
