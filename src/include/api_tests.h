@@ -29,7 +29,7 @@
 #include "tests_misc.h"
 
 typedef struct {
-    void (*func)(int func_num, const char* func_name);
+    void (*func)(int api_num, const char* api_name);
     const char* name;
 } kernel_api_test;
 

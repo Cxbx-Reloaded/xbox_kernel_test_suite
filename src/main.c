@@ -12,7 +12,7 @@
 #include "util/vector.h"
 #include "util/string_extra.h"
 #include "global.h"
-#include "include/func_table.h"
+#include "include/api_tests.h"
 
 #ifndef GIT_VERSION
 #define GIT_VERSION "unknown"
