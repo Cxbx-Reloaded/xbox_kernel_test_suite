@@ -9,7 +9,7 @@ typedef struct {
   int *data;
 } vector;
 
-void vector_init(vector *vec);
+void vector_init(vector *vec, int capacity);
 void vector_append(vector *vec, int value);
 int vector_get(vector *vec, int index);
 void vector_set(vector *vec, int index, int value);

@@ -410,3 +410,5 @@ void (*kernel_thunk_table[])(void) =
 	test_MmDbgReleaseAddress,                                    // 0x017A (377) DEVKIT
 	test_MmDbgWriteCheck,                                        // 0x017A (378) DEVKIT
 };
+
+static const int kernel_thunk_table_size = ARRAY_SIZE(kernel_thunk_table);
