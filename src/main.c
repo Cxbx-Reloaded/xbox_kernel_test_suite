@@ -33,6 +33,56 @@ static void init_default_values()
 }
 
 static char *submitter = NULL;
+#define LOG_NAME_PATH_DEFAULT "D:\\kernel_tests"
+#define LOG_FILE_EXT ".log"
+static const char* name_log_format = LOG_NAME_PATH_DEFAULT "-%s" LOG_FILE_EXT;
+static char* name_log = NULL;
+
+void load_name_file(const char* file_path)
+{
+    HANDLE handle = CreateFile(
+        file_path,
+        GENERIC_READ,
+        FILE_SHARE_READ,
+        0,
+        OPEN_EXISTING,
+        FILE_ATTRIBUTE_NORMAL,
+        NULL
+    );
+    if (handle == INVALID_HANDLE_VALUE) {
+        return;
+    }
+
+    DWORD file_size = GetFileSize(handle, NULL);
+    if (file_size == INVALID_FILE_SIZE) {
+        return;
+    }
+
+    char* buffer = (char *)malloc(file_size);
+    if (buffer == NULL) {
+        return;
+    }
+
+    DWORD bytes_read = 0;
+    BOOL result = ReadFile(handle, buffer, file_size, &bytes_read, NULL);
+    if (result == 0 || bytes_read != file_size) {
+        return;
+    }
+
+    CloseHandle(handle);
+
+    char *line;
+    char *rest = buffer;
+    if ((line = strtok_r(rest, NEWLINE_DELIMITER, &rest))) {
+        size_t length = strlen(line);
+        if (length) {
+            name_log = calloc(length + 1, sizeof(char));
+            strncpy(name_log, line, length);
+        }
+    }
+
+    free(buffer);
+}
 
 static vector tests_to_run;
 static vector tests_exclude;
@@ -173,7 +223,16 @@ void main(void)
 {
     vector_init(&tests_to_run, kernel_thunk_table_size);
     vector_init(&tests_exclude, 20);
-    if (!open_output_file("D:\\kernel_tests.log")) {
+    load_name_file("D:\\name.txt");
+    char* output_file_name = "D:\\kernel_tests.log";
+    // If name_log buffer is allocated, then we know it does have actual input.
+    if (name_log) {
+        size_t name_log_length = strlen(name_log);
+        name_log_length += strlen(name_log_format) - 2; // exclude %s
+        output_file_name = calloc(name_log_length + 1, sizeof(char));
+        snprintf(output_file_name, name_log_length, name_log_format, name_log);
+    }
+    if (!open_output_file(output_file_name)) {
         return;
     }
     if (load_conf_file("D:\\config.txt")) {
@@ -197,6 +256,13 @@ void main(void)
     if (submitter) {
         free(submitter);
         submitter = NULL;
+    }
+    print("name: %s", (name_log ? name_log : ""));
+    if (name_log) {
+        free(name_log);
+        name_log = NULL;
+        free(output_file_name);
+        output_file_name = NULL;
     }
     print("kernel: %hu.%hu.%hu.%hu",
           XboxKrnlVersion.Major,
