@@ -2,17 +2,17 @@
 
 #include "util/output.h"
 
-void test_XcSHAInit(int func_num, const char* func_name)
+TEST_FUNC(XcSHAInit)
 {
 	/* FIXME: This is a stub! implement this function! */
 }
 
-void test_XcSHAUpdate(int func_num, const char* func_name)
+TEST_FUNC(XcSHAUpdate)
 {
 	/* FIXME: This is a stub! implement this function! */
 }
 
-void test_XcSHAFinal(int func_num, const char* func_name)
+TEST_FUNC(XcSHAFinal)
 {
 	/* FIXME: This is a stub! implement this function! */
 }

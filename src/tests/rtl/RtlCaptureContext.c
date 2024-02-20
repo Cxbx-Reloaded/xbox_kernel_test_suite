@@ -12,10 +12,9 @@
 //
 // FIXME: RtlCaptureContext also sets Ebp, Eip, and Esp in the context record. No checks are enabled for them
 // currently.
-void test_RtlCaptureContext(int func_num, const char* func_name)
+TEST_FUNC(RtlCaptureContext)
 {
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     CONTEXT result_context;
     // cs and ss words so make sure that the upper word of the Seg* dword is 0 or the tests will fail
@@ -91,5 +90,5 @@ void test_RtlCaptureContext(int func_num, const char* func_name)
         GEN_CHECK(*context_tests[i].actual, *context_tests[i].expected, context_tests[i].reg_name);
     }
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }

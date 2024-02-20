@@ -1,5 +1,5 @@
 #pragma once
 
-void test_FscGetCacheSize(int, const char*);
-void test_FscInvalidateIdleBlocks(int, const char*);
-void test_FscSetCacheSize(int, const char*);
+TEST_FUNC(FscGetCacheSize);
+TEST_FUNC(FscInvalidateIdleBlocks);
+TEST_FUNC(FscSetCacheSize);

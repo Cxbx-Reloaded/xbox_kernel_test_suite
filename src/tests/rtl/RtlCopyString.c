@@ -3,10 +3,9 @@
 
 #include "util/output.h"
 
-void test_RtlCopyString(int func_num, const char* func_name)
+TEST_FUNC(RtlCopyString)
 {
-    BOOL tests_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     char src_char_arr[] = "xbox is cool";
     char dst_char_arr[] = "            ";
@@ -18,7 +17,7 @@ void test_RtlCopyString(int func_num, const char* func_name)
     RtlCopyString(&dst_str, &src_str);
 
     if(strncmp(src_str.Buffer, dst_char_arr, src_str.Length) != 0)
-        tests_passed = 0;
+        test_passed = 0;
 
-    print_test_footer(func_num, func_name, tests_passed);
+    TEST_END();
 }

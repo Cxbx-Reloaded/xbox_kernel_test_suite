@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtFlushBuffersFile(int func_num, const char* func_name)
+TEST_FUNC(NtFlushBuffersFile)
 {
     /* FIXME: This is a stub! implement this function! */
 }

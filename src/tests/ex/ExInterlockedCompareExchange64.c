@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_ExInterlockedCompareExchange64(int func_num, const char* func_name)
+TEST_FUNC(ExInterlockedCompareExchange64)
 {
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test__vsnprintf(int func_num, const char* func_name)
+TEST_FUNC(_vsnprintf)
 {
     /* FIXME: This is a stub! implement this function! */
 }

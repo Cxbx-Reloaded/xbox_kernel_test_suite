@@ -6,13 +6,12 @@
 #include "assertions/defines.h"
 #include "assertions/common.h"
 
-void test_ObReferenceObjectByHandle(int func_num, const char* func_name)
+TEST_FUNC(ObReferenceObjectByHandle)
 {
-    BOOL test_passed = 1;
+    TEST_BEGIN();
+
     PVOID object_return;
     NTSTATUS result;
-
-    print_test_header(func_num, func_name);
 
     typedef struct {
         const char* message;
@@ -26,7 +25,7 @@ void test_ObReferenceObjectByHandle(int func_num, const char* func_name)
         // test with invalid handle with null object type
         { "unknown (invalid / NULL)", (HANDLE)100000, NULL, STATUS_INVALID_HANDLE, NULL },
         // test with invalid handle with null object type
-        { "unknown (invalid / invalid)", (HANDLE)100000, (POBJECT_TYPE)&func_name, STATUS_INVALID_HANDLE, NULL },
+        { "unknown (invalid / invalid)", (HANDLE)100000, (POBJECT_TYPE)&api_name, STATUS_INVALID_HANDLE, NULL },
         // test with invalid handle with thread object type
         { "thread (invalid / PsThreadObjectType)", (HANDLE)100000, &PsThreadObjectType, STATUS_INVALID_HANDLE, NULL },
         // test with invalid special handle (NtCurrentProcess) with null object type
@@ -47,9 +46,9 @@ void test_ObReferenceObjectByHandle(int func_num, const char* func_name)
         if (result == STATUS_SUCCESS) {
             NtClose(reference_object_handle_test[i].handle);
         }
-        test_passed &= assert_NTSTATUS(result, reference_object_handle_test[i].expected_result, func_name);
+        test_passed &= assert_NTSTATUS(result, reference_object_handle_test[i].expected_result, api_name);
         GEN_CHECK(object_return, reference_object_handle_test[i].expected_object_return, reference_object_handle_test[i].message);
     }
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }

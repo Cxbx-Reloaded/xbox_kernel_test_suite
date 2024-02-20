@@ -3,23 +3,22 @@
 #include "assertions/ke.h"
 #include "util/output.h"
 
-void test_KeEnterCriticalRegion(int func_num, const char* func_name)
+TEST_FUNC(KeEnterCriticalRegion)
 {
-    BOOL tests_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     PKTHREAD thread = KeGetCurrentThread();
-    tests_passed &= assert_critical_region(thread, 0, "Before entering critical region");
+    test_passed &= assert_critical_region(thread, 0, "Before entering critical region");
 
     KeEnterCriticalRegion();
-    tests_passed &= assert_critical_region(thread, -1, "In critical region");
+    test_passed &= assert_critical_region(thread, -1, "In critical region");
 
     KeEnterCriticalRegion();
-    tests_passed &= assert_critical_region(thread, -2, "Entered critical region again");
+    test_passed &= assert_critical_region(thread, -2, "Entered critical region again");
 
     KeLeaveCriticalRegion();
     KeLeaveCriticalRegion();
-    tests_passed &= assert_critical_region(thread, 0, "Leave critical region twice");
+    test_passed &= assert_critical_region(thread, 0, "Leave critical region twice");
 
-    print_test_footer(func_num, func_name, tests_passed);
+    TEST_END();
 }

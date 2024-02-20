@@ -2,16 +2,15 @@
 
 #include "util/output.h"
 
-void test_XcModExp(int func_num, const char* func_name)
+TEST_FUNC(XcModExp)
 {
-    BOOL test_passed = 1;
+    TEST_BEGIN();
+
 	ULONG ret = 0;
 	ULONG output = 0;
 	ULONG a      = 0x10;
 	ULONG b      = 0x20;
 	ULONG c      = 0x30;
-
-    print_test_header(func_num, func_name);
 
 	ret = XcModExp(&output, &a, &b, &c, 4/sizeof(ULONG));
 	if(ret == 1 && output == 0x10) {
@@ -23,5 +22,5 @@ void test_XcModExp(int func_num, const char* func_name)
 
 	// Passing a size of zero freezes (crash?) my xbox so I won't test it
 
-	print_test_footer(func_num, func_name, test_passed);
+	TEST_END();
 }

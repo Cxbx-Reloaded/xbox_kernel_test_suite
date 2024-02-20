@@ -4,10 +4,9 @@
 #include "util/misc.h"
 #include "assertions/defines.h"
 
-void test_RtlDowncaseUnicodeChar(int func_num, const char* func_name)
+TEST_FUNC(RtlDowncaseUnicodeChar)
 {
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     typedef struct _downcase_test {
         WCHAR input;
@@ -30,18 +29,17 @@ void test_RtlDowncaseUnicodeChar(int func_num, const char* func_name)
     }
     GEN_CHECK_ARRAY_MEMBER(downcase_tests, return_result, expected_output, results_size, "downcase_tests");
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }
 
-void test_RtlDowncaseUnicodeString(int func_num, const char* func_name)
+TEST_FUNC(RtlDowncaseUnicodeString)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlLowerChar(int func_num, const char* func_name)
+TEST_FUNC(RtlLowerChar)
 {
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     // These results are taken from running inputs 0 through 255 on a NTSC Xbox
     CHAR expected_outputs[] = {
@@ -70,5 +68,5 @@ void test_RtlLowerChar(int func_num, const char* func_name)
     }
     GEN_CHECK_ARRAY(results, expected_outputs, expected_length, "results");
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }

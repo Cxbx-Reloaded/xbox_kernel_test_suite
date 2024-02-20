@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoInitializeIrp(int func_num, const char* func_name)
+TEST_FUNC(IoInitializeIrp)
 {
     /* FIXME: This is a stub! implement this function! */
 }

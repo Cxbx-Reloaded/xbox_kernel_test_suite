@@ -4,10 +4,9 @@
 #include "util/misc.h"
 #include "assertions/defines.h"
 
-void test_RtlUlongByteSwap(int func_num, const char* func_name)
+TEST_FUNC(RtlUlongByteSwap)
 {
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     typedef struct _byte_swap_test {
         const ULONG input;
@@ -27,5 +26,5 @@ void test_RtlUlongByteSwap(int func_num, const char* func_name)
     }
     GEN_CHECK_ARRAY_MEMBER(byte_swap_tests, return_result, expected_result, byte_swap_tests_size, "byte_swap_tests");
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }

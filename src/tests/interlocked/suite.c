@@ -2,42 +2,42 @@
 
 #include "util/output.h"
 
-void test_InterlockedCompareExchange(int func_num, const char* func_name)
+TEST_FUNC(InterlockedCompareExchange)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_InterlockedDecrement(int func_num, const char* func_name)
+TEST_FUNC(InterlockedDecrement)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_InterlockedIncrement(int func_num, const char* func_name)
+TEST_FUNC(InterlockedIncrement)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_InterlockedExchange(int func_num, const char* func_name)
+TEST_FUNC(InterlockedExchange)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_InterlockedExchangeAdd(int func_num, const char* func_name)
+TEST_FUNC(InterlockedExchangeAdd)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_InterlockedFlushSList(int func_num, const char* func_name)
+TEST_FUNC(InterlockedFlushSList)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_InterlockedPopEntrySList(int func_num, const char* func_name)
+TEST_FUNC(InterlockedPopEntrySList)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_InterlockedPushEntrySList(int func_num, const char* func_name)
+TEST_FUNC(InterlockedPushEntrySList)
 {
     /* FIXME: This is a stub! implement this function! */
 }

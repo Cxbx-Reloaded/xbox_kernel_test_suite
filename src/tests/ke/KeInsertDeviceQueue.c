@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeInsertDeviceQueue(int func_num, const char* func_name)
+TEST_FUNC(KeInsertDeviceQueue)
 {
     /* FIXME: This is a stub! implement this function! */
 }

@@ -5,10 +5,9 @@
 #include "util/output.h"
 #include "assertions/defines.h"
 
-void test_RtlCaptureStackBackTrace(int func_num, const char* func_name)
+TEST_FUNC(RtlCaptureStackBackTrace)
 {
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     ULONG frame_size = 10;
     PULONG frames_expected = (PULONG)malloc(frame_size * sizeof(ULONG));
@@ -76,7 +75,7 @@ void test_RtlCaptureStackBackTrace(int func_num, const char* func_name)
     free(frames_expected);
     free(frames_test);
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }
 
 void stub_RtlGetCallersAddress(PVOID* CallerAddress_test, PVOID* CallersCaller_test, PULONG CallerAddress_expected){
@@ -84,11 +83,9 @@ void stub_RtlGetCallersAddress(PVOID* CallerAddress_test, PVOID* CallersCaller_t
     RtlGetCallersAddress(CallerAddress_test, CallersCaller_test);
 }
 
-void test_RtlGetCallersAddress(int func_num, const char* func_name)
+TEST_FUNC(RtlGetCallersAddress)
 {
-    BOOL test_passed = 1;
-
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     ULONG CallerAddress_test, CallersCaller_test, CallerAddress_expected;
     ULONG CallersCaller_expected = (ULONG)__builtin_return_address(0);
@@ -99,7 +96,7 @@ void test_RtlGetCallersAddress(int func_num, const char* func_name)
 
     GEN_CHECK(CallersCaller_test, CallersCaller_expected, "CallersCaller");
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }
 
 // stack calls to see how RtlWalkFrameChain work internally.
@@ -120,10 +117,9 @@ static ULONG stub_RtlWalkFrameChain1of4(PVOID* Callers, ULONG Count)
     return stub_RtlWalkFrameChain2of4(Callers, Count);
 }
 
-void test_RtlWalkFrameChain(int func_num, const char* func_name)
+TEST_FUNC(RtlWalkFrameChain)
 {
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     ULONG count = 20;
     ULONG callers[count];
@@ -150,5 +146,5 @@ void test_RtlWalkFrameChain(int func_num, const char* func_name)
         }
     }
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }

@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_RtlMapGenericMask(int func_num, const char* func_name)
+TEST_FUNC(RtlMapGenericMask)
 {
     /* FIXME: This is a stub! implement this function! */
 }

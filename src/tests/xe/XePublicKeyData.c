@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_XePublicKeyData(int func_num, const char* func_name)
+TEST_FUNC(XePublicKeyData)
 {
     /* FIXME: This is a stub! implement this function! */
 }

@@ -1,15 +1,15 @@
 #pragma once
 
-void test_panic(int, const char*);
-void test_LaunchDataPage(int, const char*);
-void test_READ_PORT_BUFFER_UCHAR(int, const char*);
-void test_READ_PORT_BUFFER_USHORT(int, const char*);
-void test_READ_PORT_BUFFER_ULONG(int, const char*);
-void test_WRITE_PORT_BUFFER_UCHAR(int, const char*);
-void test_WRITE_PORT_BUFFER_USHORT(int, const char*);
-void test_WRITE_PORT_BUFFER_ULONG(int, const char*);
-void test_IdexChannelObject(int, const char*);
-void test__snprintf(int, const char*);
-void test__sprintf(int, const char*);
-void test__vsnprintf(int, const char*);
-void test__vsprintf(int, const char*);
+TEST_FUNC(panic);
+TEST_FUNC(LaunchDataPage);
+TEST_FUNC(READ_PORT_BUFFER_UCHAR);
+TEST_FUNC(READ_PORT_BUFFER_USHORT);
+TEST_FUNC(READ_PORT_BUFFER_ULONG);
+TEST_FUNC(WRITE_PORT_BUFFER_UCHAR);
+TEST_FUNC(WRITE_PORT_BUFFER_USHORT);
+TEST_FUNC(WRITE_PORT_BUFFER_ULONG);
+TEST_FUNC(IdexChannelObject);
+TEST_FUNC(_snprintf);
+TEST_FUNC(_sprintf);
+TEST_FUNC(_vsnprintf);
+TEST_FUNC(_vsprintf);

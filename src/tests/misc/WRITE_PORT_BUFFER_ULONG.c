@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_WRITE_PORT_BUFFER_ULONG(int func_num, const char* func_name)
+TEST_FUNC(WRITE_PORT_BUFFER_ULONG)
 {
     /* FIXME: This is a stub! implement this function! */
 }

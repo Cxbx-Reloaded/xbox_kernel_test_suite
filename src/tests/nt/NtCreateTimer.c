@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtCreateTimer(int func_num, const char* func_name)
+TEST_FUNC(NtCreateTimer)
 {
     /* FIXME: This is a stub! implement this function! */
 }

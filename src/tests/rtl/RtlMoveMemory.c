@@ -4,10 +4,9 @@
 #include "global.h" // for seed var
 #include "util/output.h"
 
-void test_RtlMoveMemory(int func_num, const char* func_name)
+TEST_FUNC(RtlMoveMemory)
 {
-    BOOL tests_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     const int size = 1024;
     char rnd_letter;
@@ -31,12 +30,12 @@ void test_RtlMoveMemory(int func_num, const char* func_name)
 
     for(int k=0; k<size; k++){
         if(src_buffer[k] != dest_buffer[k]){
-            tests_passed = 0;
+            test_passed = 0;
             break;
         }
     }
 
     free(src_buffer);
     free(dest_buffer);
-    print_test_footer(func_num, func_name, tests_passed);
+    TEST_END();
 }

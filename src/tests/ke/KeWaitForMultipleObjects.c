@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeWaitForMultipleObjects(int func_num, const char* func_name)
+TEST_FUNC(KeWaitForMultipleObjects)
 {
     /* FIXME: This is a stub! implement this function! */
 }

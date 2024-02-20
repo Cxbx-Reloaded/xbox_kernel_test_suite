@@ -3,10 +3,9 @@
 #include "util/output.h"
 #include "assertions/defines.h"
 
-void test_MmFreeSystemMemory(int func_num, const char* func_name)
+TEST_FUNC(MmFreeSystemMemory)
 {
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     // NOTE: these tests could be marked as failed if not enough memory can be allocated for them
 
@@ -28,5 +27,5 @@ void test_MmFreeSystemMemory(int func_num, const char* func_name)
         GEN_CHECK(num_of_pages, 2, "num_of_pages");
     }
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }

@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_MmQueryStatistics(int func_num, const char* func_name)
+TEST_FUNC(MmQueryStatistics)
 {
     /* FIXME: This is a stub! implement this function! */
 }

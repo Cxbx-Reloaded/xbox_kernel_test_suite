@@ -11,10 +11,9 @@
 //    to test this as it will cause real hardware to hang.
 // 3. Real hardware implements this as a binary divison algorithm that emits interesting results when negative
 //    inputs are provided. The expected_results below are taken from what real hardware produces as output.
-void test_RtlExtendedLargeIntegerDivide(int func_num, const char* func_name)
+TEST_FUNC(RtlExtendedLargeIntegerDivide)
 {
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     typedef struct _int_divide_test {
         const LARGE_INTEGER dividend;
@@ -46,5 +45,5 @@ void test_RtlExtendedLargeIntegerDivide(int func_num, const char* func_name)
     LARGE_INTEGER result = RtlExtendedLargeIntegerDivide(dividend, 2, NULL);
     GEN_CHECK(result.QuadPart, 2, "result");
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }

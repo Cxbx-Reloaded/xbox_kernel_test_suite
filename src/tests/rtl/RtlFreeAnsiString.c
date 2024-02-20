@@ -3,10 +3,9 @@
 #include "util/output.h"
 #include "assertions/rtl.h"
 
-void test_RtlFreeAnsiString(int func_num, const char* func_name)
+TEST_FUNC(RtlFreeAnsiString)
 {
-    BOOL tests_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     const BOOL alloc_buffer = 1;
     ANSI_STRING ansi_string;
@@ -16,7 +15,7 @@ void test_RtlFreeAnsiString(int func_num, const char* func_name)
     RtlInitUnicodeString(&unicode_string, unicode_text);
     RtlUnicodeStringToAnsiString(&ansi_string, &unicode_string, alloc_buffer);
     RtlFreeAnsiString(&ansi_string);
-    tests_passed &= assert_ansi_string(
+    test_passed &= assert_ansi_string(
         &ansi_string,
         0,
         0,
@@ -24,5 +23,5 @@ void test_RtlFreeAnsiString(int func_num, const char* func_name)
         "Free ansi string"
     );
 
-    print_test_footer(func_num, func_name, tests_passed);
+    TEST_END();
 }

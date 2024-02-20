@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_PsQueryStatistics(int func_num, const char* func_name)
+TEST_FUNC(PsQueryStatistics)
 {
     /* FIXME: This is a stub! implement this function! */
 }

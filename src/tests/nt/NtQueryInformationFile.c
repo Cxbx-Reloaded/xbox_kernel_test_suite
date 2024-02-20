@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtQueryInformationFile(int func_num, const char* func_name)
+TEST_FUNC(NtQueryInformationFile)
 {
     /* FIXME: This is a stub! implement this function! */
 }

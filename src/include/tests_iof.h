@@ -1,4 +1,4 @@
 #pragma once
 
-void test_IofCallDriver(int, const char*);
-void test_IofCompleteRequest(int, const char*);
+TEST_FUNC(IofCallDriver);
+TEST_FUNC(IofCompleteRequest);

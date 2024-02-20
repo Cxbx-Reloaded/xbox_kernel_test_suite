@@ -1,12 +1,12 @@
 #pragma once
 
-void test_ObCreateObject(int, const char*);
-void test_ObDirectoryObjectType(int, const char*);
-void test_ObInsertObject(int, const char*);
-void test_ObMakeTemporaryObject(int, const char*);
-void test_ObOpenObjectByName(int, const char*);
-void test_ObOpenObjectByPointer(int, const char*);
-void test_ObReferenceObjectByHandle(int, const char*);
-void test_ObReferenceObjectByName(int, const char*);
-void test_ObReferenceObjectByPointer(int, const char*);
-void test_ObSymbolicLinkObjectType(int, const char*);
+TEST_FUNC(ObCreateObject);
+TEST_FUNC(ObDirectoryObjectType);
+TEST_FUNC(ObInsertObject);
+TEST_FUNC(ObMakeTemporaryObject);
+TEST_FUNC(ObOpenObjectByName);
+TEST_FUNC(ObOpenObjectByPointer);
+TEST_FUNC(ObReferenceObjectByHandle);
+TEST_FUNC(ObReferenceObjectByName);
+TEST_FUNC(ObReferenceObjectByPointer);
+TEST_FUNC(ObSymbolicLinkObjectType);

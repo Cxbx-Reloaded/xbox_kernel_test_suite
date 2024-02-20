@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoAllocateIrp(int func_num, const char* func_name)
+TEST_FUNC(IoAllocateIrp)
 {
     /* FIXME: This is a stub! implement this function! */
 }

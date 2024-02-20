@@ -1,18 +1,19 @@
 #include <hal/fileio.h>
 
 #include "util/output.h"
+#include "assertions/common.h"
 
-void test_NtClose(int func_num, const char* func_name)
+TEST_FUNC(NtClose)
 {
+    TEST_BEGIN();
+
+    // TODO: Update this test with more macros checks.
     HANDLE handle;
     NTSTATUS status;
     OBJECT_ATTRIBUTES obj;
     IO_STATUS_BLOCK isb;
     ANSI_STRING obj_name;
     char filepath[200];
-    BOOL tests_passed = 0;
-
-    print_test_header(func_num, func_name);
 
     XConvertDOSFilenameToXBOX("./default.xbe", filepath);
     RtlInitAnsiString(&obj_name, filepath);
@@ -21,19 +22,18 @@ void test_NtClose(int func_num, const char* func_name)
     obj.Attributes = OBJ_CASE_INSENSITIVE;
     obj.ObjectName = &obj_name;
 
-    status = NtCreateFile(
-    &handle,
-    GENERIC_READ,
-    &obj,
-    &isb,
-    NULL,
-    FILE_ATTRIBUTE_NORMAL,
-    0,
-    FILE_OPEN,
-    FILE_SYNCHRONOUS_IO_NONALERT);
+    status = NtCreateFile(&handle,
+                          GENERIC_READ,
+                          &obj,
+                          &isb,
+                          NULL,
+                          FILE_ATTRIBUTE_NORMAL,
+                          0,
+                          FILE_OPEN,
+                          FILE_SYNCHRONOUS_IO_NONALERT);
 
-    if(NtClose(handle)==0)
-        tests_passed += 1;
+    status = NtClose(handle);
+    test_passed &= assert_NTSTATUS(status, STATUS_SUCCESS, "NtClose");
 
-    print_test_footer(func_num, func_name, tests_passed);
+    TEST_END();
 }

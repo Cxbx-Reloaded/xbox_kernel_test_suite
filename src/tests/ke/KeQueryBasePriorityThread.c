@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeQueryBasePriorityThread(int func_num, const char* func_name)
+TEST_FUNC(KeQueryBasePriorityThread)
 {
     /* FIXME: This is a stub! implement this function! */
 }

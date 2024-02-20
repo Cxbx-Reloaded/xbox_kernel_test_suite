@@ -11,10 +11,9 @@
 - STATUS_OBJECT_NAME_EXISTS
 - STATUS_OBJECT_TYPE_MISMATCH
 */
-void test_IoCreateSymbolicLink(int func_num, const char* func_name)
+TEST_FUNC(IoCreateSymbolicLink)
 {
-    BOOL tests_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     ANSI_STRING null_str, blank_str, symlink_str, device_str,
         symlink_no_slash_str, symlink_bad_str, device_w_slash_str,
@@ -35,11 +34,11 @@ void test_IoCreateSymbolicLink(int func_num, const char* func_name)
 
     // First part of the test is ensure we are able to make symbolic link.
     result = IoCreateSymbolicLink(&symlink_str, &device_str);
-    tests_passed &= assert_NTSTATUS(result, STATUS_SUCCESS, func_name);
+    test_passed &= assert_NTSTATUS(result, STATUS_SUCCESS, api_name);
 
     // Do not delete symbolic link yet in order to trigger object name collision error.
     result = IoCreateSymbolicLink(&symlink_str, &device_str);
-    tests_passed &= assert_NTSTATUS(result, STATUS_OBJECT_NAME_COLLISION, func_name);
+    test_passed &= assert_NTSTATUS(result, STATUS_OBJECT_NAME_COLLISION, api_name);
 
     // Now we can delete symbolic link for next part of various tests.
     IoDeleteSymbolicLink(&symlink_str);
@@ -81,7 +80,7 @@ void test_IoCreateSymbolicLink(int func_num, const char* func_name)
             IoDeleteSymbolicLink(symlink_test_str[i].pStr);
         }
 
-        tests_passed &= assert_NTSTATUS(result, symlink_test_str[i].expected_result, func_name);
+        test_passed &= assert_NTSTATUS(result, symlink_test_str[i].expected_result, api_name);
     }
 
     // Perform tests for device inputs
@@ -91,8 +90,8 @@ void test_IoCreateSymbolicLink(int func_num, const char* func_name)
             IoDeleteSymbolicLink(&symlink_str);
         }
 
-        tests_passed &= assert_NTSTATUS(result, device_test_str[i].expected_result, func_name);
+        test_passed &= assert_NTSTATUS(result, device_test_str[i].expected_result, api_name);
     }
 
-    print_test_footer(func_num, func_name, tests_passed);
+    TEST_END();
 }

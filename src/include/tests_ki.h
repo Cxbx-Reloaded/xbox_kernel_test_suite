@@ -1,4 +1,4 @@
 #pragma once
 
-void test_KiBugCheckData(int, const char*);
-void test_KiUnlockDispatcherDatabase(int, const char*);
+TEST_FUNC(KiBugCheckData);
+TEST_FUNC(KiUnlockDispatcherDatabase);

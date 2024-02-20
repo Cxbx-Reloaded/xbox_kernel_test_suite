@@ -1,5 +1,5 @@
 #pragma once
 
-void test_ObfDereferenceObject(int, const char*);
-void test_ObfReferenceObject(int, const char*);
+TEST_FUNC(ObfDereferenceObject);
+TEST_FUNC(ObfReferenceObject);
 

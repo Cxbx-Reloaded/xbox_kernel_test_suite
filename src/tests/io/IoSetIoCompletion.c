@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoSetIoCompletion(int func_num, const char* func_name)
+TEST_FUNC(IoSetIoCompletion)
 {
     /* FIXME: This is a stub! implement this function! */
 }

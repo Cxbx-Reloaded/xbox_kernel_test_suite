@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_MmUnmapIoSpace(int func_num, const char* func_name)
+TEST_FUNC(MmUnmapIoSpace)
 {
     /* FIXME: This is a stub! implement this function! */
 }

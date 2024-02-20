@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_HalInitiateShutdown(int func_num, const char* func_name)
+TEST_FUNC(HalInitiateShutdown)
 {
     /* FIXME: This is a stub! implement this function! */
 }

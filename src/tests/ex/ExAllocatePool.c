@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_ExAllocatePool(int func_num, const char* func_name)
+TEST_FUNC(ExAllocatePool)
 {
     /* FIXME: This is a stub! implement this function! */
 }

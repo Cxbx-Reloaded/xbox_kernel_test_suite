@@ -9,25 +9,24 @@
 #include "util/misc.h"
 #include "assertions/defines.h"
 
-void test_RtlUpcaseUnicodeChar(int func_num, const char* func_name)
+TEST_FUNC(RtlUpcaseUnicodeChar)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlUpcaseUnicodeString(int func_num, const char* func_name)
+TEST_FUNC(RtlUpcaseUnicodeString)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlUpcaseUnicodeToMultiByteN(int func_num, const char* func_name)
+TEST_FUNC(RtlUpcaseUnicodeToMultiByteN)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_RtlUpperChar(int func_num, const char* func_name)
+TEST_FUNC(RtlUpperChar)
 {
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     // These results are taken from running inputs 0 through 255 on a NTSC Xbox
     CHAR expected_outputs[] = {
@@ -56,13 +55,12 @@ void test_RtlUpperChar(int func_num, const char* func_name)
     }
     GEN_CHECK_ARRAY(results, expected_outputs, expected_length, "results");
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }
 
-void test_RtlUpperString(int func_num, const char* func_name)
+TEST_FUNC(RtlUpperString)
 {
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     char rnd_letter;
     char rnd_letters[101];
@@ -118,5 +116,5 @@ void test_RtlUpperString(int func_num, const char* func_name)
     RtlUpperString(&res_str, &src_str);
     GEN_CHECK(strncmp(res_str.Buffer, "XBOX", res_str.Length) == 0, TRUE, "compare");
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }

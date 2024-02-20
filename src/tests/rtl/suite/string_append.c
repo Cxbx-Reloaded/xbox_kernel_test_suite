@@ -9,10 +9,9 @@
 #include "assertions/rtl.h"
 
 // Odd behavior of this function: A terminating NULL character '\0' is not added to the end of the appended string.
-void test_RtlAppendStringToString(int func_num, const char* func_name)
+TEST_FUNC(RtlAppendStringToString)
 {
-    BOOL tests_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     // Append string to empty dest once
     ANSI_STRING src_str, dest_str;
@@ -26,9 +25,9 @@ void test_RtlAppendStringToString(int func_num, const char* func_name)
     strncpy(expected_result, src_str.Buffer, src_str.MaximumLength);
 
     NTSTATUS ret = RtlAppendStringToString(&dest_str, &src_str);
-    tests_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, func_name);
+    test_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, api_name);
     dest_buffer[dest_str.Length] = '\0'; // RtlAppendStringToString does not add a terminating NULL character which breaks strncmp
-    tests_passed &= assert_ansi_string(
+    test_passed &= assert_ansi_string(
         &dest_str,
         strlen(expected_result),
         sizeof(dest_buffer),
@@ -41,8 +40,8 @@ void test_RtlAppendStringToString(int func_num, const char* func_name)
     strncat(expected_result, src_str.Buffer, src_str.MaximumLength);
 
     ret = RtlAppendStringToString(&dest_str, &src_str);
-    tests_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, func_name);
-    tests_passed &= assert_ansi_string(
+    test_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, api_name);
+    test_passed &= assert_ansi_string(
         &dest_str,
         strlen(expected_result),
         sizeof(dest_buffer),
@@ -53,13 +52,13 @@ void test_RtlAppendStringToString(int func_num, const char* func_name)
     // Should now return STATUS_BUFFER_TOO_SMALL
     RtlInitAnsiString(&src_str, "A");
     ret = RtlAppendStringToString(&dest_str, &src_str);
-    tests_passed &= assert_NTSTATUS(ret, STATUS_BUFFER_TOO_SMALL, func_name);
+    test_passed &= assert_NTSTATUS(ret, STATUS_BUFFER_TOO_SMALL, api_name);
 
     // Appending empty str is okay though
     RtlInitAnsiString(&src_str, "");
     ret = RtlAppendStringToString(&dest_str, &src_str);
-    tests_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, func_name);
-    tests_passed &= assert_ansi_string(
+    test_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, api_name);
+    test_passed &= assert_ansi_string(
         &dest_str,
         strlen(expected_result),
         sizeof(dest_buffer),
@@ -67,13 +66,12 @@ void test_RtlAppendStringToString(int func_num, const char* func_name)
         "Appending empty_str does not change dest_str"
     );
 
-    print_test_footer(func_num, func_name, tests_passed);
+    TEST_END();
 }
 
-void test_RtlAppendUnicodeStringToString(int func_num, const char* func_name)
+TEST_FUNC(RtlAppendUnicodeStringToString)
 {
-    BOOL tests_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     UNICODE_STRING src_str, dest_str;
     RtlInitUnicodeString(&src_str, L"Xbox");
@@ -88,8 +86,8 @@ void test_RtlAppendUnicodeStringToString(int func_num, const char* func_name)
     wcsncpy(expected_result, src_str.Buffer, num_chars_in_src + 1);
 
     NTSTATUS ret = RtlAppendUnicodeStringToString(&dest_str, &src_str);
-    tests_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, func_name);
-    tests_passed &= assert_unicode_string(
+    test_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, api_name);
+    test_passed &= assert_unicode_string(
         &dest_str,
         wcslen(expected_result) * sizeof(WCHAR),
         num_buf_bytes,
@@ -99,8 +97,8 @@ void test_RtlAppendUnicodeStringToString(int func_num, const char* func_name)
 
     wcscat(expected_result, src_str.Buffer);
     ret = RtlAppendUnicodeStringToString(&dest_str, &src_str);
-    tests_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, func_name);
-    tests_passed &= assert_unicode_string(
+    test_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, api_name);
+    test_passed &= assert_unicode_string(
         &dest_str,
         wcslen(expected_result) * sizeof(WCHAR),
         num_buf_bytes,
@@ -109,15 +107,14 @@ void test_RtlAppendUnicodeStringToString(int func_num, const char* func_name)
     );
 
     ret = RtlAppendUnicodeStringToString(&dest_str, &src_str);
-    tests_passed &= assert_NTSTATUS(ret, STATUS_BUFFER_TOO_SMALL, func_name);
+    test_passed &= assert_NTSTATUS(ret, STATUS_BUFFER_TOO_SMALL, api_name);
 
-    print_test_footer(func_num, func_name, tests_passed);
+    TEST_END();
 }
 
-void test_RtlAppendUnicodeToString(int func_num, const char* func_name)
+TEST_FUNC(RtlAppendUnicodeToString)
 {
-    BOOL tests_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     const WCHAR* src_text = L"Xbox";
     const uint8_t num_chars_in_src = wcslen(src_text) + 1;
@@ -132,8 +129,8 @@ void test_RtlAppendUnicodeToString(int func_num, const char* func_name)
     wcsncpy(expected_result, src_text, num_chars_in_src);
 
     NTSTATUS ret = RtlAppendUnicodeToString(&dest_str, src_text);
-    tests_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, func_name);
-    tests_passed &= assert_unicode_string(
+    test_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, api_name);
+    test_passed &= assert_unicode_string(
         &dest_str,
         wcslen(expected_result) * sizeof(WCHAR),
         num_buf_bytes,
@@ -143,8 +140,8 @@ void test_RtlAppendUnicodeToString(int func_num, const char* func_name)
 
     wcsncat(expected_result, src_text, num_chars_in_src);
     ret = RtlAppendUnicodeToString(&dest_str, src_text);
-    tests_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, func_name);
-    tests_passed &= assert_unicode_string(
+    test_passed &= assert_NTSTATUS(ret, STATUS_SUCCESS, api_name);
+    test_passed &= assert_unicode_string(
         &dest_str,
         wcslen(expected_result) * sizeof(WCHAR),
         num_buf_bytes,
@@ -153,7 +150,7 @@ void test_RtlAppendUnicodeToString(int func_num, const char* func_name)
     );
 
     ret = RtlAppendUnicodeToString(&dest_str, src_text);
-    tests_passed &= assert_NTSTATUS(ret, STATUS_BUFFER_TOO_SMALL, func_name);
+    test_passed &= assert_NTSTATUS(ret, STATUS_BUFFER_TOO_SMALL, api_name);
 
-    print_test_footer(func_num, func_name, tests_passed);
+    TEST_END();
 }

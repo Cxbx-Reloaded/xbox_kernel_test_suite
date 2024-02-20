@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeQueryInterruptTime(int func_num, const char* func_name)
+TEST_FUNC(KeQueryInterruptTime)
 {
     /* FIXME: This is a stub! implement this function! */
 }

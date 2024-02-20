@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoDeviceObjectType(int func_num, const char* func_name)
+TEST_FUNC(IoDeviceObjectType)
 {
     /* FIXME: This is a stub! implement this function! */
 }

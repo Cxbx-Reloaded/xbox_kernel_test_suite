@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_HalReturnToFirmware(int func_num, const char* func_name)
+TEST_FUNC(HalReturnToFirmware)
 {
     /* FIXME: This is a stub! implement this function! */
 }

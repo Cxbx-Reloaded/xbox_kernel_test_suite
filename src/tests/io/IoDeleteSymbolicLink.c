@@ -3,10 +3,9 @@
 #include "util/output.h"
 #include "assertions/common.h"
 
-void test_IoDeleteSymbolicLink(int func_num, const char* func_name)
+TEST_FUNC(IoDeleteSymbolicLink)
 {
-    BOOL tests_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     ANSI_STRING symlink_str, device_str, null_str, blank_str;
     RtlInitAnsiString(&symlink_str, "\\xkts");
@@ -18,19 +17,19 @@ void test_IoDeleteSymbolicLink(int func_num, const char* func_name)
     IoCreateSymbolicLink(&symlink_str, &device_str);
 
     result = IoDeleteSymbolicLink(&symlink_str);
-    tests_passed &= assert_NTSTATUS(result, STATUS_SUCCESS, func_name);
+    test_passed &= assert_NTSTATUS(result, STATUS_SUCCESS, api_name);
 
     result = IoDeleteSymbolicLink(&symlink_str);
-    tests_passed &= assert_NTSTATUS(result, STATUS_OBJECT_NAME_NOT_FOUND, func_name);
+    test_passed &= assert_NTSTATUS(result, STATUS_OBJECT_NAME_NOT_FOUND, api_name);
 
     result = IoDeleteSymbolicLink(&null_str);
-    tests_passed &= assert_NTSTATUS(result, STATUS_OBJECT_NAME_INVALID, func_name);
+    test_passed &= assert_NTSTATUS(result, STATUS_OBJECT_NAME_INVALID, api_name);
 
     result = IoDeleteSymbolicLink(&blank_str);
-    tests_passed &= assert_NTSTATUS(result, STATUS_OBJECT_NAME_INVALID, func_name);
+    test_passed &= assert_NTSTATUS(result, STATUS_OBJECT_NAME_INVALID, api_name);
 
     result = IoDeleteSymbolicLink(NULL);
-    tests_passed &= assert_NTSTATUS(result, STATUS_OBJECT_NAME_INVALID, func_name);
+    test_passed &= assert_NTSTATUS(result, STATUS_OBJECT_NAME_INVALID, api_name);
 
-    print_test_footer(func_num, func_name, tests_passed);
+    TEST_END();
 }
