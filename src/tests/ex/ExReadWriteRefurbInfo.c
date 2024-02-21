@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_ExReadWriteRefurbInfo()
+TEST_FUNC(ExReadWriteRefurbInfo)
 {
     /* FIXME: This is a stub! implement this function! */
 }

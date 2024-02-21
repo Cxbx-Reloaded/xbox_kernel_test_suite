@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_ExQueryNonVolatileSetting()
+TEST_FUNC(ExQueryNonVolatileSetting)
 {
     /* FIXME: This is a stub! implement this function! */
 }

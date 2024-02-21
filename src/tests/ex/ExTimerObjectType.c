@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_ExTimerObjectType()
+TEST_FUNC(ExTimerObjectType)
 {
     /* FIXME: This is a stub! implement this function! */
 }

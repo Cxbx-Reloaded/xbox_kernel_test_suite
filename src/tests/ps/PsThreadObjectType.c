@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_PsThreadObjectType()
+TEST_FUNC(PsThreadObjectType)
 {
     /* FIXME: This is a stub! implement this function! */
 }

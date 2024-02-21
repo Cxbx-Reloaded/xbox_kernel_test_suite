@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoCheckShareAccess()
+TEST_FUNC(IoCheckShareAccess)
 {
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_LaunchDataPage()
+TEST_FUNC(LaunchDataPage)
 {
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_XboxAlternateSignatureKeys()
+TEST_FUNC(XboxAlternateSignatureKeys)
 {
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtQueueApcThread()
+TEST_FUNC(NtQueueApcThread)
 {
     /* FIXME: This is a stub! implement this function! */
 }

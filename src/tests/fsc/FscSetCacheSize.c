@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_FscSetCacheSize()
+TEST_FUNC(FscSetCacheSize)
 {
     /* FIXME: This is a stub! implement this function! */
 }

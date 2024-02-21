@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtClearEvent()
+TEST_FUNC(NtClearEvent)
 {
     /* FIXME: This is a stub! implement this function! */
 }

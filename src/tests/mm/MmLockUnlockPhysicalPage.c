@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_MmLockUnlockPhysicalPage()
+TEST_FUNC(MmLockUnlockPhysicalPage)
 {
     /* FIXME: This is a stub! implement this function! */
 }

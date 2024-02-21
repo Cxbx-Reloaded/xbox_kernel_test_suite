@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoBuildAsynchronousFsdRequest()
+TEST_FUNC(IoBuildAsynchronousFsdRequest)
 {
     /* FIXME: This is a stub! implement this function! */
 }

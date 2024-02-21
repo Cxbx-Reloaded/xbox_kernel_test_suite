@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_MmQueryAllocationSize()
+TEST_FUNC(MmQueryAllocationSize)
 {
     /* FIXME: This is a stub! implement this function! */
 }

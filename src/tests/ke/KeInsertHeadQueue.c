@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeInsertHeadQueue()
+TEST_FUNC(KeInsertHeadQueue)
 {
     /* FIXME: This is a stub! implement this function! */
 }

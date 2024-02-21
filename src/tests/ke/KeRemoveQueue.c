@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeRemoveQueue()
+TEST_FUNC(KeRemoveQueue)
 {
     /* FIXME: This is a stub! implement this function! */
 }

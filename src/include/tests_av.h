@@ -1,6 +1,6 @@
 #pragma once
 
-void test_AvGetSavedDataAddress();
-void test_AvSendTVEncoderOption();
-void test_AvSetDisplayMode();
-void test_AvSetSavedDataAddress();
+TEST_FUNC(AvGetSavedDataAddress);
+TEST_FUNC(AvSendTVEncoderOption);
+TEST_FUNC(AvSetDisplayMode);
+TEST_FUNC(AvSetSavedDataAddress);

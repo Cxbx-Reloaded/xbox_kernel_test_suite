@@ -5,17 +5,14 @@
 #include "assertions/rtl.h"
 #include "assertions/ke.h"
 
-void test_RtlEnterCriticalSection()
+TEST_FUNC(RtlEnterCriticalSection)
 {
-    const char* func_num = "0x0115";
-    const char* func_name = "RtlEnterCriticalSection";
     RTL_CRITICAL_SECTION crit_section;
-    BOOL tests_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     RtlInitializeCriticalSection(&crit_section);
     RtlEnterCriticalSection(&crit_section);
-    tests_passed &= assert_critical_section_equals(
+    test_passed &= assert_critical_section_equals(
         &crit_section,
         0,
         1,
@@ -24,7 +21,7 @@ void test_RtlEnterCriticalSection()
     );
 
     RtlEnterCriticalSection(&crit_section);
-    tests_passed &= assert_critical_section_equals(
+    test_passed &= assert_critical_section_equals(
         &crit_section,
         1,
         2,
@@ -35,7 +32,7 @@ void test_RtlEnterCriticalSection()
     RtlLeaveCriticalSection(&crit_section);
     RtlLeaveCriticalSection(&crit_section);
     RtlEnterCriticalSection(&crit_section);
-    tests_passed &= assert_critical_section_equals(
+    test_passed &= assert_critical_section_equals(
         &crit_section,
         0,
         1,
@@ -43,16 +40,13 @@ void test_RtlEnterCriticalSection()
         "Re-Enter critical section after leaving twice"
     );
 
-    print_test_footer(func_num, func_name, tests_passed);
+    TEST_END();
 }
 
-void test_RtlEnterCriticalSectionAndRegion()
+TEST_FUNC(RtlEnterCriticalSectionAndRegion)
 {
-    const char* func_num = "0x0116";
-    const char* func_name = "RtlEnterCriticalSectionAndRegion";
     RTL_CRITICAL_SECTION crit_section;
-    BOOL tests_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     PKTHREAD thread = KeGetCurrentThread();
     const ULONG orig_APC_disable = thread->KernelApcDisable;
@@ -61,33 +55,30 @@ void test_RtlEnterCriticalSectionAndRegion()
     RtlEnterCriticalSectionAndRegion(&crit_section);
     RtlEnterCriticalSectionAndRegion(&crit_section);
 
-    tests_passed &= assert_critical_section_equals(
+    test_passed &= assert_critical_section_equals(
         &crit_section,
         1,
         2,
         (HANDLE)thread,
         "Enter critcal section and region twice"
     );
-    tests_passed &= assert_critical_region(thread, orig_APC_disable - 2, "Entered critical region twice");
+    test_passed &= assert_critical_region(thread, orig_APC_disable - 2, "Entered critical region twice");
 
     // Cleanup machine state without using RtlLeaveCriticalSectionAndRegion because it only
     // increments KernelApcDisable when the critical region is freed (RecursionCount == 0)
     KeLeaveCriticalRegion();
     KeLeaveCriticalRegion();
 
-    print_test_footer(func_num, func_name, tests_passed);
+    TEST_END();
 }
 
-void test_RtlInitializeCriticalSection()
+TEST_FUNC(RtlInitializeCriticalSection)
 {
-    const char* func_num = "0x0123";
-    const char* func_name = "RtlInitializeCriticalSection";
     RTL_CRITICAL_SECTION crit_section;
-    BOOL tests_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     RtlInitializeCriticalSection(&crit_section);
-    tests_passed &= assert_critical_section_equals(
+    test_passed &= assert_critical_section_equals(
         &crit_section,
         -1,
         0,
@@ -97,7 +88,7 @@ void test_RtlInitializeCriticalSection()
 
     memset(&crit_section, 0x11, sizeof(crit_section));
     RtlInitializeCriticalSection(&crit_section);
-    tests_passed &= assert_critical_section_equals(
+    test_passed &= assert_critical_section_equals(
         &crit_section,
         -1,
         0,
@@ -105,22 +96,19 @@ void test_RtlInitializeCriticalSection()
         "Re-Init critical section after setting garbage data"
     );
 
-    print_test_footer(func_num, func_name, tests_passed);
+    TEST_END();
 }
 
-void test_RtlLeaveCriticalSection()
+TEST_FUNC(RtlLeaveCriticalSection)
 {
-    const char* func_num = "0x0126";
-    const char* func_name = "RtlLeaveCriticalSection";
     RTL_CRITICAL_SECTION crit_section;
-    BOOL tests_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     RtlInitializeCriticalSection(&crit_section);
     RtlEnterCriticalSection(&crit_section);
     RtlEnterCriticalSection(&crit_section);
     RtlLeaveCriticalSection(&crit_section);
-    tests_passed &= assert_critical_section_equals(
+    test_passed &= assert_critical_section_equals(
         &crit_section,
         0,
         1,
@@ -129,7 +117,7 @@ void test_RtlLeaveCriticalSection()
     );
 
     RtlLeaveCriticalSection(&crit_section);
-    tests_passed &= assert_critical_section_equals(
+    test_passed &= assert_critical_section_equals(
         &crit_section,
         -1,
         0,
@@ -138,7 +126,7 @@ void test_RtlLeaveCriticalSection()
     );
 
     RtlEnterCriticalSection(&crit_section);
-    tests_passed &= assert_critical_section_equals(
+    test_passed &= assert_critical_section_equals(
         &crit_section,
         0,
         1,
@@ -146,16 +134,13 @@ void test_RtlLeaveCriticalSection()
         "Re-Enter Critical Section"
     );
 
-    print_test_footer(func_num, func_name, tests_passed);
+    TEST_END();
 }
 
-void test_RtlLeaveCriticalSectionAndRegion()
+TEST_FUNC(RtlLeaveCriticalSectionAndRegion)
 {
-    const char* func_num = "0x0127";
-    const char* func_name = "RtlLeaveCriticalSectionAndRegion";
     RTL_CRITICAL_SECTION crit_section;
-    BOOL tests_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     PKTHREAD thread = KeGetCurrentThread();
     const ULONG orig_APC_disable = thread->KernelApcDisable;
@@ -165,32 +150,32 @@ void test_RtlLeaveCriticalSectionAndRegion()
     RtlEnterCriticalSectionAndRegion(&crit_section);
 
     RtlLeaveCriticalSectionAndRegion(&crit_section);
-    tests_passed &= assert_critical_section_equals(
+    test_passed &= assert_critical_section_equals(
         &crit_section,
         0,
         1,
         (HANDLE)thread,
         "Leave critical section and region after entering twice"
     );
-    tests_passed &= assert_critical_region(thread, orig_APC_disable - 2, "KernelApcDisable should be unchanged until critical section is freed");
+    test_passed &= assert_critical_region(thread, orig_APC_disable - 2, "KernelApcDisable should be unchanged until critical section is freed");
 
     RtlLeaveCriticalSectionAndRegion(&crit_section);
-    tests_passed &= assert_critical_section_equals(
+    test_passed &= assert_critical_section_equals(
         &crit_section,
         -1,
         0,
         NULL,
         "Leave critical section and region a second time"
     );
-    tests_passed &= assert_critical_region(thread, orig_APC_disable - 1, "KernelApcDisable should now decrement as the critial section is freed");
+    test_passed &= assert_critical_region(thread, orig_APC_disable - 1, "KernelApcDisable should now decrement as the critial section is freed");
 
     // Cleanup machine state
     KeLeaveCriticalRegion();
 
-    print_test_footer(func_num, func_name, tests_passed);
+    TEST_END();
 }
 
-void test_RtlTryEnterCriticalSection()
+TEST_FUNC(RtlTryEnterCriticalSection)
 {
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_MmDbgAllocateMemory()
+TEST_FUNC(MmDbgAllocateMemory)
 {
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_MmAllocateContiguousMemoryEx()
+TEST_FUNC(MmAllocateContiguousMemoryEx)
 {
     /* FIXME: This is a stub! implement this function! */
 }

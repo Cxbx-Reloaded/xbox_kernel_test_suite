@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_MmDbgWriteCheck()
+TEST_FUNC(MmDbgWriteCheck)
 {
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_XboxHardwareInfo()
+TEST_FUNC(XboxHardwareInfo)
 {
     /* FIXME: This is a stub! implement this function! */
 }

@@ -4,12 +4,9 @@
 #include "util/misc.h"
 #include "assertions/defines.h"
 
-void test_RtlExtendedIntegerMultiply()
+TEST_FUNC(RtlExtendedIntegerMultiply)
 {
-    const char* func_num = "0x0119";
-    const char* func_name = "RtlExtendedIntegerMultiply";
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     typedef struct _int_multiply_test {
         const LARGE_INTEGER multiplicand;
@@ -32,5 +29,5 @@ void test_RtlExtendedIntegerMultiply()
     }
     GEN_CHECK_ARRAY_MEMBER(int_multiply_tests, return_result.QuadPart, expected_result, int_multiply_tests_size, "int_multiply_tests");
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }

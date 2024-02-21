@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IrtSweep()
+TEST_FUNC(IrtSweep)
 {
     /* FIXME: This is a stub! implement this function! */
 }

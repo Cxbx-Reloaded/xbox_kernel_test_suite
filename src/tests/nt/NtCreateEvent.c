@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtCreateEvent()
+TEST_FUNC(NtCreateEvent)
 {
     /* FIXME: This is a stub! implement this function! */
 }

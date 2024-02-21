@@ -10,12 +10,9 @@
 
 #define CHECK_ALIGNMENT(size, alignment) (((size) % (alignment)) == 0)
 
-void test_MmAllocateSystemMemory()
+TEST_FUNC(MmAllocateSystemMemory)
 {
-    const char* func_num = "0x00A7";
-    const char* func_name = "MmAllocateSystemMemory";
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
    // NOTE: these tests could be marked as failed if not enough memory can be allocated for them
 
@@ -54,5 +51,5 @@ void test_MmAllocateSystemMemory()
         MmFreeSystemMemory(sys_addr, 0);
     }
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }

@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeInitializeQueue()
+TEST_FUNC(KeInitializeQueue)
 {
     /* FIXME: This is a stub! implement this function! */
 }

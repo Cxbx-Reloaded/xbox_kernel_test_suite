@@ -98,11 +98,10 @@ unsigned char encrypted_string[] = {
 	0x67,0x0d,0x7a,0x7b, 0x00,0x00,0x00,0x00, 0x00,0x00,0x00,0x00
 };
 
-void test_XcPKEncPublic()
+TEST_FUNC(XcPKEncPublic)
 {
-	const char* func_num = "0x0155";
-	const char* func_name = "XcPKEncPublic";
-	BOOL test_passed = 1;
+	TEST_BEGIN();
+
 	ULONG ret = 0;
 	UCHAR input_buffer[264]          = { 0 };
 	UCHAR output_buffer[264]         = { 0 };
@@ -112,8 +111,6 @@ void test_XcPKEncPublic()
 	UCHAR key_bit_size1024[]         = { 0x00,0x04,0x00,0x00 };
 	UCHAR bogus_data[]               = { 0xcc,0xcc,0xcc,0xcc };
 
-	print_test_header(func_num, func_name);
-	
 	// Correct usage
 	memcpy(input_buffer, "\x45\x6e\x63\x72\x79\x70\x74\x20\x6d\x65", 10); // "Encrypt me"
 	ret = XcPKEncPublic(pub_key, input_buffer, output_buffer);
@@ -140,9 +137,9 @@ void test_XcPKEncPublic()
 	else {
 		test_passed &= 0;
 	}
-	
+
 	// Using bogus_data as modulus buffer size freezes (crash?) my xbox so I won't test it
-	
+
 	// 1024 key bit size but using bogus_data as key bit size freezes (crash?) my xbox so I won't test it
 	memcpy(pub_key, original_magic_string, 4);
 	memcpy(&pub_key[8], key_bit_size1024, 4);
@@ -158,7 +155,7 @@ void test_XcPKEncPublic()
 	else {
 		test_passed &= 0;
 	}
-	
+
 	// Wrong max encode size -> same result as if original value
 	memcpy(&pub_key[8], original_key_bit_size, 4);
 	memcpy(&pub_key[12], bogus_data, 4);
@@ -176,23 +173,20 @@ void test_XcPKEncPublic()
 		test_passed &= 0;
 	}
 	memcpy(&pub_key[12], original_max_encode_size, 4);
-	
-	print_test_footer(func_num, func_name, test_passed);
+
+	TEST_END();
 }
 
-void test_XcPKDecPrivate()
+TEST_FUNC(XcPKDecPrivate)
 {
-	const char* func_num = "0x0156";
-	const char* func_name = "XcPKDecPrivate";
-	BOOL test_passed = 1;
+	TEST_BEGIN();
+
 	ULONG ret = 0;
 	UCHAR input_buffer[264]          = { 0 };
 	UCHAR output_buffer[264]         = { 0 };
 	UCHAR original_magic_string[]    = { 0x52,0x53,0x41,0x32 };
 	UCHAR bogus_data[]               = { 0xcc,0xcc,0xcc,0xcc };
-	
-	print_test_header(func_num, func_name);
-	
+
 	// Correct usage
 	// While this succeeds on real hardware, it still fails to give back the original "Encrypt me" string. I believe it's because the
 	// prv_key is missing the parameters of the Chinese Remainder Theorem to perform the decryption correctly, but now I'm too lazy
@@ -205,7 +199,7 @@ void test_XcPKDecPrivate()
 	else {
 		test_passed &= 0;
 	}
-	
+
 	// Wrong magic string
 	memcpy(prv_key, bogus_data, 4);
 	memset(input_buffer, 0, 264);
@@ -220,43 +214,39 @@ void test_XcPKDecPrivate()
 		test_passed &= 0;
 	}
 	memcpy(prv_key, original_magic_string, 4);
-	
-	print_test_footer(func_num, func_name, test_passed);
+
+	TEST_END();
 }
 
-void test_XcPKGetKeyLen()
+TEST_FUNC(XcPKGetKeyLen)
 {
-	const char* func_num = "0x0157";
-	const char* func_name = "XcPKGetKeyLen";
-	BOOL test_passed = 1;
+	TEST_BEGIN();
+
 	ULONG ret = 0;
 	UCHAR original_key_size[] = { 0x08,0x01,0x00,0x00 };
 	UCHAR bogus_data[]        = { 0xcc,0xcc,0xcc,0xcc };
 
-	print_test_header(func_num, func_name);
-	
 	// Public key
 	ret = XcPKGetKeyLen(pub_key);
 	GEN_CHECK(ret, 0x108, "pub_key_len")
-	
+
 	// Wrong key lenght
 	memcpy(&pub_key[4], bogus_data, 4);
 	ret = XcPKGetKeyLen(pub_key);
 	GEN_CHECK(ret, 0xCCCCCCCC, "pub_key_len (bad)")
-	
+
 	// Private key
 	memcpy(&pub_key[4], original_key_size, 4);
 	ret = XcPKGetKeyLen(prv_key);
 	GEN_CHECK(ret, 0x108, "prv_key_len")
-	
-	print_test_footer(func_num, func_name, test_passed);
+
+	TEST_END();
 }
 
-void test_XcVerifyPKCS1Signature()
+TEST_FUNC(XcVerifyPKCS1Signature)
 {
-	const char* func_num = "0x0158";
-	const char* func_name = "XcVerifyPKCS1Signature";
-	BOOL test_passed = 1;
+	TEST_BEGIN();
+
 	ULONG ret = 0;
 	UCHAR digest[]     = { 0xd2,0x98,0x3c,0x52,0x96,0x43,0x95,0x2f,0xf9,0x5b,0x9a,0xc3,0x67,0x4c,0xb4,0x3a,0xfb,0x3d,0x3d,0x69 };
 	UCHAR digest_inv[] = { 0x69,0x3d,0x3d,0xfb,0x3a,0xb4,0x4c,0x67,0xc3,0x9a,0x5b,0xf9,0x2f,0x95,0x43,0x96,0x52,0x3c,0x98,0xd2 };
@@ -272,8 +262,6 @@ void test_XcVerifyPKCS1Signature()
 	    0x94,0xd5,0x25,0x92,0xc4,0x1d,0x23,0x03,0x58,0x28,0xc0,0xab,0x7f,0x3b,0xd0,0x40,0x4d,0x1f,0x89,0x98,0x40,0xd8,0x23,0x40,0x6d,0xdd,
 	    0xc7,0x61,0xbc,0x6a,0xbb,0x56,0x91,0x2e,0x47,0xd1,0x3b,0x97,0xed,0xa7,0x91,0xb7,0x87,0x70,0x30,0x6f,0xdc,0x30
 	};
-	
-	print_test_header(func_num, func_name);
 	
 	ret = XcVerifyPKCS1Signature(signature, XePublicKeyData, digest);
 	if(ret == 1) {
@@ -291,5 +279,5 @@ void test_XcVerifyPKCS1Signature()
 	    test_passed &= 0;
 	}
 
-	print_test_footer(func_num, func_name, test_passed);
+	TEST_END();
 }

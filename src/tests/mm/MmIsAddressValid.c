@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_MmIsAddressValid()
+TEST_FUNC(MmIsAddressValid)
 {
     /* FIXME: This is a stub! implement this function! */
 }

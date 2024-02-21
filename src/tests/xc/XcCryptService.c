@@ -3,18 +3,15 @@
 
 #include "util/output.h"
 
-void test_XcCryptService()
+TEST_FUNC(XcCryptService)
 {
-	const char* func_num = "0x015e";
-	const char* func_name = "XcCryptService";
-	BOOL test_passed = 1;
+	TEST_BEGIN();
+
 	ULONG a;
 	void* b;
 	ULONG ret;
 	UCHAR test_buffer[8] = { 0 };
 
-	print_test_header(func_num, func_name);
-	
 	a = 0;
 	b = NULL;
 	ret = XcCryptService(a, b);
@@ -24,7 +21,7 @@ void test_XcCryptService()
 	else {
 		test_passed &= 0;
 	}
-	
+
 	a = 0xFFFFFFFF;
 	b = NULL;
 	ret = XcCryptService(a, b);
@@ -34,7 +31,7 @@ void test_XcCryptService()
 	else {
 		test_passed &= 0;
 	}
-	
+
 	a = 0xFFFFFFFF;
 	b = test_buffer;
 	ret = XcCryptService(a, b);
@@ -44,7 +41,7 @@ void test_XcCryptService()
 	else {
 		test_passed &= 0;
 	}
-	
+
 	a = 0;
 	b = test_buffer;
 	ret = XcCryptService(a, b);
@@ -54,6 +51,6 @@ void test_XcCryptService()
 	else {
 		test_passed &= 0;
 	}
-	
-	print_test_footer(func_num, func_name, test_passed);
+
+	TEST_END();
 }

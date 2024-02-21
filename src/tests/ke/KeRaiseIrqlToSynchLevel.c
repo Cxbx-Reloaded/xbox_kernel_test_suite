@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeRaiseIrqlToSynchLevel()
+TEST_FUNC(KeRaiseIrqlToSynchLevel)
 {
     /* FIXME: This is a stub! implement this function! */
 }

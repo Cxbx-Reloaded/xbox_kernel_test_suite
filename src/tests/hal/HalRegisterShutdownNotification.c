@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_HalRegisterShutdownNotification()
+TEST_FUNC(HalRegisterShutdownNotification)
 {
     /* FIXME: This is a stub! implement this function! */
 }

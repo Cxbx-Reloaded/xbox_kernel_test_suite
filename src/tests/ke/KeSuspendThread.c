@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeSuspendThread()
+TEST_FUNC(KeSuspendThread)
 {
     /* FIXME: This is a stub! implement this function! */
 }

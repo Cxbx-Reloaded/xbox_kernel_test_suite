@@ -6,12 +6,9 @@
 #include "assertions/defines.h"
 #include "assertions/rtl.h"
 
-void test_RtlCompareMemory()
+TEST_FUNC(RtlCompareMemory)
 {
-    const char* func_num = "0x010C";
-    const char* func_name = "RtlCompareMemory";
-    BOOL tests_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     uint32_t num1 = 0;
     uint32_t num2 = 0;
@@ -19,33 +16,30 @@ void test_RtlCompareMemory()
     VOID* num2_ptr = (VOID*)&num2;
 
     SIZE_T bytes_matching = RtlCompareMemory(num1_ptr, num2_ptr, 0);
-    tests_passed &= assert_rtl_compared_bytes(bytes_matching, 0, "Check 0 bytes of memory");
+    test_passed &= assert_rtl_compared_bytes(bytes_matching, 0, "Check 0 bytes of memory");
 
     bytes_matching = RtlCompareMemory(num1_ptr, num2_ptr, sizeof(num1));
-    tests_passed &= assert_rtl_compared_bytes(bytes_matching, sizeof(num1), "Both nums 0, should match");
+    test_passed &= assert_rtl_compared_bytes(bytes_matching, sizeof(num1), "Both nums 0, should match");
 
     num1 |= 0x80000000;
     bytes_matching = RtlCompareMemory(num1_ptr, num2_ptr, sizeof(num1));
-    tests_passed &= assert_rtl_compared_bytes(bytes_matching, sizeof(num1) - 1, "Only 3 bytes should match");
+    test_passed &= assert_rtl_compared_bytes(bytes_matching, sizeof(num1) - 1, "Only 3 bytes should match");
 
     num2 |= 0x4000;
     bytes_matching = RtlCompareMemory(num1_ptr, num2_ptr, sizeof(num1));
-    tests_passed &= assert_rtl_compared_bytes(bytes_matching, sizeof(num1) - 3, "Only 1 byte should match");
+    test_passed &= assert_rtl_compared_bytes(bytes_matching, sizeof(num1) - 3, "Only 1 byte should match");
 
     num2 |= 0x80000000;
     num1 |= 0x4000;
     bytes_matching = RtlCompareMemory(num1_ptr, num2_ptr, sizeof(num1));
-    tests_passed &= assert_rtl_compared_bytes(bytes_matching, sizeof(num1), "All bytes should match again");
+    test_passed &= assert_rtl_compared_bytes(bytes_matching, sizeof(num1), "All bytes should match again");
 
-    print_test_footer(func_num, func_name, tests_passed);
+    TEST_END();
 }
 
-void test_RtlCompareMemoryUlong()
+TEST_FUNC(RtlCompareMemoryUlong)
 {
-    const char* func_num = "0x010D";
-    const char* func_name = "RtlCompareMemoryUlong";
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     ULONG mem[4];
     ULONG res;
@@ -76,15 +70,12 @@ void test_RtlCompareMemoryUlong()
     result = RtlCompareMemoryUlong(mem, 16, 0x4567);
     GEN_CHECK(result, 0, "result");
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }
 
-void test_RtlCompareString()
+TEST_FUNC(RtlCompareString)
 {
-    const char* func_num = "0x010E";
-    const char* func_name = "RtlCompareString";
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     ANSI_STRING lower_case_string;
     ANSI_STRING upper_case_string;
@@ -109,15 +100,12 @@ void test_RtlCompareString()
     result = RtlCompareString(&long_string, &lower_case_string, 1);
     GEN_CHECK(result, 3, "result");
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }
 
-void test_RtlCompareUnicodeString()
+TEST_FUNC(RtlCompareUnicodeString)
 {
-    const char* func_num = "0x010F";
-    const char* func_name = "RtlCompareUnicodeString";
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     const BOOL case_sensitive = 0;
     const BOOL case_insensitive = 1;
@@ -151,7 +139,7 @@ void test_RtlCompareUnicodeString()
     result = RtlCompareUnicodeString(&base_str, &longer_str, case_insensitive);
     GEN_CHECK(result, -18, "result");
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }
 static const char* str1_str = "str1";
 static const char* str2_str = "str2";
@@ -159,12 +147,9 @@ static const char* str3_str = "str3";
 static const char* case_insensitive_str = "insensitive";
 static const char* case_sensitive_str = "sensitive";
 
-void test_RtlEqualString()
+TEST_FUNC(RtlEqualString)
 {
-    const char* func_num = "0x0117";
-    const char* func_name = "RtlEqualString";
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     ANSI_STRING str1, str2, str3;
     RtlInitAnsiString(&str1, "xbox is cool");
@@ -194,15 +179,12 @@ void test_RtlEqualString()
     }
     GEN_CHECK_ARRAY_MEMBER(str_tests, return_result, expected_result, str_tests_size, "str_tests");
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }
 
-void test_RtlEqualUnicodeString()
+TEST_FUNC(RtlEqualUnicodeString)
 {
-    const char* func_num = "0x0118";
-    const char* func_name = "RtlEqualUnicodeString";
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     UNICODE_STRING str1;
     UNICODE_STRING str2;
@@ -235,5 +217,5 @@ void test_RtlEqualUnicodeString()
     }
     GEN_CHECK_ARRAY_MEMBER(str_tests, return_result, expected_result, str_tests_size, "str_tests");
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }

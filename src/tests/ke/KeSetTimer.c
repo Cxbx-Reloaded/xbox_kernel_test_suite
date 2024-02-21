@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeSetTimer()
+TEST_FUNC(KeSetTimer)
 {
     /* FIXME: This is a stub! implement this function! */
 }

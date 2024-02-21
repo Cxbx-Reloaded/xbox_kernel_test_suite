@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_XboxHDKey()
+TEST_FUNC(XboxHDKey)
 {
     /* FIXME: This is a stub! implement this function! */
 }

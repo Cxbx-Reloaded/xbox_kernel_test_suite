@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_HalClearSoftwareInterrupt()
+TEST_FUNC(HalClearSoftwareInterrupt)
 {
     /* FIXME: This is a stub! implement this function! */
 }

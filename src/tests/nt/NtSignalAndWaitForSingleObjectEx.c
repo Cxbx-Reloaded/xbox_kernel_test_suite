@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtSignalAndWaitForSingleObjectEx()
+TEST_FUNC(NtSignalAndWaitForSingleObjectEx)
 {
     /* FIXME: This is a stub! implement this function! */
 }

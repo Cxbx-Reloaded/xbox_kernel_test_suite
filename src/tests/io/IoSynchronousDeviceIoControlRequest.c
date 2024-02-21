@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoSynchronousDeviceIoControlRequest()
+TEST_FUNC(IoSynchronousDeviceIoControlRequest)
 {
     /* FIXME: This is a stub! implement this function! */
 }

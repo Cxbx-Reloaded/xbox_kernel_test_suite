@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_XeLoadSection()
+TEST_FUNC(XeLoadSection)
 {
     /* FIXME: This is a stub! implement this function! */
 }

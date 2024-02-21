@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoMarkIrpMustComplete()
+TEST_FUNC(IoMarkIrpMustComplete)
 {
     /* FIXME: This is a stub! implement this function! */
 }

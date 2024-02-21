@@ -1,6 +1,6 @@
 #pragma once
 
-void test_XeImageFileName();
-void test_XeLoadSection();
-void test_XeUnloadSection();
-void test_XePublicKeyData();
+TEST_FUNC(XeImageFileName);
+TEST_FUNC(XeLoadSection);
+TEST_FUNC(XeUnloadSection);
+TEST_FUNC(XePublicKeyData);

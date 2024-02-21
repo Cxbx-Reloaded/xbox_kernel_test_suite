@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtQueryMutant()
+TEST_FUNC(NtQueryMutant)
 {
     /* FIXME: This is a stub! implement this function! */
 }

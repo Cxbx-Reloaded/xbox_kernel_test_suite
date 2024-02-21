@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtSetTimerEx()
+TEST_FUNC(NtSetTimerEx)
 {
     /* FIXME: This is a stub! implement this function! */
 }

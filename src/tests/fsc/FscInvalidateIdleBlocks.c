@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_FscInvalidateIdleBlocks()
+TEST_FUNC(FscInvalidateIdleBlocks)
 {
     /* FIXME: This is a stub! implement this function! */
 }

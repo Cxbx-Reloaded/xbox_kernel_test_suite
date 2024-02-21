@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_ExRaiseStatus()
+TEST_FUNC(ExRaiseStatus)
 {
     /* FIXME: This is a stub! implement this function! */
 }

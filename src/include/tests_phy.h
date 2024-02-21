@@ -1,4 +1,4 @@
 #pragma once
 
-void test_PhyGetLinkState();
-void test_PhyInitialize();
+TEST_FUNC(PhyGetLinkState);
+TEST_FUNC(PhyInitialize);

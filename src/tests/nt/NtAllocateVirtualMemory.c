@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtAllocateVirtualMemory()
+TEST_FUNC(NtAllocateVirtualMemory)
 {
     /* FIXME: This is a stub! implement this function! */
 }

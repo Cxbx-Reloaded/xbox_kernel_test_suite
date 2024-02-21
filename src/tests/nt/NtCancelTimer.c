@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtCancelTimer()
+TEST_FUNC(NtCancelTimer)
 {
     /* FIXME: This is a stub! implement this function! */
 }

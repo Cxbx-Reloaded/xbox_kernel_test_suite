@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtWaitForMultipleObjectsEx()
+TEST_FUNC(NtWaitForMultipleObjectsEx)
 {
     /* FIXME: This is a stub! implement this function! */
 }

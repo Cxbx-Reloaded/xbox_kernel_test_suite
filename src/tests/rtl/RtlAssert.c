@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_RtlAssert()
+TEST_FUNC(RtlAssert)
 {
     /* FIXME: This is a stub! implement this function! */
 }

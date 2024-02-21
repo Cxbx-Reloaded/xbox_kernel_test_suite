@@ -4,12 +4,9 @@
 #include "util/output.h"
 #include "assertions/rtl.h"
 
-void test_RtlCopyUnicodeString()
+TEST_FUNC(RtlCopyUnicodeString)
 {
-    const char* func_num = "0x0111";
-    const char* func_name = "RtlCopyUnicodeString";
-    BOOL tests_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     UNICODE_STRING dest_str, shorter_str, longer_str;
     WCHAR buffer[8];
@@ -22,11 +19,11 @@ void test_RtlCopyUnicodeString()
     dest_str.Buffer = buffer;
 
     RtlCopyUnicodeString(&dest_str, NULL);
-    tests_passed &= assert_unicode_string(&dest_str, 0, num_buf_bytes, buffer, "NULL src_str");
+    test_passed &= assert_unicode_string(&dest_str, 0, num_buf_bytes, buffer, "NULL src_str");
 
     dest_str.Length = 0;
     RtlCopyUnicodeString(&dest_str, &shorter_str);
-    tests_passed &= assert_unicode_string(
+    test_passed &= assert_unicode_string(
         &dest_str,
         shorter_str.Length,
         num_buf_bytes,
@@ -36,7 +33,7 @@ void test_RtlCopyUnicodeString()
 
     dest_str.Length = 0;
     RtlCopyUnicodeString(&dest_str, &longer_str);
-    tests_passed &= assert_unicode_string(
+    test_passed &= assert_unicode_string(
         &dest_str,
         num_buf_bytes,
         num_buf_bytes,
@@ -44,5 +41,5 @@ void test_RtlCopyUnicodeString()
         "Copy longer str into str"
     );
 
-    print_test_footer(func_num, func_name, tests_passed);
+    TEST_END();
 }

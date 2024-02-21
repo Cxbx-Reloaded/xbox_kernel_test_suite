@@ -4,12 +4,9 @@
 #include "util/misc.h"
 #include "assertions/defines.h"
 
-void test_RtlFillMemory()
+TEST_FUNC(RtlFillMemory)
 {
-    const char* func_num = "0x011C";
-    const char* func_name = "RtlFillMemory";
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     enum { buf_len = 20 };
     UCHAR buffer[buf_len] = { 0 };
@@ -36,5 +33,5 @@ void test_RtlFillMemory()
         GEN_CHECK_ARRAY(buffer, expected_fills, buf_len, "fills");
     }
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }

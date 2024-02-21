@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtPulseEvent()
+TEST_FUNC(NtPulseEvent)
 {
     /* FIXME: This is a stub! implement this function! */
 }

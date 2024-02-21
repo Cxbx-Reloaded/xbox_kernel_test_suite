@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_HalEnableSystemInterrupt()
+TEST_FUNC(HalEnableSystemInterrupt)
 {
     /* FIXME: This is a stub! implement this function! */
 }

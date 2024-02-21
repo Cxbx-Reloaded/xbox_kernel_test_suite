@@ -1,3 +1,3 @@
 #pragma once
 
-void test_ObpObjectHandleTable();
+TEST_FUNC(ObpObjectHandleTable);

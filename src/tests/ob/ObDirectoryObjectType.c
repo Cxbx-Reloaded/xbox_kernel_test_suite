@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_ObDirectoryObjectType()
+TEST_FUNC(ObDirectoryObjectType)
 {
     /* FIXME: This is a stub! implement this function! */
 }

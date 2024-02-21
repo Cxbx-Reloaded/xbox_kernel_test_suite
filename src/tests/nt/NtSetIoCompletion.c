@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtSetIoCompletion()
+TEST_FUNC(NtSetIoCompletion)
 {
     /* FIXME: This is a stub! implement this function! */
 }

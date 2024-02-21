@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeTickCount()
+TEST_FUNC(KeTickCount)
 {
     /* FIXME: This is a stub! implement this function! */
 }

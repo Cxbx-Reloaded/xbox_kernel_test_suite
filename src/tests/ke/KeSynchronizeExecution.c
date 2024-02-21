@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeSynchronizeExecution()
+TEST_FUNC(KeSynchronizeExecution)
 {
     /* FIXME: This is a stub! implement this function! */
 }

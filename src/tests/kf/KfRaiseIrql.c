@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KfRaiseIrql()
+TEST_FUNC(KfRaiseIrql)
 {
     /* FIXME: This is a stub! implement this function! */
 }

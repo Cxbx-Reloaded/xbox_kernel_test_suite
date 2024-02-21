@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeRaiseIrqlToDpcLevel()
+TEST_FUNC(KeRaiseIrqlToDpcLevel)
 {
     /* FIXME: This is a stub! implement this function! */
 }

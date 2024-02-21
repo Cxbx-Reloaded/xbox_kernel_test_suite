@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtUserIoApcDispatcher()
+TEST_FUNC(NtUserIoApcDispatcher)
 {
     /* FIXME: This is a stub! implement this function! */
 }

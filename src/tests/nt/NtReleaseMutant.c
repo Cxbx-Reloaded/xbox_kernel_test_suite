@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtReleaseMutant()
+TEST_FUNC(NtReleaseMutant)
 {
     /* FIXME: This is a stub! implement this function! */
 }

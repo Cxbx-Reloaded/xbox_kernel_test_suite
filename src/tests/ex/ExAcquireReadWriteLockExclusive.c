@@ -50,33 +50,30 @@ static BOOL timed_poll_for_value(ULONG* poll_var, ULONG wait_value)
 
 static void NTAPI ExAcquireReadWriteLockExclusive_thread2(void* arg)
 {
-    const char* func_name = "ExAcquireReadWriteLockExclusive_thread2";
+    const char* api_name = "ExAcquireReadWriteLockExclusive_thread2";
     control_struct* control = (control_struct*)arg;
     ExAcquireReadWriteLockExclusive(control->ReadWriteLock);
-    increment_thread2_status(control, func_name);
+    increment_thread2_status(control, api_name);
     ExReleaseReadWriteLock(control->ReadWriteLock);
-    increment_thread2_status(control, func_name);
+    increment_thread2_status(control, api_name);
 }
 
-void test_ExAcquireReadWriteLockExclusive()
+TEST_FUNC(ExAcquireReadWriteLockExclusive)
 {
-    const char* func_num = "0x000C";
-    const char* func_name = "ExAcquireReadWriteLockExclusive";
-    BOOL tests_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     ERWLOCK ReadWriteLock;
     ExInitializeReadWriteLock(&ReadWriteLock);
 
     ExAcquireReadWriteLockExclusive(&ReadWriteLock);
-    tests_passed = assert_ERWLOCK_equals(
+    test_passed = assert_ERWLOCK_equals(
         &ReadWriteLock,
         0, 0, 0, 0,
         "Acquire exclusive lock on empty lock"
     );
     // Avoid spinning forever in the loop below.
-    if(!tests_passed) {
-        print_test_footer(func_num, func_name, tests_passed);
+    if(!test_passed) {
+        TEST_END();
         return;
     }
     ExReleaseReadWriteLock(&ReadWriteLock);
@@ -90,34 +87,34 @@ void test_ExAcquireReadWriteLockExclusive()
     NTSTATUS result = PsCreateSystemThread(&handle, NULL, ExAcquireReadWriteLockExclusive_thread2, (void*)&control, 0);
     if(result != STATUS_SUCCESS) {
         print("  ERROR: did not create thread");
-        tests_passed = 0;
-        print_test_footer(func_num, func_name, tests_passed);
+        test_passed = 0;
+        TEST_END();
         return;
     }
 
-    tests_passed = timed_poll_for_value((ULONG*)&ReadWriteLock.LockCount, 1);
-    if(!tests_passed) {
+    test_passed = timed_poll_for_value((ULONG*)&ReadWriteLock.LockCount, 1);
+    if(!test_passed) {
         print("  ERROR: LockCount did not equal 1\n");
-        tests_passed = 0;
-        print_test_footer(func_num, func_name, tests_passed);
+        test_passed = 0;
+        TEST_END();
         return;
     }
-    tests_passed = assert_ERWLOCK_equals(
+    test_passed = assert_ERWLOCK_equals(
         &ReadWriteLock,
         1, 1, 0, 0,
         "Second thread attempted to acquire the exclusive lock, incrementing WritersWaitingCount"
     );
 
     if(control.thread2_status == 1) {
-        tests_passed = 0;
+        test_passed = 0;
         print("  ERROR: The second thread was not supposed to write before the lock is released on the first thread.");
     }
     ExReleaseReadWriteLock(&ReadWriteLock);
-    tests_passed = timed_poll_for_value(&control.thread2_status, 2);
-    if(!tests_passed) {
+    test_passed = timed_poll_for_value(&control.thread2_status, 2);
+    if(!test_passed) {
         print("  ERROR: thread2_status did not equal 2 before timing out.\n");
-        tests_passed = 0;
+        test_passed = 0;
     }
 
-    print_test_footer(func_num, func_name, tests_passed);
+    TEST_END();
 }

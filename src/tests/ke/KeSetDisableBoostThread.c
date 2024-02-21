@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeSetDisableBoostThread()
+TEST_FUNC(KeSetDisableBoostThread)
 {
     /* FIXME: This is a stub! implement this function! */
 }

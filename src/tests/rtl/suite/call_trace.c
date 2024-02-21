@@ -5,12 +5,9 @@
 #include "util/output.h"
 #include "assertions/defines.h"
 
-void test_RtlCaptureStackBackTrace()
+TEST_FUNC(RtlCaptureStackBackTrace)
 {
-    const char* func_num = "0x010A";
-    const char* func_name = "RtlCaptureStackBackTrace";
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     ULONG frame_size = 10;
     PULONG frames_expected = (PULONG)malloc(frame_size * sizeof(ULONG));
@@ -78,7 +75,7 @@ void test_RtlCaptureStackBackTrace()
     free(frames_expected);
     free(frames_test);
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }
 
 void stub_RtlGetCallersAddress(PVOID* CallerAddress_test, PVOID* CallersCaller_test, PULONG CallerAddress_expected){
@@ -86,13 +83,9 @@ void stub_RtlGetCallersAddress(PVOID* CallerAddress_test, PVOID* CallersCaller_t
     RtlGetCallersAddress(CallerAddress_test, CallersCaller_test);
 }
 
-void test_RtlGetCallersAddress()
+TEST_FUNC(RtlGetCallersAddress)
 {
-    const char* func_num = "0x0120";
-    const char* func_name = "RtlGetCallersAddress";
-    BOOL test_passed = 1;
-
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     ULONG CallerAddress_test, CallersCaller_test, CallerAddress_expected;
     ULONG CallersCaller_expected = (ULONG)__builtin_return_address(0);
@@ -103,7 +96,7 @@ void test_RtlGetCallersAddress()
 
     GEN_CHECK(CallersCaller_test, CallersCaller_expected, "CallersCaller");
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }
 
 // stack calls to see how RtlWalkFrameChain work internally.
@@ -124,12 +117,9 @@ static ULONG stub_RtlWalkFrameChain1of4(PVOID* Callers, ULONG Count)
     return stub_RtlWalkFrameChain2of4(Callers, Count);
 }
 
-void test_RtlWalkFrameChain()
+TEST_FUNC(RtlWalkFrameChain)
 {
-    const char* func_num = "0x013F";
-    const char* func_name = "RtlWalkFrameChain";
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     ULONG count = 20;
     ULONG callers[count];
@@ -156,5 +146,5 @@ void test_RtlWalkFrameChain()
         }
     }
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }

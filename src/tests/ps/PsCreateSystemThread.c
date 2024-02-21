@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_PsCreateSystemThread()
+TEST_FUNC(PsCreateSystemThread)
 {
     /* FIXME: This is a stub! implement this function! */
 }

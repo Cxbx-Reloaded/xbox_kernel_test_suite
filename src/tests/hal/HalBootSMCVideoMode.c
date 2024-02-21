@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_HalBootSMCVideoMode()
+TEST_FUNC(HalBootSMCVideoMode)
 {
     /* FIXME: This is a stub! implement this function! */
 }

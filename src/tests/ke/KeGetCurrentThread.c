@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeGetCurrentThread()
+TEST_FUNC(KeGetCurrentThread)
 {
     /* FIXME: This is a stub! implement this function! */
 }

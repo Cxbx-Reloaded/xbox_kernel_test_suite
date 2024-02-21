@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KdDebuggerEnabled()
+TEST_FUNC(KdDebuggerEnabled)
 {
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,42 +2,42 @@
 
 #include "util/output.h"
 
-void test_InterlockedCompareExchange()
+TEST_FUNC(InterlockedCompareExchange)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_InterlockedDecrement()
+TEST_FUNC(InterlockedDecrement)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_InterlockedIncrement()
+TEST_FUNC(InterlockedIncrement)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_InterlockedExchange()
+TEST_FUNC(InterlockedExchange)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_InterlockedExchangeAdd()
+TEST_FUNC(InterlockedExchangeAdd)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_InterlockedFlushSList()
+TEST_FUNC(InterlockedFlushSList)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_InterlockedPopEntrySList()
+TEST_FUNC(InterlockedPopEntrySList)
 {
     /* FIXME: This is a stub! implement this function! */
 }
 
-void test_InterlockedPushEntrySList()
+TEST_FUNC(InterlockedPushEntrySList)
 {
     /* FIXME: This is a stub! implement this function! */
 }

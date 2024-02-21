@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_MmGlobalData()
+TEST_FUNC(MmGlobalData)
 {
     /* FIXME: This is a stub! implement this function! */
 }

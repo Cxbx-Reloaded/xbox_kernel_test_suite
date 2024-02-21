@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoStartPacket()
+TEST_FUNC(IoStartPacket)
 {
     /* FIXME: This is a stub! implement this function! */
 }

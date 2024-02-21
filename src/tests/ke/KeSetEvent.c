@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeSetEvent()
+TEST_FUNC(KeSetEvent)
 {
     /* FIXME: This is a stub! implement this function! */
 }

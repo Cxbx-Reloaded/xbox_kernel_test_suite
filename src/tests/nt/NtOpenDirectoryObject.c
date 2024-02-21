@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtOpenDirectoryObject()
+TEST_FUNC(NtOpenDirectoryObject)
 {
     /* FIXME: This is a stub! implement this function! */
 }

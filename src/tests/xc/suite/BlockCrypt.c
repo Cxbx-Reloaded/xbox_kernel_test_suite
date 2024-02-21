@@ -4,11 +4,10 @@
 #include "util/output.h"
 #include "assertions/xc.h"
 
-void test_XcBlockCrypt()
+TEST_FUNC(XcBlockCrypt)
 {
-	const char* func_num = "0x015c";
-	const char* func_name = "XcBlockCrypt";
-	BOOL test_passed = 1;
+	TEST_BEGIN();
+
 	ULONG cipher_selector;
 	UCHAR input_buffer[8]       = { 0x54,0x65,0x73,0x74 }; // "Test"
 	UCHAR output_buffer[8]      = { 0 };
@@ -20,9 +19,7 @@ void test_XcBlockCrypt()
 		0x20,0x21,0x22,0x23,0x24,0x25,0x26,0x27,
 		0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37
 	};
-	
-	print_test_header(func_num, func_name);
-	
+
 	// DES encrypt
 	XcDESKeyParity(key_des, sizeof(key_des));
 	cipher_selector = 0;
@@ -32,7 +29,7 @@ void test_XcBlockCrypt()
 	                                    sizeof(output_buffer),
 	                                    (PUCHAR)"\x2a\x6c\x52\x95\x2c\x94\x23\xe7\x88\x30\x72\x85\xd4\xca\x40\xe4\x56\xe8\xb8\x60",
 	                                    "DES encrypt");
-	
+
 	// DES decrypt
 	memcpy(input_buffer, output_buffer, sizeof(input_buffer));
 	memset(output_buffer, 0, sizeof(output_buffer));
@@ -41,7 +38,7 @@ void test_XcBlockCrypt()
 	                                    sizeof(output_buffer),
 	                                    (PUCHAR)"\x40\x34\x58\xa2\x26\xff\x6b\x3e\xa6\x49\xde\xc2\x34\x05\x7a\xdf\x58\x57\x38\x4a",
 	                                    "DES decrypt");
-	
+
 	// Bogus operation value (DES)
 	memcpy(input_buffer, output_buffer, sizeof(input_buffer));
 	memset(output_buffer, 0, sizeof(output_buffer));
@@ -63,7 +60,7 @@ void test_XcBlockCrypt()
 	                                    sizeof(output_buffer),
 	                                    (PUCHAR)"\x39\xfd\x7a\xbf\x54\xd2\x59\x30\xbd\x76\xf1\xe3\x75\xe0\xb4\x95\xea\x49\x33\x60",
 	                                    "3DES encrypt");
-	
+
 	// 3DES decrypt
 	memcpy(input_buffer, output_buffer, sizeof(input_buffer));
 	memset(output_buffer, 0, sizeof(output_buffer));
@@ -103,14 +100,13 @@ void test_XcBlockCrypt()
 	                                    (PUCHAR)"\x40\x34\x58\xa2\x26\xff\x6b\x3e\xa6\x49\xde\xc2\x34\x05\x7a\xdf\x58\x57\x38\x4a",
 	                                    "bogus cipher selector (3DES decrypt)");
 
-	print_test_footer(func_num, func_name, test_passed);
+	TEST_END();
 }
 
-void test_XcBlockCryptCBC()
+TEST_FUNC(XcBlockCryptCBC)
 {
-	const char* func_num = "0x015d";
-	const char* func_name = "XcBlockCryptCBC";
-	BOOL test_passed = 1;
+	TEST_BEGIN();
+
 	ULONG cipher_selector;
 	UCHAR input_buffer[8*5]     = { 0x53,0x65,0x63,0x72,0x65,0x74,0x20,0x73,0x74,0x72,0x69,0x6e,0x67 }; // "Secret string"
 	UCHAR output_buffer[8*5]    = { 0 };
@@ -123,9 +119,7 @@ void test_XcBlockCryptCBC()
 		0x20,0x21,0x22,0x23,0x24,0x25,0x26,0x27,
 		0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37
 	};
-	
-	print_test_header(func_num, func_name);
-	
+
 	// DES encrypt
 	XcDESKeyParity(key_des, sizeof(key_des));
 	cipher_selector = 0;
@@ -225,5 +219,5 @@ void test_XcBlockCryptCBC()
 	                                    (PUCHAR)"\x4e\x9c\x6d\xf9\xcc\xac\xa8\xfe\x33\xba\x6a\x30\xb4\x17\x09\x0a\x9b\x3b\x82\x59",
 	                                    "bogus input length (3DES encrypt)");
 
-	print_test_footer(func_num, func_name, test_passed);
+	TEST_END();
 }

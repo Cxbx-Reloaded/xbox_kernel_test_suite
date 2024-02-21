@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_XProfpControl()
+TEST_FUNC(XProfpControl)
 {
     /* FIXME: This is a stub! implement this function! */
 }

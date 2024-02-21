@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeResumeThread()
+TEST_FUNC(KeResumeThread)
 {
     /* FIXME: This is a stub! implement this function! */
 }

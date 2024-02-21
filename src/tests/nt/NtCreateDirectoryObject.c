@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtCreateDirectoryObject()
+TEST_FUNC(NtCreateDirectoryObject)
 {
     /* FIXME: This is a stub! implement this function! */
 }

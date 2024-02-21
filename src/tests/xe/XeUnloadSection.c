@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_XeUnloadSection()
+TEST_FUNC(XeUnloadSection)
 {
     /* FIXME: This is a stub! implement this function! */
 }

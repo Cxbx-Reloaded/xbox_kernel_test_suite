@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_XeImageFileName()
+TEST_FUNC(XeImageFileName)
 {
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_ObOpenObjectByPointer()
+TEST_FUNC(ObOpenObjectByPointer)
 {
     /* FIXME: This is a stub! implement this function! */
 }

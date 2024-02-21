@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_HalDiskCachePartitionCount()
+TEST_FUNC(HalDiskCachePartitionCount)
 {
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtQueryIoCompletion()
+TEST_FUNC(NtQueryIoCompletion)
 {
     /* FIXME: This is a stub! implement this function! */
 }

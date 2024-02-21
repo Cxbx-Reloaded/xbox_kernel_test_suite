@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeRestoreFloatingPointState()
+TEST_FUNC(KeRestoreFloatingPointState)
 {
     /* FIXME: This is a stub! implement this function! */
 }

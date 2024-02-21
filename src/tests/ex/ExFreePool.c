@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_ExFreePool()
+TEST_FUNC(ExFreePool)
 {
     /* FIXME: This is a stub! implement this function! */
 }

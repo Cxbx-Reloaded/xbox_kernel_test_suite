@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtDuplicateObject()
+TEST_FUNC(NtDuplicateObject)
 {
     /* FIXME: This is a stub! implement this function! */
 }

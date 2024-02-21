@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_MmPersistContiguousMemory()
+TEST_FUNC(MmPersistContiguousMemory)
 {
     /* FIXME: This is a stub! implement this function! */
 }

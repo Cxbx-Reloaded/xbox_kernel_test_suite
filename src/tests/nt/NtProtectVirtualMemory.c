@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtProtectVirtualMemory()
+TEST_FUNC(NtProtectVirtualMemory)
 {
     /* FIXME: This is a stub! implement this function! */
 }

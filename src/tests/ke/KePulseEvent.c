@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KePulseEvent()
+TEST_FUNC(KePulseEvent)
 {
     /* FIXME: This is a stub! implement this function! */
 }

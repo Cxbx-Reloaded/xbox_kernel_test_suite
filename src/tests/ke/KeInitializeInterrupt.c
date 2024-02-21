@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeInitializeInterrupt()
+TEST_FUNC(KeInitializeInterrupt)
 {
     /* FIXME: This is a stub! implement this function! */
 }

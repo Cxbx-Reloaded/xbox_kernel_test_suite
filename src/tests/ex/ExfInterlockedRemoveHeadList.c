@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_ExfInterlockedRemoveHeadList()
+TEST_FUNC(ExfInterlockedRemoveHeadList)
 {
     /* FIXME: This is a stub! implement this function! */
 }

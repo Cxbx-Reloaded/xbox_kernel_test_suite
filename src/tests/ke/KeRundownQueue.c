@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeRundownQueue()
+TEST_FUNC(KeRundownQueue)
 {
     /* FIXME: This is a stub! implement this function! */
 }

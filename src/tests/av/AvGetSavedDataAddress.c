@@ -3,13 +3,11 @@
 #include "util/output.h"
 #include "assertions/defines.h"
 
-void test_AvGetSavedDataAddress()
+TEST_FUNC(AvGetSavedDataAddress)
 {
+    TEST_BEGIN();
+
     // FIXME this test is broken - We shouldn't pass NULL to AvSetSavedDataAddress. This is just an hack to avoid a system crash.
-    const char* func_num = "0x0001";
-    const char* func_name = "AvGetSavedDataAddress";
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
 
     PVOID address_old = AvGetSavedDataAddress();
 
@@ -18,5 +16,5 @@ void test_AvGetSavedDataAddress()
 
     AvSetSavedDataAddress(address_old);
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }

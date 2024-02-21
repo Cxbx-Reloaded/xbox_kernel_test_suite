@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_HalWriteSMBusValue()
+TEST_FUNC(HalWriteSMBusValue)
 {
     /* FIXME: This is a stub! implement this function! */
 }

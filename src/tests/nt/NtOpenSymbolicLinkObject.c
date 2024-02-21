@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtOpenSymbolicLinkObject()
+TEST_FUNC(NtOpenSymbolicLinkObject)
 {
     /* FIXME: This is a stub! implement this function! */
 }

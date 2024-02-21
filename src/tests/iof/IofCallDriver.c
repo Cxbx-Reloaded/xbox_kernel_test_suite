@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IofCallDriver()
+TEST_FUNC(IofCallDriver)
 {
     /* FIXME: This is a stub! implement this function! */
 }

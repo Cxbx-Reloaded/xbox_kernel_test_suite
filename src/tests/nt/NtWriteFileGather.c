@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtWriteFileGather()
+TEST_FUNC(NtWriteFileGather)
 {
     /* FIXME: This is a stub! implement this function! */
 }

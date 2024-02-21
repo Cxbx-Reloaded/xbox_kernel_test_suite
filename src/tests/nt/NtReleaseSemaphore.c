@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtReleaseSemaphore()
+TEST_FUNC(NtReleaseSemaphore)
 {
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_ObpObjectHandleTable()
+TEST_FUNC(ObpObjectHandleTable)
 {
     /* FIXME: This is a stub! implement this function! */
 }

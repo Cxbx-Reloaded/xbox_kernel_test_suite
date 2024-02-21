@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtDeleteFile()
+TEST_FUNC(NtDeleteFile)
 {
     /* FIXME: This is a stub! implement this function! */
 }

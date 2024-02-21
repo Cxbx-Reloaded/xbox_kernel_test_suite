@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_RtlNtStatusToDosError()
+TEST_FUNC(RtlNtStatusToDosError)
 {
     /* FIXME: This is a stub! implement this function! */
 }

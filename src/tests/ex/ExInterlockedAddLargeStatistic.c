@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_ExInterlockedAddLargeStatistic()
+TEST_FUNC(ExInterlockedAddLargeStatistic)
 {
     /* FIXME: This is a stub! implement this function! */
 }

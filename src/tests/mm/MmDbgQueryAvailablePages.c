@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_MmDbgQueryAvailablePages()
+TEST_FUNC(MmDbgQueryAvailablePages)
 {
     /* FIXME: This is a stub! implement this function! */
 }

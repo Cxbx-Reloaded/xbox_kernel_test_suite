@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoQueryVolumeInformation()
+TEST_FUNC(IoQueryVolumeInformation)
 {
     /* FIXME: This is a stub! implement this function! */
 }

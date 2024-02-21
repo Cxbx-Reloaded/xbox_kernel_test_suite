@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IofCompleteRequest()
+TEST_FUNC(IofCompleteRequest)
 {
     /* FIXME: This is a stub! implement this function! */
 }

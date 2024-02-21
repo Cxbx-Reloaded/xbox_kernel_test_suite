@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoDismountVolumeByName()
+TEST_FUNC(IoDismountVolumeByName)
 {
     /* FIXME: This is a stub! implement this function! */
 }

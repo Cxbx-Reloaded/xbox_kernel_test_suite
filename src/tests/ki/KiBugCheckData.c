@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KiBugCheckData()
+TEST_FUNC(KiBugCheckData)
 {
     /* FIXME: This is a stub! implement this function! */
 }

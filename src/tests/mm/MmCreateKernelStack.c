@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_MmCreateKernelStack()
+TEST_FUNC(MmCreateKernelStack)
 {
     /* FIXME: This is a stub! implement this function! */
 }

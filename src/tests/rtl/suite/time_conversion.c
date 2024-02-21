@@ -4,12 +4,9 @@
 #include "assertions/defines.h"
 #include "util/misc.h"
 
-void test_RtlTimeFieldsToTime()
+TEST_FUNC(RtlTimeFieldsToTime)
 {
-    const char* func_num = "0x0130";
-    const char* func_name = "RtlTimeFieldsToTime";
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     TIME_FIELDS time_fields;
     LARGE_INTEGER time;
@@ -112,15 +109,12 @@ void test_RtlTimeFieldsToTime()
     GEN_CHECK_ARRAY_MEMBER(time_tests, time_actual.QuadPart, time_expected.QuadPart, time_tests_size, "time_tests");
     GEN_CHECK_ARRAY_MEMBER(time_tests, result_actual, result_expected, time_tests_size, "time_tests");
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }
 
-void test_RtlTimeToTimeFields()
+TEST_FUNC(RtlTimeToTimeFields)
 {
-    const char* func_num = "0x0131";
-    const char* func_name = "RtlTimeToTimeFields";
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     TIME_FIELDS time_fields;
     LARGE_INTEGER time;
@@ -164,6 +158,6 @@ void test_RtlTimeToTimeFields()
     GEN_CHECK_ARRAY_MEMBER(time_fields_tests, actual.Second, expected.Second, time_fields_tests_size, "time_fields_tests");
     GEN_CHECK_ARRAY_MEMBER(time_fields_tests, actual.Millisecond, expected.Millisecond, time_fields_tests_size, "time_fields_tests");
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }
 

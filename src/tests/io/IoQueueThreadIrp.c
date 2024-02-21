@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoQueueThreadIrp()
+TEST_FUNC(IoQueueThreadIrp)
 {
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_MmGetPhysicalAddress()
+TEST_FUNC(MmGetPhysicalAddress)
 {
     /* FIXME: This is a stub! implement this function! */
 }

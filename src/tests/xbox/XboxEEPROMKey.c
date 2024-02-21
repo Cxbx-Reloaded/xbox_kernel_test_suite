@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_XboxEEPROMKey()
+TEST_FUNC(XboxEEPROMKey)
 {
     /* FIXME: This is a stub! implement this function! */
 }

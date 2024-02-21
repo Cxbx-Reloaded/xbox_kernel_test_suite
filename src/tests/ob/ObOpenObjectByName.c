@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_ObOpenObjectByName()
+TEST_FUNC(ObOpenObjectByName)
 {
     /* FIXME: This is a stub! implement this function! */
 }

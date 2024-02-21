@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_ExReleaseReadWriteLock()
+TEST_FUNC(ExReleaseReadWriteLock)
 {
     /* FIXME: This is a stub! implement this function! */
 }

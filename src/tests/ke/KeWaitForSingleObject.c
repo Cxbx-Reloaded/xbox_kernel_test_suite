@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeWaitForSingleObject()
+TEST_FUNC(KeWaitForSingleObject)
 {
     /* FIXME: This is a stub! implement this function! */
 }

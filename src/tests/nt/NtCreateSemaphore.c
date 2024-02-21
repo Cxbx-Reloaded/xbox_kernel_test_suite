@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtCreateSemaphore()
+TEST_FUNC(NtCreateSemaphore)
 {
     /* FIXME: This is a stub! implement this function! */
 }

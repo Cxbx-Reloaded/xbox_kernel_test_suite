@@ -3,19 +3,17 @@
 #include "util/output.h"
 #include "assertions/rtl.h"
 
-void test_RtlInitUnicodeString()
+TEST_FUNC(RtlInitUnicodeString)
 {
-    const char* func_num = "0x0122";
-    const char* func_name = "RtlInitUnicodeString";
-    BOOL tests_passed = 1;
+    TEST_BEGIN();
+
     UNICODE_STRING unicode_string;
     WCHAR string[] = L"Xbox";
-    print_test_header(func_num, func_name);
 
     unicode_string.Length = 100;
     unicode_string.MaximumLength = 200;
     RtlInitUnicodeString(&unicode_string, NULL);
-    tests_passed &= assert_unicode_string(
+    test_passed &= assert_unicode_string(
         &unicode_string,
         0,
         0,
@@ -24,7 +22,7 @@ void test_RtlInitUnicodeString()
     );
 
     RtlInitUnicodeString(&unicode_string, string);
-    tests_passed &= assert_unicode_string(
+    test_passed &= assert_unicode_string(
         &unicode_string,
         4*2,
         (4+1)*2,
@@ -32,5 +30,5 @@ void test_RtlInitUnicodeString()
         "Use char array to create unicode string"
     );
 
-    print_test_footer(func_num, func_name, tests_passed);
+    TEST_END();
 }

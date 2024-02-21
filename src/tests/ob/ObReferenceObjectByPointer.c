@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_ObReferenceObjectByPointer()
+TEST_FUNC(ObReferenceObjectByPointer)
 {
     /* FIXME: This is a stub! implement this function! */
 }

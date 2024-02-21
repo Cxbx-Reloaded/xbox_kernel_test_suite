@@ -1,10 +1,10 @@
 #pragma once
 
-void test_InterlockedCompareExchange();
-void test_InterlockedDecrement();
-void test_InterlockedIncrement();
-void test_InterlockedExchange();
-void test_InterlockedExchangeAdd();
-void test_InterlockedFlushSList();
-void test_InterlockedPopEntrySList();
-void test_InterlockedPushEntrySList();
+TEST_FUNC(InterlockedCompareExchange);
+TEST_FUNC(InterlockedDecrement);
+TEST_FUNC(InterlockedIncrement);
+TEST_FUNC(InterlockedExchange);
+TEST_FUNC(InterlockedExchangeAdd);
+TEST_FUNC(InterlockedFlushSList);
+TEST_FUNC(InterlockedPopEntrySList);
+TEST_FUNC(InterlockedPushEntrySList);

@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoBuildDeviceIoControlRequest()
+TEST_FUNC(IoBuildDeviceIoControlRequest)
 {
     /* FIXME: This is a stub! implement this function! */
 }

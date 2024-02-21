@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_DbgLoadImageSymbols()
+TEST_FUNC(DbgLoadImageSymbols)
 {
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoStartNextPacketByKey()
+TEST_FUNC(IoStartNextPacketByKey)
 {
     /* FIXME: This is a stub! implement this function! */
 }

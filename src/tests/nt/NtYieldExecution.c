@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtYieldExecution()
+TEST_FUNC(NtYieldExecution)
 {
     /* FIXME: This is a stub! implement this function! */
 }

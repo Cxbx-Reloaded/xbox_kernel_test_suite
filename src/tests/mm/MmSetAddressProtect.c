@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_MmSetAddressProtect()
+TEST_FUNC(MmSetAddressProtect)
 {
     /* FIXME: This is a stub! implement this function! */
 }

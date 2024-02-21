@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeResetEvent()
+TEST_FUNC(KeResetEvent)
 {
     /* FIXME: This is a stub! implement this function! */
 }

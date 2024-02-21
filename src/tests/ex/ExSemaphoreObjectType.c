@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_ExSemaphoreObjectType()
+TEST_FUNC(ExSemaphoreObjectType)
 {
     /* FIXME: This is a stub! implement this function! */
 }

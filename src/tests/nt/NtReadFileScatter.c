@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtReadFileScatter()
+TEST_FUNC(NtReadFileScatter)
 {
     /* FIXME: This is a stub! implement this function! */
 }

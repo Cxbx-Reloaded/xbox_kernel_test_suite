@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_ExfInterlockedInsertHeadList()
+TEST_FUNC(ExfInterlockedInsertHeadList)
 {
     /* FIXME: This is a stub! implement this function! */
 }

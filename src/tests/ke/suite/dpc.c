@@ -56,12 +56,9 @@ static void __stdcall dpc_callback(
     }
 }
 
-void test_KeInitializeDpc()
+TEST_FUNC(KeInitializeDpc)
 {
-    const char* func_num = "0x006B";
-    const char* func_name = "KeInitializeDpc";
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     // Force set dpc object's variables as invalid to verify if KeInitializeDpc call does set them or not.
     // According to hardware, some are not set. Let's force check them anyway.
@@ -84,15 +81,12 @@ void test_KeInitializeDpc()
     // clear DPC object for later test request
     memset(&dpcObject, 0, sizeof(KDPC));
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }
 
-void test_KeInsertQueueDpc()
+TEST_FUNC(KeInsertQueueDpc)
 {
-    const char* func_num = "0x0077";
-    const char* func_name = "KeInsertQueueDpc";
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     // Initialize test
     KeInitializeDpc(&dpcObject, dpc_callback, NULL);
@@ -182,15 +176,12 @@ void test_KeInsertQueueDpc()
     dpc_called = FALSE;
     dpcObject = restore_dpc_object;
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }
 
-void test_KeIsExecutingDpc()
+TEST_FUNC(KeIsExecutingDpc)
 {
-    const char* func_num = "0x0079";
-    const char* func_name = "KeIsExecutingDpc";
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     // Initialize test
     KeInitializeDpc(&dpcObject, dpc_callback, NULL);
@@ -236,15 +227,12 @@ void test_KeIsExecutingDpc()
     dpc_called = FALSE;
     dpc_executing = FALSE;
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }
 
-void test_KeRemoveQueueDpc()
+TEST_FUNC(KeRemoveQueueDpc)
 {
-    const char* func_num = "0x0089";
-    const char* func_name = "KeRemoveQueueDpc";
-    BOOL test_passed = 1;
-    print_test_header(func_num, func_name);
+    TEST_BEGIN();
 
     // Initialize test
     KeInitializeDpc(&dpcObject, dpc_callback, NULL);
@@ -281,5 +269,5 @@ void test_KeRemoveQueueDpc()
     GEN_CHECK(test3.removal, FALSE, "3:removal");
     GEN_CHECK(test3.dpc_called, FALSE, "3:dpc_called");
 
-    print_test_footer(func_num, func_name, test_passed);
+    TEST_END();
 }

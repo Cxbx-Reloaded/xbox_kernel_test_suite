@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_UnknownAPI369()
+TEST_FUNC(UnknownAPI369)
 {
     /* FIXME: This is a stub! implement this function! */
 }

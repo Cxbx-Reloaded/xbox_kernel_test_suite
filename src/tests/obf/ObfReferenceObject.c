@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_ObfReferenceObject()
+TEST_FUNC(ObfReferenceObject)
 {
     /* FIXME: This is a stub! implement this function! */
 }

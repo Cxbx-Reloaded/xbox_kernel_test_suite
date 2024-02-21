@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtQueryDirectoryFile()
+TEST_FUNC(NtQueryDirectoryFile)
 {
     /* FIXME: This is a stub! implement this function! */
 }

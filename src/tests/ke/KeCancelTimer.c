@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeCancelTimer()
+TEST_FUNC(KeCancelTimer)
 {
     /* FIXME: This is a stub! implement this function! */
 }

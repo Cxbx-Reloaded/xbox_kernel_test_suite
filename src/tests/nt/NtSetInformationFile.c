@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtSetInformationFile()
+TEST_FUNC(NtSetInformationFile)
 {
     /* FIXME: This is a stub! implement this function! */
 }

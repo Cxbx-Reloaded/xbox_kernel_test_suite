@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_DbgBreakPoint()
+TEST_FUNC(DbgBreakPoint)
 {
     /* FIXME: This is a stub! implement this function! */
 }

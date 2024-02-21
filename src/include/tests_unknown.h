@@ -1,5 +1,5 @@
 #pragma once
 
-void test_UnknownAPI367();
-void test_UnknownAPI368();
-void test_UnknownAPI369();
+TEST_FUNC(UnknownAPI367);
+TEST_FUNC(UnknownAPI368);
+TEST_FUNC(UnknownAPI369);

@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeQuerySystemTime()
+TEST_FUNC(KeQuerySystemTime)
 {
     /* FIXME: This is a stub! implement this function! */
 }

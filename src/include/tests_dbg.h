@@ -1,8 +1,8 @@
 #pragma once
 
-void test_DbgBreakPoint();
-void test_DbgBreakPointWithStatus();
-void test_DbgLoadImageSymbols();
-void test_DbgPrint();
-void test_DbgPrompt();
-void test_DbgUnLoadImageSymbols();
+TEST_FUNC(DbgBreakPoint);
+TEST_FUNC(DbgBreakPointWithStatus);
+TEST_FUNC(DbgLoadImageSymbols);
+TEST_FUNC(DbgPrint);
+TEST_FUNC(DbgPrompt);
+TEST_FUNC(DbgUnLoadImageSymbols);

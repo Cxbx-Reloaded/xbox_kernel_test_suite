@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeInitializeMutant()
+TEST_FUNC(KeInitializeMutant)
 {
     /* FIXME: This is a stub! implement this function! */
 }

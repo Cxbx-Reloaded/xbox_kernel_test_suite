@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_MmLockUnlockBufferPages()
+TEST_FUNC(MmLockUnlockBufferPages)
 {
     /* FIXME: This is a stub! implement this function! */
 }

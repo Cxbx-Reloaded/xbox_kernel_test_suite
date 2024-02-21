@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_MmClaimGpuInstanceMemory()
+TEST_FUNC(MmClaimGpuInstanceMemory)
 {
     /* FIXME: This is a stub! implement this function! */
 }

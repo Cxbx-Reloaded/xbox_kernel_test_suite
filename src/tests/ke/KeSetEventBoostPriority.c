@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeSetEventBoostPriority()
+TEST_FUNC(KeSetEventBoostPriority)
 {
     /* FIXME: This is a stub! implement this function! */
 }

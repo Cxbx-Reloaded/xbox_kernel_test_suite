@@ -1,19 +1,19 @@
 #pragma once
 
-void test_XcSHAInit();
-void test_XcSHAUpdate();
-void test_XcSHAFinal();
-void test_XcRC4Key();
-void test_XcRC4Crypt();
-void test_XcHMAC();
-void test_XcPKEncPublic();
-void test_XcPKDecPrivate();
-void test_XcPKGetKeyLen();
-void test_XcVerifyPKCS1Signature();
-void test_XcModExp();
-void test_XcDESKeyParity();
-void test_XcKeyTable();
-void test_XcBlockCrypt();
-void test_XcBlockCryptCBC();
-void test_XcCryptService();
-void test_XcUpdateCrypto();
+TEST_FUNC(XcSHAInit);
+TEST_FUNC(XcSHAUpdate);
+TEST_FUNC(XcSHAFinal);
+TEST_FUNC(XcRC4Key);
+TEST_FUNC(XcRC4Crypt);
+TEST_FUNC(XcHMAC);
+TEST_FUNC(XcPKEncPublic);
+TEST_FUNC(XcPKDecPrivate);
+TEST_FUNC(XcPKGetKeyLen);
+TEST_FUNC(XcVerifyPKCS1Signature);
+TEST_FUNC(XcModExp);
+TEST_FUNC(XcDESKeyParity);
+TEST_FUNC(XcKeyTable);
+TEST_FUNC(XcBlockCrypt);
+TEST_FUNC(XcBlockCryptCBC);
+TEST_FUNC(XcCryptService);
+TEST_FUNC(XcUpdateCrypto);

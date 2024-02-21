@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_PsSetCreateThreadNotifyRoutine()
+TEST_FUNC(PsSetCreateThreadNotifyRoutine)
 {
     /* FIXME: This is a stub! implement this function! */
 }

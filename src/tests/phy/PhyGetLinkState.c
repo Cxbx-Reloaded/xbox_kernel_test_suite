@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_PhyGetLinkState()
+TEST_FUNC(PhyGetLinkState)
 {
     /* FIXME: This is a stub! implement this function! */
 }

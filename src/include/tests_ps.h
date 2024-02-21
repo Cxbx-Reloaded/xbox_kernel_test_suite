@@ -1,8 +1,8 @@
 #pragma once
 
-void test_PsCreateSystemThread();
-void test_PsCreateSystemThreadEx();
-void test_PsQueryStatistics();
-void test_PsSetCreateThreadNotifyRoutine();
-void test_PsTerminateSystemThread();
-void test_PsThreadObjectType();
+TEST_FUNC(PsCreateSystemThread);
+TEST_FUNC(PsCreateSystemThreadEx);
+TEST_FUNC(PsQueryStatistics);
+TEST_FUNC(PsSetCreateThreadNotifyRoutine);
+TEST_FUNC(PsTerminateSystemThread);
+TEST_FUNC(PsThreadObjectType);

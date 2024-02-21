@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test__vsprintf()
+TEST_FUNC(_vsprintf)
 {
     /* FIXME: This is a stub! implement this function! */
 }

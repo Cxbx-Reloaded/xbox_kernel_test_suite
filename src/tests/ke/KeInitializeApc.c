@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_KeInitializeApc()
+TEST_FUNC(KeInitializeApc)
 {
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_MmFreeContiguousMemory()
+TEST_FUNC(MmFreeContiguousMemory)
 {
     /* FIXME: This is a stub! implement this function! */
 }

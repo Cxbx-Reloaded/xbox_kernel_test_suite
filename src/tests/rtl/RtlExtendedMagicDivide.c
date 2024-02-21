@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_RtlExtendedMagicDivide()
+TEST_FUNC(RtlExtendedMagicDivide)
 {
     /* FIXME: This is a stub! implement this function! */
 }

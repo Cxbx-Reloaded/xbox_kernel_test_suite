@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_NtFsControlFile()
+TEST_FUNC(NtFsControlFile)
 {
     /* FIXME: This is a stub! implement this function! */
 }

@@ -2,7 +2,7 @@
 
 #include "util/output.h"
 
-void test_IoCompletionObjectType()
+TEST_FUNC(IoCompletionObjectType)
 {
     /* FIXME: This is a stub! implement this function! */
 }
