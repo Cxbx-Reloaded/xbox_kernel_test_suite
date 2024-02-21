@@ -12,10 +12,10 @@ TEST_FUNC(KeLeaveCriticalRegion)
     KeEnterCriticalRegion();
 
     KeLeaveCriticalRegion();
-    test_passed &= assert_critical_region(thread, -1, "Leave critical region after entering twice");
+    assert_critical_region(thread, -1, "Leave critical region after entering twice");
 
     KeLeaveCriticalRegion();
-    test_passed &= assert_critical_region(thread, 0, "Leave critical region again");
+    assert_critical_region(thread, 0, "Leave critical region again");
 
     TEST_END();
 }

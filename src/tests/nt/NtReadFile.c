@@ -36,7 +36,7 @@ TEST_FUNC(NtReadFile)
 
     if (!NT_SUCCESS(status)) {
         NtClose(handle);
-        test_passed = 0;
+        TEST_FAILED();
         TEST_END();
         return;
     }

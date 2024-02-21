@@ -15,10 +15,11 @@ TEST_FUNC(RtlZeroMemory)
     RtlZeroMemory(alloc_buffer, size);
     for(int k=0; k<size; k++){
         if(alloc_buffer[k] != (char)0){
-            test_passed = 0;
+            TEST_FAILED();
             break;
         }
     }
     free(alloc_buffer);
+
     TEST_END();
 }

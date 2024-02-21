@@ -16,7 +16,7 @@ BOOL assert_NTSTATUS_ex(
             expected_status,
             status
         );
-        test_passed = 0;
+        TEST_FAILED();
     }
     return test_passed;
 }

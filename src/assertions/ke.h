@@ -8,7 +8,7 @@ BOOL assert_critical_region_ex(PKTHREAD, ULONG, const char*, int);
     expected_Apc, \
     test_name \
 ) \
-assert_critical_region_ex( \
+test_passed &= assert_critical_region_ex( \
     thread, \
     expected_Apc, \
     test_name, \

@@ -46,7 +46,7 @@ TEST_FUNC(ObReferenceObjectByHandle)
         if (result == STATUS_SUCCESS) {
             NtClose(reference_object_handle_test[i].handle);
         }
-        test_passed &= assert_NTSTATUS(result, reference_object_handle_test[i].expected_result, api_name);
+        assert_NTSTATUS(result, reference_object_handle_test[i].expected_result, api_name);
         GEN_CHECK(object_return, reference_object_handle_test[i].expected_object_return, reference_object_handle_test[i].message);
     }
 

@@ -34,11 +34,11 @@ TEST_FUNC(IoCreateSymbolicLink)
 
     // First part of the test is ensure we are able to make symbolic link.
     result = IoCreateSymbolicLink(&symlink_str, &device_str);
-    test_passed &= assert_NTSTATUS(result, STATUS_SUCCESS, api_name);
+    assert_NTSTATUS(result, STATUS_SUCCESS, api_name);
 
     // Do not delete symbolic link yet in order to trigger object name collision error.
     result = IoCreateSymbolicLink(&symlink_str, &device_str);
-    test_passed &= assert_NTSTATUS(result, STATUS_OBJECT_NAME_COLLISION, api_name);
+    assert_NTSTATUS(result, STATUS_OBJECT_NAME_COLLISION, api_name);
 
     // Now we can delete symbolic link for next part of various tests.
     IoDeleteSymbolicLink(&symlink_str);
@@ -80,7 +80,7 @@ TEST_FUNC(IoCreateSymbolicLink)
             IoDeleteSymbolicLink(symlink_test_str[i].pStr);
         }
 
-        test_passed &= assert_NTSTATUS(result, symlink_test_str[i].expected_result, api_name);
+        assert_NTSTATUS(result, symlink_test_str[i].expected_result, api_name);
     }
 
     // Perform tests for device inputs
@@ -90,7 +90,7 @@ TEST_FUNC(IoCreateSymbolicLink)
             IoDeleteSymbolicLink(&symlink_str);
         }
 
-        test_passed &= assert_NTSTATUS(result, device_test_str[i].expected_result, api_name);
+        assert_NTSTATUS(result, device_test_str[i].expected_result, api_name);
     }
 
     TEST_END();

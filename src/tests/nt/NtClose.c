@@ -33,7 +33,7 @@ TEST_FUNC(NtClose)
                           FILE_SYNCHRONOUS_IO_NONALERT);
 
     status = NtClose(handle);
-    test_passed &= assert_NTSTATUS(status, STATUS_SUCCESS, "NtClose");
+    assert_NTSTATUS(status, STATUS_SUCCESS, api_name);
 
     TEST_END();
 }

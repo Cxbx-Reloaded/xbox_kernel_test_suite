@@ -13,7 +13,7 @@ TEST_FUNC(RtlInitUnicodeString)
     unicode_string.Length = 100;
     unicode_string.MaximumLength = 200;
     RtlInitUnicodeString(&unicode_string, NULL);
-    test_passed &= assert_unicode_string(
+    assert_unicode_string(
         &unicode_string,
         0,
         0,
@@ -22,7 +22,7 @@ TEST_FUNC(RtlInitUnicodeString)
     );
 
     RtlInitUnicodeString(&unicode_string, string);
-    test_passed &= assert_unicode_string(
+    assert_unicode_string(
         &unicode_string,
         4*2,
         (4+1)*2,

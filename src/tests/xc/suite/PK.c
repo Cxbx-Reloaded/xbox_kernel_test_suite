@@ -115,13 +115,13 @@ TEST_FUNC(XcPKEncPublic)
 	memcpy(input_buffer, "\x45\x6e\x63\x72\x79\x70\x74\x20\x6d\x65", 10); // "Encrypt me"
 	ret = XcPKEncPublic(pub_key, input_buffer, output_buffer);
 	if(ret == 1) {
-		test_passed &= assert_hashed_result(output_buffer,
-		                                    sizeof(output_buffer),
-		                                    (PUCHAR)"\x1a\x31\x40\xee\x8e\x0b\x07\xff\x36\xe3\xb1\x8e\xc8\x87\xe2\xd7\xb1\x63\x01\xe4",
-		                                    "2048 key bit");
+		assert_hashed_result(output_buffer,
+							 sizeof(output_buffer),
+							 (PUCHAR)"\x1a\x31\x40\xee\x8e\x0b\x07\xff\x36\xe3\xb1\x8e\xc8\x87\xe2\xd7\xb1\x63\x01\xe4",
+							 "2048 key bit");
 	}
 	else {
-		test_passed &= 0;
+		TEST_FAILED();
 	}
 
 	// Wrong magic string
@@ -135,7 +135,7 @@ TEST_FUNC(XcPKEncPublic)
 		test_passed &= 1;
 	}
 	else {
-		test_passed &= 0;
+		TEST_FAILED();
 	}
 
 	// Using bogus_data as modulus buffer size freezes (crash?) my xbox so I won't test it
@@ -147,13 +147,13 @@ TEST_FUNC(XcPKEncPublic)
 	memset(output_buffer, 0, 264);
 	ret = XcPKEncPublic(pub_key, input_buffer, output_buffer);
 	if(ret == 1) {
-		test_passed &= assert_hashed_result(output_buffer,
-		                                    sizeof(output_buffer),
-		                                    (PUCHAR)"\x0c\xd6\x8f\x80\xc2\x04\xca\x68\x0b\x9d\x21\x37\x1c\xcb\x46\x32\x68\xb2\x8a\x92",
-		                                    "1024 key bit");
+		assert_hashed_result(output_buffer,
+							 sizeof(output_buffer),
+							 (PUCHAR)"\x0c\xd6\x8f\x80\xc2\x04\xca\x68\x0b\x9d\x21\x37\x1c\xcb\x46\x32\x68\xb2\x8a\x92",
+							 "1024 key bit");
 	}
 	else {
-		test_passed &= 0;
+		TEST_FAILED();
 	}
 
 	// Wrong max encode size -> same result as if original value
@@ -164,13 +164,13 @@ TEST_FUNC(XcPKEncPublic)
 	memset(output_buffer, 0, 264);
 	ret = XcPKEncPublic(pub_key, input_buffer, output_buffer);
 	if(ret == 1) {
-		test_passed &= assert_hashed_result(output_buffer,
-		                                    sizeof(output_buffer),
-		                                    (PUCHAR)"\x1a\x31\x40\xee\x8e\x0b\x07\xff\x36\xe3\xb1\x8e\xc8\x87\xe2\xd7\xb1\x63\x01\xe4",
-		                                    "wrong max encode size");
+		assert_hashed_result(output_buffer,
+		                     sizeof(output_buffer),
+		                     (PUCHAR)"\x1a\x31\x40\xee\x8e\x0b\x07\xff\x36\xe3\xb1\x8e\xc8\x87\xe2\xd7\xb1\x63\x01\xe4",
+		                     "wrong max encode size");
 	}
 	else {
-		test_passed &= 0;
+		TEST_FAILED();
 	}
 	memcpy(&pub_key[12], original_max_encode_size, 4);
 

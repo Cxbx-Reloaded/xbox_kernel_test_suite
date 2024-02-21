@@ -13,7 +13,7 @@ BOOL assert_NTSTATUS_ex(
     expected_status, \
     func_name \
 ) \
-assert_NTSTATUS_ex( \
+test_passed &= assert_NTSTATUS_ex( \
     status, \
     expected_status, \
     func_name, \

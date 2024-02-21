@@ -19,7 +19,7 @@ BOOL assert_ERWLOCK_equals_ex(
     expected_ReadersEntryCount, \
     test_name \
 ) \
-assert_ERWLOCK_equals_ex( \
+test_passed &= assert_ERWLOCK_equals_ex( \
     ReadWriteLock, \
     expected_LockCount, \
     expected_WritersWaitingCount, \

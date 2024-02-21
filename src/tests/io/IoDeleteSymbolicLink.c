@@ -17,19 +17,19 @@ TEST_FUNC(IoDeleteSymbolicLink)
     IoCreateSymbolicLink(&symlink_str, &device_str);
 
     result = IoDeleteSymbolicLink(&symlink_str);
-    test_passed &= assert_NTSTATUS(result, STATUS_SUCCESS, api_name);
+    assert_NTSTATUS(result, STATUS_SUCCESS, api_name);
 
     result = IoDeleteSymbolicLink(&symlink_str);
-    test_passed &= assert_NTSTATUS(result, STATUS_OBJECT_NAME_NOT_FOUND, api_name);
+    assert_NTSTATUS(result, STATUS_OBJECT_NAME_NOT_FOUND, api_name);
 
     result = IoDeleteSymbolicLink(&null_str);
-    test_passed &= assert_NTSTATUS(result, STATUS_OBJECT_NAME_INVALID, api_name);
+    assert_NTSTATUS(result, STATUS_OBJECT_NAME_INVALID, api_name);
 
     result = IoDeleteSymbolicLink(&blank_str);
-    test_passed &= assert_NTSTATUS(result, STATUS_OBJECT_NAME_INVALID, api_name);
+    assert_NTSTATUS(result, STATUS_OBJECT_NAME_INVALID, api_name);
 
     result = IoDeleteSymbolicLink(NULL);
-    test_passed &= assert_NTSTATUS(result, STATUS_OBJECT_NAME_INVALID, api_name);
+    assert_NTSTATUS(result, STATUS_OBJECT_NAME_INVALID, api_name);
 
     TEST_END();
 }

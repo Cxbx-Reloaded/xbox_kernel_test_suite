@@ -17,7 +17,7 @@ BOOL assert_critical_section_equals_ex(
     expected_OwningThread, \
     test_name \
 ) \
-assert_critical_section_equals_ex( \
+test_passed &= assert_critical_section_equals_ex( \
     crit_section, \
     expected_LockCount, \
     expected_RecursionCount, \
@@ -41,7 +41,7 @@ BOOL assert_ansi_string_ex(
     expected_Buffer, \
     test_name \
 ) \
-assert_ansi_string_ex( \
+test_passed &= assert_ansi_string_ex( \
     string, \
     expected_Length, \
     expected_MaximumLength, \
@@ -65,7 +65,7 @@ BOOL assert_unicode_string_ex(
     expected_Buffer, \
     test_name \
 ) \
-assert_unicode_string_ex( \
+test_passed &= assert_unicode_string_ex( \
     string, \
     expected_Length, \
     expected_MaximumLength, \
@@ -80,7 +80,7 @@ BOOL assert_rtl_compared_bytes_ex(SIZE_T, SIZE_T, const char*, int);
     expected_matching_bytes, \
     test_name \
 ) \
-assert_rtl_compared_bytes_ex( \
+test_passed &= assert_rtl_compared_bytes_ex( \
     num_matching_bytes, \
     expected_matching_bytes, \
     test_name, \

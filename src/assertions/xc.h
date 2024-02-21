@@ -16,7 +16,7 @@ BOOL assert_hashed_result_ex(
     expected_result, \
     test_name \
 ) \
-assert_hashed_result_ex( \
+test_passed &= assert_hashed_result_ex( \
     input, \
     len, \
     expected_result, \
