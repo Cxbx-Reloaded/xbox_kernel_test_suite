@@ -1,6 +1,7 @@
 #include <xboxkrnl/xboxkrnl.h>
 
 #include "util/output.h"
+#include "assertions/defines.h"
 
 TEST_FUNC(XcModExp)
 {
@@ -13,12 +14,8 @@ TEST_FUNC(XcModExp)
 	ULONG c      = 0x30;
 
 	ret = XcModExp(&output, &a, &b, &c, 4/sizeof(ULONG));
-	if(ret == 1 && output == 0x10) {
-        test_passed &= 1;
-	}
-    else {
-        test_passed &= 0;
-	}
+	GEN_CHECK(ret, 1, "XcModExp return");
+	GEN_CHECK(output, 0x10, "output");
 
 	// Passing a size of zero freezes (crash?) my xbox so I won't test it
 

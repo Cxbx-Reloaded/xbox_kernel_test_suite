@@ -1,6 +1,7 @@
 #include <hal/fileio.h>
 
 #include "util/output.h"
+#include "assertions/defines.h"
 
 TEST_FUNC(NtReadFile)
 {
@@ -23,16 +24,15 @@ TEST_FUNC(NtReadFile)
     obj.Attributes = OBJ_CASE_INSENSITIVE;
     obj.ObjectName = &obj_name;
 
-    status = NtCreateFile(
-    &handle,
-    GENERIC_READ,
-    &obj,
-    &isb,
-    NULL,
-    FILE_ATTRIBUTE_NORMAL,
-    0,
-    FILE_OPEN,
-    FILE_SYNCHRONOUS_IO_NONALERT);
+    status = NtCreateFile(&handle,
+                          GENERIC_READ,
+                          &obj,
+                          &isb,
+                          NULL,
+                          FILE_ATTRIBUTE_NORMAL,
+                          0,
+                          FILE_OPEN,
+                          FILE_SYNCHRONOUS_IO_NONALERT);
 
     if (!NT_SUCCESS(status)) {
         NtClose(handle);
@@ -41,20 +41,20 @@ TEST_FUNC(NtReadFile)
         return;
     }
 
-    status = NtReadFile(
-    handle,
-    NULL,
-    NULL,
-    NULL,
-    &isb,
-    read,
-    uSize,
-    NULL);
+    status = NtReadFile(handle,
+                        NULL,
+                        NULL,
+                        NULL,
+                        &isb,
+                        read,
+                        uSize,
+                        NULL);
 
-    if (status == STATUS_PENDING)
+    if (status == STATUS_PENDING) {
         status = NtWaitForSingleObject((void*)handle, FALSE, (void*)NULL);
+    }
 
-    test_passed &= NT_SUCCESS(status);
+    GEN_CHECK(NT_SUCCESS(status), TRUE, "status (boolean)");
     NtClose(handle);
 
     TEST_END();
