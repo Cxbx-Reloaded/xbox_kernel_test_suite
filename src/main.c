@@ -66,6 +66,7 @@ void load_name_file(const char* file_path)
     DWORD bytes_read = 0;
     BOOL result = ReadFile(handle, buffer, file_size, &bytes_read, NULL);
     if (result == 0 || bytes_read != file_size) {
+        free(buffer);
         return;
     }
 
@@ -120,6 +121,7 @@ int load_conf_file(char *file_path)
     BOOL result = ReadFile(handle, buffer, file_size, &bytes_read, NULL);
     if (result == 0 || bytes_read != file_size) {
         print("Read failed for config file. result = %d, read = %u", file_size, bytes_read);
+        free(buffer);
         return -1;
     }
 
