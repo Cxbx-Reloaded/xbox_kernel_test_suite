@@ -11,6 +11,9 @@ void print_test_footer(int, const char*, BOOL);
     BOOL test_passed = 1
 #define TEST_END() print_test_footer(api_num, api_name, test_passed)
 #define TEST_UNIMPLEMENTED()
+#define TEST_FAILED() test_passed = 0
+#define TEST_IS_FAILED (!test_passed)
+#define TEST_IS_SUCCESS (test_passed)
 
 // Real hardware can only display one screen of text at a time. Create an output
 // logfile to contain information for all tests.
