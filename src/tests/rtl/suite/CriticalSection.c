@@ -12,33 +12,17 @@ TEST_FUNC(RtlEnterCriticalSection)
 
     RtlInitializeCriticalSection(&crit_section);
     RtlEnterCriticalSection(&crit_section);
-    test_passed &= assert_critical_section_equals(
-        &crit_section,
-        0,
-        1,
-        (HANDLE)KeGetCurrentThread(),
-        "Enter an unused critical section"
-    );
-
+    // Enter an unused critical section
+    assert_critical_section_equals(&crit_section, 0, 1, (HANDLE)KeGetCurrentThread());
+    // Enter the critical section again
     RtlEnterCriticalSection(&crit_section);
-    test_passed &= assert_critical_section_equals(
-        &crit_section,
-        1,
-        2,
-        (HANDLE)KeGetCurrentThread(),
-        "Enter the critical section again"
-    );
+    assert_critical_section_equals(&crit_section, 1, 2, (HANDLE)KeGetCurrentThread());
 
     RtlLeaveCriticalSection(&crit_section);
     RtlLeaveCriticalSection(&crit_section);
     RtlEnterCriticalSection(&crit_section);
-    test_passed &= assert_critical_section_equals(
-        &crit_section,
-        0,
-        1,
-        (HANDLE)KeGetCurrentThread(),
-        "Re-Enter critical section after leaving twice"
-    );
+    // Re-Enter critical section after leaving twice
+    assert_critical_section_equals(&crit_section, 0, 1, (HANDLE)KeGetCurrentThread());
 
     TEST_END();
 }
@@ -54,15 +38,9 @@ TEST_FUNC(RtlEnterCriticalSectionAndRegion)
     RtlInitializeCriticalSection(&crit_section);
     RtlEnterCriticalSectionAndRegion(&crit_section);
     RtlEnterCriticalSectionAndRegion(&crit_section);
-
-    test_passed &= assert_critical_section_equals(
-        &crit_section,
-        1,
-        2,
-        (HANDLE)thread,
-        "Enter critcal section and region twice"
-    );
-    test_passed &= assert_critical_region(thread, orig_APC_disable - 2, "Entered critical region twice");
+    // Enter critcal section and region twice
+    assert_critical_section_equals(&crit_section, 1, 2, (HANDLE)thread);
+    assert_critical_region(thread, orig_APC_disable - 2);
 
     // Cleanup machine state without using RtlLeaveCriticalSectionAndRegion because it only
     // increments KernelApcDisable when the critical region is freed (RecursionCount == 0)
@@ -78,23 +56,13 @@ TEST_FUNC(RtlInitializeCriticalSection)
     TEST_BEGIN();
 
     RtlInitializeCriticalSection(&crit_section);
-    test_passed &= assert_critical_section_equals(
-        &crit_section,
-        -1,
-        0,
-        NULL,
-        "Init critical section"
-    );
+    // Init critical section
+    assert_critical_section_equals(&crit_section, -1, 0, NULL);
 
     memset(&crit_section, 0x11, sizeof(crit_section));
     RtlInitializeCriticalSection(&crit_section);
-    test_passed &= assert_critical_section_equals(
-        &crit_section,
-        -1,
-        0,
-        NULL,
-        "Re-Init critical section after setting garbage data"
-    );
+    // Re-Init critical section after setting garbage data
+    assert_critical_section_equals(&crit_section, -1, 0, NULL);
 
     TEST_END();
 }
@@ -108,31 +76,14 @@ TEST_FUNC(RtlLeaveCriticalSection)
     RtlEnterCriticalSection(&crit_section);
     RtlEnterCriticalSection(&crit_section);
     RtlLeaveCriticalSection(&crit_section);
-    test_passed &= assert_critical_section_equals(
-        &crit_section,
-        0,
-        1,
-        (HANDLE)KeGetCurrentThread(),
-        "Leave critical section once"
-    );
-
+    // Leave critical section once
+    assert_critical_section_equals(&crit_section, 0, 1, (HANDLE)KeGetCurrentThread());
+    // Leave critical section again
     RtlLeaveCriticalSection(&crit_section);
-    test_passed &= assert_critical_section_equals(
-        &crit_section,
-        -1,
-        0,
-        NULL,
-        "Leave critical section again"
-    );
-
+    assert_critical_section_equals(&crit_section, -1, 0, NULL);
+    // Re-Enter Critical Section
     RtlEnterCriticalSection(&crit_section);
-    test_passed &= assert_critical_section_equals(
-        &crit_section,
-        0,
-        1,
-        (HANDLE)KeGetCurrentThread(),
-        "Re-Enter Critical Section"
-    );
+    assert_critical_section_equals(&crit_section, 0, 1, (HANDLE)KeGetCurrentThread());
 
     TEST_END();
 }
@@ -150,24 +101,16 @@ TEST_FUNC(RtlLeaveCriticalSectionAndRegion)
     RtlEnterCriticalSectionAndRegion(&crit_section);
 
     RtlLeaveCriticalSectionAndRegion(&crit_section);
-    test_passed &= assert_critical_section_equals(
-        &crit_section,
-        0,
-        1,
-        (HANDLE)thread,
-        "Leave critical section and region after entering twice"
-    );
-    test_passed &= assert_critical_region(thread, orig_APC_disable - 2, "KernelApcDisable should be unchanged until critical section is freed");
+    // Leave critical section and region after entering twice
+    assert_critical_section_equals(&crit_section, 0, 1, (HANDLE)thread);
+    // KernelApcDisable should be unchanged until critical section is freed
+    assert_critical_region(thread, orig_APC_disable - 2);
 
     RtlLeaveCriticalSectionAndRegion(&crit_section);
-    test_passed &= assert_critical_section_equals(
-        &crit_section,
-        -1,
-        0,
-        NULL,
-        "Leave critical section and region a second time"
-    );
-    test_passed &= assert_critical_region(thread, orig_APC_disable - 1, "KernelApcDisable should now decrement as the critial section is freed");
+    // Leave critical section and region a second time
+    assert_critical_section_equals(&crit_section, -1, 0, NULL);
+    // KernelApcDisable should now decrement as the critial section is freed
+    assert_critical_region(thread, orig_APC_disable - 1);
 
     // Cleanup machine state
     KeLeaveCriticalRegion();

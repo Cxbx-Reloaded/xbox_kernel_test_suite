@@ -66,13 +66,10 @@ TEST_FUNC(ExAcquireReadWriteLockExclusive)
     ExInitializeReadWriteLock(&ReadWriteLock);
 
     ExAcquireReadWriteLockExclusive(&ReadWriteLock);
-    test_passed = assert_ERWLOCK_equals(
-        &ReadWriteLock,
-        0, 0, 0, 0,
-        "Acquire exclusive lock on empty lock"
-    );
+    // Acquire exclusive lock on empty lock
+    assert_ERWLOCK_equals(&ReadWriteLock, 0, 0, 0, 0);
     // Avoid spinning forever in the loop below.
-    if(!test_passed) {
+    if (TEST_IS_FAILED) {
         TEST_END();
         return;
     }
@@ -85,35 +82,32 @@ TEST_FUNC(ExAcquireReadWriteLockExclusive)
     HANDLE handle;
     control_struct control = {&ReadWriteLock, 0, 0, 0, 0};
     NTSTATUS result = PsCreateSystemThread(&handle, NULL, ExAcquireReadWriteLockExclusive_thread2, (void*)&control, 0);
-    if(result != STATUS_SUCCESS) {
+    if (result != STATUS_SUCCESS) {
         print("  ERROR: did not create thread");
-        test_passed = 0;
+        TEST_FAILED();
         TEST_END();
         return;
     }
 
     test_passed = timed_poll_for_value((ULONG*)&ReadWriteLock.LockCount, 1);
-    if(!test_passed) {
+    if(TEST_IS_FAILED) {
         print("  ERROR: LockCount did not equal 1\n");
-        test_passed = 0;
+        TEST_FAILED();
         TEST_END();
         return;
     }
-    test_passed = assert_ERWLOCK_equals(
-        &ReadWriteLock,
-        1, 1, 0, 0,
-        "Second thread attempted to acquire the exclusive lock, incrementing WritersWaitingCount"
-    );
+    // Second thread attempted to acquire the exclusive lock, incrementing WritersWaitingCount
+    assert_ERWLOCK_equals(&ReadWriteLock, 1, 1, 0, 0);
 
     if(control.thread2_status == 1) {
-        test_passed = 0;
+        TEST_FAILED();
         print("  ERROR: The second thread was not supposed to write before the lock is released on the first thread.");
     }
     ExReleaseReadWriteLock(&ReadWriteLock);
     test_passed = timed_poll_for_value(&control.thread2_status, 2);
-    if(!test_passed) {
+    if(TEST_IS_FAILED) {
         print("  ERROR: thread2_status did not equal 2 before timing out.\n");
-        test_passed = 0;
+        TEST_FAILED();
     }
 
     TEST_END();

@@ -23,21 +23,13 @@ TEST_FUNC(RtlAnsiStringToUnicodeString)
     }
 
     NTSTATUS ret = RtlAnsiStringToUnicodeString(&dest_str, &src_str, 0);
-    test_passed &= assert_NTSTATUS(
-        ret,
-        STATUS_BUFFER_OVERFLOW,
-        api_name
-    );
+    assert_NTSTATUS(ret, STATUS_BUFFER_OVERFLOW, api_name);
 
     memset(long_str, 'a', long_str_size);
     long_str[long_str_size - 1] = '\0';
     RtlInitAnsiString(&src_str, long_str);
     ret = RtlAnsiStringToUnicodeString(&dest_str, &src_str, 0);
-    test_passed &= assert_NTSTATUS(
-        ret,
-        STATUS_INVALID_PARAMETER_2,
-        api_name
-    );
+    assert_NTSTATUS(ret, STATUS_INVALID_PARAMETER_2, api_name);
     free(long_str);
 
     TEST_END();
@@ -51,7 +43,7 @@ TEST_FUNC(RtlCharToInteger)
     // SPECIAL CASE: Base = 0 will not throw this error as base = 0 signifies that the base will be included
     // in the input string: '0b' = binary, '0o' = octal, '0x' = hex
     NTSTATUS ret = RtlCharToInteger("1", 1, NULL);
-    test_passed &= assert_NTSTATUS(ret, STATUS_INVALID_PARAMETER, api_name);
+    assert_NTSTATUS(ret, STATUS_INVALID_PARAMETER, api_name);
 
     typedef struct _char_to_int_test {
         CHAR* const input;
@@ -157,7 +149,7 @@ TEST_FUNC(RtlUnicodeStringToAnsiString)
 
     // Test if default behavior is working as intended.
     RtlInitUnicodeString(&unicode_string, unicode_text);
-    test_passed &= assert_unicode_string(
+    assert_unicode_string(
         &unicode_string,
         wcslen(unicode_text) * sizeof(WCHAR),
         (wcslen(unicode_text) + 1) * sizeof(WCHAR),
@@ -167,8 +159,8 @@ TEST_FUNC(RtlUnicodeStringToAnsiString)
 
     // Test default behavior for allocated buffer.
     NTSTATUS result = RtlUnicodeStringToAnsiString(&ansi_string, &unicode_string, alloc_buffer);
-    test_passed &= assert_NTSTATUS(result, STATUS_SUCCESS, api_name);
-    test_passed &= assert_ansi_string(
+    assert_NTSTATUS(result, STATUS_SUCCESS, api_name);
+    assert_ansi_string(
         &ansi_string,
         wcslen(unicode_text),
         wcslen(unicode_text) + 1,
@@ -185,8 +177,8 @@ TEST_FUNC(RtlUnicodeStringToAnsiString)
     ansi_string.MaximumLength = ansi_string.Length + 1;
     ansi_string.Buffer = ansi_buffer;
     result = RtlUnicodeStringToAnsiString(&ansi_string, &unicode_string, 0);
-    test_passed &= assert_NTSTATUS(result, STATUS_SUCCESS, api_name);
-    test_passed &= assert_ansi_string(
+    assert_NTSTATUS(result, STATUS_SUCCESS, api_name);
+    assert_ansi_string(
         &ansi_string,
         wcslen(unicode_text),
         wcslen(unicode_text) + 1,
@@ -203,8 +195,8 @@ TEST_FUNC(RtlUnicodeStringToAnsiString)
     unicode_string.Length += 2;
     unicode_string.MaximumLength += 2;
     result = RtlUnicodeStringToAnsiString(&ansi_string, &unicode_string, 0);
-    test_passed &= assert_NTSTATUS(result, STATUS_BUFFER_OVERFLOW, api_name);
-    test_passed &= assert_ansi_string(
+    assert_NTSTATUS(result, STATUS_BUFFER_OVERFLOW, api_name);
+    assert_ansi_string(
         &ansi_string,
         wcslen(unicode_text),
         wcslen(unicode_text) + 1,
@@ -220,8 +212,8 @@ TEST_FUNC(RtlUnicodeStringToAnsiString)
     // Since we didn't update ansi string, we should trigger buffer overflow status.
     // Yet, at least get a partial returned buffer.
     result = RtlUnicodeStringToAnsiString(&ansi_string, &unicode_string, 0);
-    test_passed &= assert_NTSTATUS(result, STATUS_BUFFER_OVERFLOW, api_name);
-    test_passed &= assert_ansi_string(
+    assert_NTSTATUS(result, STATUS_BUFFER_OVERFLOW, api_name);
+    assert_ansi_string(
         &ansi_string,
         wcslen(unicode_text),
         wcslen(unicode_text) + 1,
@@ -234,8 +226,8 @@ TEST_FUNC(RtlUnicodeStringToAnsiString)
     ansi_string.MaximumLength = sizeof(ansi_buffer);
     ansi_string.Length = ansi_string.MaximumLength - 1;
     result = RtlUnicodeStringToAnsiString(&ansi_string, &unicode_string, 0);
-    test_passed &= assert_NTSTATUS(result, STATUS_SUCCESS, api_name);
-    test_passed &= assert_ansi_string(
+    assert_NTSTATUS(result, STATUS_SUCCESS, api_name);
+    assert_ansi_string(
         &ansi_string,
         ARRAY_SIZE(unicode_text) - 1,
         ARRAY_SIZE(unicode_text),
@@ -246,7 +238,7 @@ TEST_FUNC(RtlUnicodeStringToAnsiString)
 
     ansi_string.MaximumLength = 0;
     result = RtlUnicodeStringToAnsiString(&ansi_string, &unicode_string, 0);
-    test_passed &= assert_NTSTATUS(result, STATUS_BUFFER_OVERFLOW, api_name);
+    assert_NTSTATUS(result, STATUS_BUFFER_OVERFLOW, api_name);
     // We can't do ansi string assert check since max length of ansi string is set to 0.
 
     // Allocate unicode and ansi strings for attempt to maxed out.
@@ -260,8 +252,8 @@ TEST_FUNC(RtlUnicodeStringToAnsiString)
     ansi_string.Length = UINT16_MAX;
     ansi_string.Buffer = ansi_text_max;
     result = RtlUnicodeStringToAnsiString(&ansi_string, &unicode_string, 0);
-    test_passed &= assert_NTSTATUS(result, STATUS_SUCCESS, api_name);
-    test_passed &= assert_ansi_string(
+    assert_NTSTATUS(result, STATUS_SUCCESS, api_name);
+    assert_ansi_string(
         &ansi_string,
         ARRAY_SIZE(unicode_text) - 1,
         UINT16_MAX,
@@ -276,8 +268,8 @@ TEST_FUNC(RtlUnicodeStringToAnsiString)
     unicode_string.Length = UINT16_MAX;
     unicode_string.Buffer = unicode_text_max;
     result = RtlUnicodeStringToAnsiString(&ansi_string, &unicode_string, 0);
-    test_passed &= assert_NTSTATUS(result, STATUS_SUCCESS, api_name);
-    test_passed &= assert_ansi_string(
+    assert_NTSTATUS(result, STATUS_SUCCESS, api_name);
+    assert_ansi_string(
         &ansi_string,
         (UINT16_MAX-1) / sizeof(WCHAR),
         UINT16_MAX,

@@ -140,7 +140,7 @@ TEST_FUNC(RtlWalkFrameChain)
 
     // Output any remaining parent calls occur from the stack.
     // We do not make any parent calls address verification as they can change at any time.
-    if (!test_passed) {
+    if (TEST_IS_FAILED) {
         for (ULONG i = 4; i < total; i++) {
             print("  DEBUG: callers[%u] = 0x%08x", i, callers[i]);
         }

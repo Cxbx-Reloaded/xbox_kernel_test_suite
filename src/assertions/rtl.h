@@ -2,27 +2,29 @@
 
 #include <xboxkrnl/xboxkrnl.h>
 
-BOOL assert_critical_section_equals_ex(
-    PRTL_CRITICAL_SECTION,
-    LONG,
-    LONG,
-    HANDLE,
-    const char*,
-    int
-);
-#define assert_critical_section_equals( \
+#include "defines.h"
+
+#define assert_critical_section_equals_ex( \
     crit_section, \
     expected_LockCount, \
     expected_RecursionCount, \
     expected_OwningThread, \
-    test_name \
+    line_number \
+) \
+    GEN_CHECK_EX((crit_section)->LockCount, expected_LockCount, ".LockCount", line_number); \
+    GEN_CHECK_EX((crit_section)->RecursionCount, expected_RecursionCount, ".RecursionCount", line_number); \
+    GEN_CHECK_EX((crit_section)->OwningThread, expected_OwningThread, ".OwningThread", line_number)
+#define assert_critical_section_equals( \
+    crit_section, \
+    expected_LockCount, \
+    expected_RecursionCount, \
+    expected_OwningThread \
 ) \
 assert_critical_section_equals_ex( \
     crit_section, \
     expected_LockCount, \
     expected_RecursionCount, \
     expected_OwningThread, \
-    test_name, \
     __LINE__ \
 )
 
@@ -41,7 +43,7 @@ BOOL assert_ansi_string_ex(
     expected_Buffer, \
     test_name \
 ) \
-assert_ansi_string_ex( \
+test_passed &= assert_ansi_string_ex( \
     string, \
     expected_Length, \
     expected_MaximumLength, \
@@ -65,24 +67,11 @@ BOOL assert_unicode_string_ex(
     expected_Buffer, \
     test_name \
 ) \
-assert_unicode_string_ex( \
+test_passed &= assert_unicode_string_ex( \
     string, \
     expected_Length, \
     expected_MaximumLength, \
     expected_Buffer, \
-    test_name, \
-    __LINE__ \
-)
-
-BOOL assert_rtl_compared_bytes_ex(SIZE_T, SIZE_T, const char*, int);
-#define assert_rtl_compared_bytes( \
-    num_matching_bytes, \
-    expected_matching_bytes, \
-    test_name \
-) \
-assert_rtl_compared_bytes_ex( \
-    num_matching_bytes, \
-    expected_matching_bytes, \
     test_name, \
     __LINE__ \
 )

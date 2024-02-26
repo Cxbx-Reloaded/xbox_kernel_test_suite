@@ -43,22 +43,22 @@ void print(char* str, ...)
 }
 
 void print_test_header(
-    int func_num,
-    const char* func_name)
+    int api_num,
+    const char* api_name)
 {
-    print("0x%04X - %s: Tests Starting", func_num, func_name);
+    print("0x%04X - %s: Tests Starting", api_num, api_name);
 }
 
 void print_test_footer(
-    int func_num,
-    const char* func_name,
+    int api_num,
+    const char* api_name,
     BOOL tests_passed)
 {
     if(tests_passed) {
-        print("0x%04X - %s: All tests PASSED", func_num, func_name);
+        print("0x%04X - %s: All tests PASSED", api_num, api_name);
     }
     else {
-        print("0x%04X - %s: One or more tests FAILED", func_num, func_name);
+        print("0x%04X - %s: One or more tests FAILED", api_num, api_name);
     }
 }
 

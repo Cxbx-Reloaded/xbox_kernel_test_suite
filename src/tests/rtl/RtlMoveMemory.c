@@ -30,12 +30,13 @@ TEST_FUNC(RtlMoveMemory)
 
     for(int k=0; k<size; k++){
         if(src_buffer[k] != dest_buffer[k]){
-            test_passed = 0;
+            TEST_FAILED();
             break;
         }
     }
 
     free(src_buffer);
     free(dest_buffer);
+
     TEST_END();
 }

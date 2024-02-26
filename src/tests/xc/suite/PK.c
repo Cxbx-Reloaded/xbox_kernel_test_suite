@@ -98,13 +98,15 @@ unsigned char encrypted_string[] = {
 	0x67,0x0d,0x7a,0x7b, 0x00,0x00,0x00,0x00, 0x00,0x00,0x00,0x00
 };
 
+#define BUFFER_SIZE 264
+
 TEST_FUNC(XcPKEncPublic)
 {
 	TEST_BEGIN();
 
 	ULONG ret = 0;
-	UCHAR input_buffer[264]          = { 0 };
-	UCHAR output_buffer[264]         = { 0 };
+	UCHAR input_buffer[BUFFER_SIZE]  = { 0 };
+	UCHAR output_buffer[BUFFER_SIZE] = { 0 };
 	UCHAR original_magic_string[]    = { 0x52,0x53,0x41,0x31 };
 	UCHAR original_key_bit_size[]    = { 0x00,0x08,0x00,0x00 };
 	UCHAR original_max_encode_size[] = { 0xff,0x00,0x00,0x00 };
@@ -114,29 +116,23 @@ TEST_FUNC(XcPKEncPublic)
 	// Correct usage
 	memcpy(input_buffer, "\x45\x6e\x63\x72\x79\x70\x74\x20\x6d\x65", 10); // "Encrypt me"
 	ret = XcPKEncPublic(pub_key, input_buffer, output_buffer);
-	if(ret == 1) {
-		test_passed &= assert_hashed_result(output_buffer,
-		                                    sizeof(output_buffer),
-		                                    (PUCHAR)"\x1a\x31\x40\xee\x8e\x0b\x07\xff\x36\xe3\xb1\x8e\xc8\x87\xe2\xd7\xb1\x63\x01\xe4",
-		                                    "2048 key bit");
-	}
-	else {
-		test_passed &= 0;
+	GEN_CHECK(ret, 1, "XcPKEncPublic return");
+	if (ret == 1) {
+		assert_hashed_result(output_buffer,
+		                     sizeof(output_buffer),
+		                     (PUCHAR)"\x1a\x31\x40\xee\x8e\x0b\x07\xff\x36\xe3\xb1\x8e\xc8\x87\xe2\xd7\xb1\x63\x01\xe4",
+		                     "2048 key bit");
 	}
 
 	// Wrong magic string
 	memcpy(pub_key, bogus_data, 4);
-	memset(input_buffer, 0, 264);
+	memset(input_buffer, 0, BUFFER_SIZE);
 	memcpy(input_buffer, "\x45\x6e\x63\x72\x79\x70\x74\x20\x6d\x65", 10);
-	memset(output_buffer, 0, 264);
+	memset(output_buffer, 0, BUFFER_SIZE);
 	ret = XcPKEncPublic(pub_key, input_buffer, output_buffer);
-	memset(input_buffer, 0, 264);
-	if(ret == 0 && memcmp(output_buffer, input_buffer, 264) == 0) {
-		test_passed &= 1;
-	}
-	else {
-		test_passed &= 0;
-	}
+	GEN_CHECK(ret, 0, "XcPKEncPublic return");
+	memset(input_buffer, 0, BUFFER_SIZE);
+	GEN_CHECK_ARRAY(output_buffer, input_buffer, BUFFER_SIZE, "output_buffer");
 
 	// Using bogus_data as modulus buffer size freezes (crash?) my xbox so I won't test it
 
@@ -144,33 +140,29 @@ TEST_FUNC(XcPKEncPublic)
 	memcpy(pub_key, original_magic_string, 4);
 	memcpy(&pub_key[8], key_bit_size1024, 4);
 	memcpy(input_buffer, "\x45\x6e\x63\x72\x79\x70\x74\x20\x6d\x65", 10);
-	memset(output_buffer, 0, 264);
+	memset(output_buffer, 0, BUFFER_SIZE);
 	ret = XcPKEncPublic(pub_key, input_buffer, output_buffer);
-	if(ret == 1) {
-		test_passed &= assert_hashed_result(output_buffer,
-		                                    sizeof(output_buffer),
-		                                    (PUCHAR)"\x0c\xd6\x8f\x80\xc2\x04\xca\x68\x0b\x9d\x21\x37\x1c\xcb\x46\x32\x68\xb2\x8a\x92",
-		                                    "1024 key bit");
-	}
-	else {
-		test_passed &= 0;
+	GEN_CHECK(ret, 1, "XcPKEncPublic return");
+	if (ret == 1) {
+		assert_hashed_result(output_buffer,
+		                     sizeof(output_buffer),
+		                     (PUCHAR)"\x0c\xd6\x8f\x80\xc2\x04\xca\x68\x0b\x9d\x21\x37\x1c\xcb\x46\x32\x68\xb2\x8a\x92",
+		                     "1024 key bit");
 	}
 
 	// Wrong max encode size -> same result as if original value
 	memcpy(&pub_key[8], original_key_bit_size, 4);
 	memcpy(&pub_key[12], bogus_data, 4);
-	memset(input_buffer, 0, 264);
+	memset(input_buffer, 0, BUFFER_SIZE);
 	memcpy(input_buffer, "\x45\x6e\x63\x72\x79\x70\x74\x20\x6d\x65", 10);
-	memset(output_buffer, 0, 264);
+	memset(output_buffer, 0, BUFFER_SIZE);
 	ret = XcPKEncPublic(pub_key, input_buffer, output_buffer);
-	if(ret == 1) {
-		test_passed &= assert_hashed_result(output_buffer,
-		                                    sizeof(output_buffer),
-		                                    (PUCHAR)"\x1a\x31\x40\xee\x8e\x0b\x07\xff\x36\xe3\xb1\x8e\xc8\x87\xe2\xd7\xb1\x63\x01\xe4",
-		                                    "wrong max encode size");
-	}
-	else {
-		test_passed &= 0;
+	GEN_CHECK(ret, 1, "XcPKEncPublic return");
+	if (ret == 1) {
+		assert_hashed_result(output_buffer,
+		                     sizeof(output_buffer),
+		                     (PUCHAR)"\x1a\x31\x40\xee\x8e\x0b\x07\xff\x36\xe3\xb1\x8e\xc8\x87\xe2\xd7\xb1\x63\x01\xe4",
+		                     "wrong max encode size");
 	}
 	memcpy(&pub_key[12], original_max_encode_size, 4);
 
@@ -182,8 +174,8 @@ TEST_FUNC(XcPKDecPrivate)
 	TEST_BEGIN();
 
 	ULONG ret = 0;
-	UCHAR input_buffer[264]          = { 0 };
-	UCHAR output_buffer[264]         = { 0 };
+	UCHAR input_buffer[BUFFER_SIZE]  = { 0 };
+	UCHAR output_buffer[BUFFER_SIZE] = { 0 };
 	UCHAR original_magic_string[]    = { 0x52,0x53,0x41,0x32 };
 	UCHAR bogus_data[]               = { 0xcc,0xcc,0xcc,0xcc };
 
@@ -193,26 +185,17 @@ TEST_FUNC(XcPKDecPrivate)
 	// to calculate them...
 	memcpy(input_buffer, encrypted_string, sizeof(encrypted_string));
 	ret = XcPKDecPrivate(prv_key, input_buffer, output_buffer);
-	if(ret == 1) {
-		test_passed &= 1;
-	}
-	else {
-		test_passed &= 0;
-	}
+	GEN_CHECK(ret, 1, "XcPKDecPrivate return");
 
 	// Wrong magic string
 	memcpy(prv_key, bogus_data, 4);
-	memset(input_buffer, 0, 264);
+	memset(input_buffer, 0, BUFFER_SIZE);
 	memcpy(input_buffer, encrypted_string, sizeof(encrypted_string));
-	memset(output_buffer, 0, 264);
+	memset(output_buffer, 0, BUFFER_SIZE);
 	ret = XcPKDecPrivate(prv_key, input_buffer, output_buffer);
-	memset(input_buffer, 0, 264);
-	if(ret == 0 && memcmp(output_buffer, input_buffer, 264) == 0) {
-		test_passed &= 1;
-	}
-	else {
-		test_passed &= 0;
-	}
+	GEN_CHECK(ret, 0, "XcPKDecPrivate return");
+	memset(input_buffer, 0, BUFFER_SIZE);
+	GEN_CHECK_ARRAY(output_buffer, input_buffer, BUFFER_SIZE, "output_buffer");
 	memcpy(prv_key, original_magic_string, 4);
 
 	TEST_END();
@@ -264,20 +247,10 @@ TEST_FUNC(XcVerifyPKCS1Signature)
 	};
 	
 	ret = XcVerifyPKCS1Signature(signature, XePublicKeyData, digest);
-	if(ret == 1) {
-	    test_passed &= 1;
-	}
-	else {
-	    test_passed &= 0;
-	}
+	GEN_CHECK(ret, 1, "XcVerifyPKCS1Signature return");
 	
 	ret = XcVerifyPKCS1Signature(signature, XePublicKeyData, digest_inv);
-	if(ret == 0) {
-	    test_passed &= 1;
-	}
-	else {
-	    test_passed &= 0;
-	}
+	GEN_CHECK(ret, 0, "XcVerifyPKCS1Signature return");
 
 	TEST_END();
 }

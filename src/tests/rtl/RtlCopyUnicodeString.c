@@ -19,11 +19,11 @@ TEST_FUNC(RtlCopyUnicodeString)
     dest_str.Buffer = buffer;
 
     RtlCopyUnicodeString(&dest_str, NULL);
-    test_passed &= assert_unicode_string(&dest_str, 0, num_buf_bytes, buffer, "NULL src_str");
+    assert_unicode_string(&dest_str, 0, num_buf_bytes, buffer, "NULL src_str");
 
     dest_str.Length = 0;
     RtlCopyUnicodeString(&dest_str, &shorter_str);
-    test_passed &= assert_unicode_string(
+    assert_unicode_string(
         &dest_str,
         shorter_str.Length,
         num_buf_bytes,
@@ -33,7 +33,7 @@ TEST_FUNC(RtlCopyUnicodeString)
 
     dest_str.Length = 0;
     RtlCopyUnicodeString(&dest_str, &longer_str);
-    test_passed &= assert_unicode_string(
+    assert_unicode_string(
         &dest_str,
         num_buf_bytes,
         num_buf_bytes,

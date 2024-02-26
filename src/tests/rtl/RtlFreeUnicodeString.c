@@ -15,7 +15,7 @@ TEST_FUNC(RtlFreeUnicodeString)
     RtlInitAnsiString(&ansi_string, ansi_text);
     RtlAnsiStringToUnicodeString(&unicode_string, &ansi_string, alloc_buffer);
     RtlFreeUnicodeString(&unicode_string);
-    test_passed &= assert_unicode_string(
+    assert_unicode_string(
         &unicode_string,
         0,
         0,

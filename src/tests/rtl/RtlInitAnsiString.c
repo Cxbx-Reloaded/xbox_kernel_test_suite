@@ -14,7 +14,7 @@ TEST_FUNC(RtlInitAnsiString)
     ansi_string.Length = 100;
     ansi_string.MaximumLength = 200;
     RtlInitAnsiString(&ansi_string, NULL);
-    test_passed &= assert_ansi_string(
+    assert_ansi_string(
         &ansi_string,
         0,
         0,
@@ -23,7 +23,7 @@ TEST_FUNC(RtlInitAnsiString)
     );
 
     RtlInitAnsiString(&ansi_string, string);
-    test_passed &= assert_ansi_string(
+    assert_ansi_string(
         &ansi_string,
         strlen(string),
         strlen(string) + 1,

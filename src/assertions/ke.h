@@ -1,16 +1,19 @@
 #pragma once
 
-#include <xboxkrnl/xboxkrnl.h>
+#include "defines.h"
 
-BOOL assert_critical_region_ex(PKTHREAD, ULONG, const char*, int);
-#define assert_critical_region( \
+#define assert_critical_region_ex( \
     thread, \
     expected_Apc, \
-    test_name \
+    line_number \
+) \
+    GEN_CHECK_EX(thread->KernelApcDisable, expected_Apc, ".KernelApcDisable", line_number)
+#define assert_critical_region( \
+    thread, \
+    expected_Apc \
 ) \
 assert_critical_region_ex( \
     thread, \
     expected_Apc, \
-    test_name, \
     __LINE__ \
 )
