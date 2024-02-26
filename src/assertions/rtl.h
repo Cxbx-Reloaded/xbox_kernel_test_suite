@@ -2,27 +2,29 @@
 
 #include <xboxkrnl/xboxkrnl.h>
 
-BOOL assert_critical_section_equals_ex(
-    PRTL_CRITICAL_SECTION,
-    LONG,
-    LONG,
-    HANDLE,
-    const char*,
-    int
-);
+#include "defines.h"
+
+#define assert_critical_section_equals_ex( \
+    crit_section, \
+    expected_LockCount, \
+    expected_RecursionCount, \
+    expected_OwningThread, \
+    line_number \
+) \
+    GEN_CHECK_EX((crit_section)->LockCount, expected_LockCount, ".LockCount", line_number); \
+    GEN_CHECK_EX((crit_section)->RecursionCount, expected_RecursionCount, ".RecursionCount", line_number); \
+    GEN_CHECK_EX((crit_section)->OwningThread, expected_OwningThread, ".OwningThread", line_number)
 #define assert_critical_section_equals( \
     crit_section, \
     expected_LockCount, \
     expected_RecursionCount, \
-    expected_OwningThread, \
-    test_name \
+    expected_OwningThread \
 ) \
-test_passed &= assert_critical_section_equals_ex( \
+assert_critical_section_equals_ex( \
     crit_section, \
     expected_LockCount, \
     expected_RecursionCount, \
     expected_OwningThread, \
-    test_name, \
     __LINE__ \
 )
 

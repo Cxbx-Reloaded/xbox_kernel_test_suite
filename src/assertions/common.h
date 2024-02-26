@@ -2,20 +2,32 @@
 
 #include <xboxkrnl/xboxkrnl.h>
 
-BOOL assert_NTSTATUS_ex(
-    NTSTATUS,
-    NTSTATUS,
-    const char*,
-    int
-);
+#include "defines.h"
+
+#define assert_NTSTATUS_ex( \
+    status, \
+    expected_status, \
+    api_name, \
+    line_number \
+) \
+    if(status != expected_status) { \
+        print( \
+            "  ERROR(line %d): Expected return status of function '%s' = 0x%x, got = 0x%x", \
+            line_number, \
+            api_name, \
+            expected_status, \
+            status \
+        ); \
+        TEST_FAILED(); \
+    }
 #define assert_NTSTATUS( \
     status, \
     expected_status, \
-    func_name \
+    api_name \
 ) \
-test_passed &= assert_NTSTATUS_ex( \
+assert_NTSTATUS_ex( \
     status, \
     expected_status, \
-    func_name, \
+    api_name, \
     __LINE__ \
 )

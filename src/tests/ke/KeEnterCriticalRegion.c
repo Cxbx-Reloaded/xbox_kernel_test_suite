@@ -8,17 +8,21 @@ TEST_FUNC(KeEnterCriticalRegion)
     TEST_BEGIN();
 
     PKTHREAD thread = KeGetCurrentThread();
-    assert_critical_region(thread, 0, "Before entering critical region");
+    // Before entering critical region
+    assert_critical_region(thread, 0);
 
     KeEnterCriticalRegion();
-    assert_critical_region(thread, -1, "In critical region");
+    // In critical region
+    assert_critical_region(thread, -1);
 
     KeEnterCriticalRegion();
-    assert_critical_region(thread, -2, "Entered critical region again");
+    // Entered critical region again
+    assert_critical_region(thread, -2);
 
     KeLeaveCriticalRegion();
     KeLeaveCriticalRegion();
-    assert_critical_region(thread, 0, "Leave critical region twice");
+    // Leave critical region twice
+    assert_critical_region(thread, 0);
 
     TEST_END();
 }

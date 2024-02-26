@@ -4,23 +4,6 @@
 #include "rtl.h"
 #include "defines.h"
 
-BOOL assert_critical_section_equals_ex(
-    PRTL_CRITICAL_SECTION crit_section,
-    LONG expected_LockCount,
-    LONG expected_RecursionCount,
-    HANDLE expected_OwningThread,
-    const char* test_name,
-    int line_number)
-{
-    ASSERT_HEADER
-
-    GEN_CHECK_EX(crit_section->LockCount, expected_LockCount, "LockCount", line_number);
-    GEN_CHECK_EX(crit_section->RecursionCount, expected_RecursionCount, "RecursionCount", line_number);
-    GEN_CHECK_EX(crit_section->OwningThread, expected_OwningThread, "OwningThread", line_number);
-
-    ASSERT_FOOTER(test_name)
-}
-
 BOOL assert_ansi_string_ex(
     PANSI_STRING string,
     USHORT expected_Length,

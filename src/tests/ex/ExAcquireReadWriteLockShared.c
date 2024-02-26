@@ -110,11 +110,8 @@ TEST_FUNC(ExAcquireReadWriteLockShared)
 
     // Test case where LockCount == 0. Should obtain the lock.
     ExAcquireReadWriteLockShared(&ReadWriteLock);
-    assert_ERWLOCK_equals(
-        &ReadWriteLock,
-        0, 0, 0, 1,
-        "Acquire shared lock on empty lock"
-    );
+    // Acquire shared lock on empty lock
+    assert_ERWLOCK_equals(&ReadWriteLock, 0, 0, 0, 1);
     // Avoid spinning forever in the loop below.
     if(TEST_IS_FAILED) {
         TEST_END();
@@ -143,11 +140,8 @@ TEST_FUNC(ExAcquireReadWriteLockShared)
         TEST_END();
         return;
     }
-    assert_ERWLOCK_equals(
-        &ReadWriteLock,
-        1, 0, 1, 0,
-        "Second thread attempted to acquire the exclusive lock, incrementing ReadersWaitingCount and waiting"
-    );
+    // Second thread attempted to acquire the exclusive lock, incrementing ReadersWaitingCount and waiting
+    assert_ERWLOCK_equals(&ReadWriteLock, 1, 0, 1, 0);
     if(control.thread2_status == 1) {
         TEST_FAILED();
         print("  ERROR: The second thread was not supposed to write before the lock is released on the first thread.");
@@ -173,11 +167,8 @@ TEST_FUNC(ExAcquireReadWriteLockShared)
         TEST_END();
         return;
     }
-    assert_ERWLOCK_equals(
-        &ReadWriteLock,
-        1, 0, 0, 2,
-        "Second thread attempted to acquire the shared lock, incrementing ReaderEntryCount and getting the lock"
-    );
+    // Second thread attempted to acquire the shared lock, incrementing ReaderEntryCount and getting the lock
+    assert_ERWLOCK_equals(&ReadWriteLock, 1, 0, 0, 2);
     Sleep(10);
     if(control.thread2_status != 3) {
         TEST_FAILED();
@@ -220,11 +211,8 @@ TEST_FUNC(ExAcquireReadWriteLockShared)
         TEST_END();
         return;
     }
-    assert_ERWLOCK_equals(
-        &ReadWriteLock,
-        2, 1, 1, 1,
-        "Third thread attempted to acquire the shared lock but there is already another exclusive request in flight."
-    );
+    // Third thread attempted to acquire the shared lock but there is already another exclusive request in flight.
+    assert_ERWLOCK_equals(&ReadWriteLock, 2, 1, 1, 1);
     if(control.thread3_status == 1) {
         TEST_FAILED();
         TEST_END();

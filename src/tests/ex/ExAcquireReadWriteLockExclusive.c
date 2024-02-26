@@ -66,11 +66,8 @@ TEST_FUNC(ExAcquireReadWriteLockExclusive)
     ExInitializeReadWriteLock(&ReadWriteLock);
 
     ExAcquireReadWriteLockExclusive(&ReadWriteLock);
-    assert_ERWLOCK_equals(
-        &ReadWriteLock,
-        0, 0, 0, 0,
-        "Acquire exclusive lock on empty lock"
-    );
+    // Acquire exclusive lock on empty lock
+    assert_ERWLOCK_equals(&ReadWriteLock, 0, 0, 0, 0);
     // Avoid spinning forever in the loop below.
     if (TEST_IS_FAILED) {
         TEST_END();
@@ -99,11 +96,8 @@ TEST_FUNC(ExAcquireReadWriteLockExclusive)
         TEST_END();
         return;
     }
-    assert_ERWLOCK_equals(
-        &ReadWriteLock,
-        1, 1, 0, 0,
-        "Second thread attempted to acquire the exclusive lock, incrementing WritersWaitingCount"
-    );
+    // Second thread attempted to acquire the exclusive lock, incrementing WritersWaitingCount
+    assert_ERWLOCK_equals(&ReadWriteLock, 1, 1, 0, 0);
 
     if(control.thread2_status == 1) {
         TEST_FAILED();

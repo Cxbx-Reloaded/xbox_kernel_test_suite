@@ -1,30 +1,31 @@
 #pragma once
 
-#include <xboxkrnl/xboxkrnl.h>
+#include "defines.h"
 
-BOOL assert_ERWLOCK_equals_ex(
-    PERWLOCK,
-    LONG,
-    ULONG,
-    ULONG,
-    ULONG,
-    const char*,
-    int
-);
+#define assert_ERWLOCK_equals_ex( \
+    ReadWriteLock, \
+    expected_LockCount, \
+    expected_WritersWaitingCount, \
+    expected_ReadersWaitingCount, \
+    expected_ReadersEntryCount, \
+    line_number \
+) \
+    GEN_CHECK_EX((ReadWriteLock)->LockCount, expected_LockCount, ".LockCount", line_number) \
+    GEN_CHECK_EX((ReadWriteLock)->WritersWaitingCount, expected_WritersWaitingCount, ".WritersWaitingCount", line_number) \
+    GEN_CHECK_EX((ReadWriteLock)->ReadersWaitingCount, expected_ReadersWaitingCount, ".ReadersWaitingCount", line_number) \
+    GEN_CHECK_EX((ReadWriteLock)->ReadersEntryCount, expected_ReadersEntryCount, ".ReadersEntryCount", line_number)
 #define assert_ERWLOCK_equals( \
     ReadWriteLock, \
     expected_LockCount, \
     expected_WritersWaitingCount, \
     expected_ReadersWaitingCount, \
-    expected_ReadersEntryCount, \
-    test_name \
+    expected_ReadersEntryCount \
 ) \
-test_passed &= assert_ERWLOCK_equals_ex( \
+assert_ERWLOCK_equals_ex( \
     ReadWriteLock, \
     expected_LockCount, \
     expected_WritersWaitingCount, \
     expected_ReadersWaitingCount, \
     expected_ReadersEntryCount, \
-    test_name, \
     __LINE__ \
 )
