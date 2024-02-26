@@ -4,7 +4,7 @@
 
 Xbox kernel APIs tester written using the open-source nxdk.
 
-This is a tool for testing the xbox kernel APIs on the hardware to verify tests are passing. Plus we have a dedicated wiki page for [homebrew kernels](https://github.com/Cxbx-Reloaded/xbox_kernel_test_suite/wiki/List-of-Homebrew-Kernels-Tested) have used this tool to test their kernel implementation.
+This is a tool for testing the xbox kernel APIs on the hardware to verify their workings. In addition, we have a dedicated wiki page for [homebrew kernels](https://github.com/Cxbx-Reloaded/xbox_kernel_test_suite/wiki/List-of-Homebrew-Kernels-Tested) that have used this tool to test their kernel implementation.
 
 ## HOW TO BUILD:
 All you need is nxdk. You can get it here: https://github.com/XboxDev/nxdk
@@ -15,8 +15,8 @@ Here is a setup guide: https://github.com/XboxDev/nxdk/wiki/Getting-Started
 > [!NOTE]
 > The configuration file should be called _**"config.txt"**_ and should be placed in the same directory of the xbe.
 
-The following list of options can be used inside config.txt file:
-- `seed` = `<hexadecimal (support up to unsigned int max)>`
+The following list of options can be used inside the config.txt file:
+- `seed` = `<hexadecimal (support up to FFFFFFFF)>`
 - `tests` = `<hexadecimal (support up to 17A)>[,...]`
 - `tests-exclude` = `<hexadecimal (support up to 17A)>[,...]`
 - `disable-video` = `<boolean>`[^1]
