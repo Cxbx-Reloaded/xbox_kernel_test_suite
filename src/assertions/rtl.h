@@ -73,16 +73,3 @@ test_passed &= assert_unicode_string_ex( \
     test_name, \
     __LINE__ \
 )
-
-BOOL assert_rtl_compared_bytes_ex(SIZE_T, SIZE_T, const char*, int);
-#define assert_rtl_compared_bytes( \
-    num_matching_bytes, \
-    expected_matching_bytes, \
-    test_name \
-) \
-test_passed &= assert_rtl_compared_bytes_ex( \
-    num_matching_bytes, \
-    expected_matching_bytes, \
-    test_name, \
-    __LINE__ \
-)

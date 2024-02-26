@@ -4,7 +4,6 @@
 #include "util/output.h"
 #include "util/misc.h"
 #include "assertions/defines.h"
-#include "assertions/rtl.h"
 
 TEST_FUNC(RtlCompareMemory)
 {
@@ -16,23 +15,23 @@ TEST_FUNC(RtlCompareMemory)
     VOID* num2_ptr = (VOID*)&num2;
 
     SIZE_T bytes_matching = RtlCompareMemory(num1_ptr, num2_ptr, 0);
-    assert_rtl_compared_bytes(bytes_matching, 0, "Check 0 bytes of memory");
+    GEN_CHECK(bytes_matching, 0, "Check 0 bytes of memory");
 
     bytes_matching = RtlCompareMemory(num1_ptr, num2_ptr, sizeof(num1));
-    assert_rtl_compared_bytes(bytes_matching, sizeof(num1), "Both nums 0, should match");
+    GEN_CHECK(bytes_matching, sizeof(num1), "Both nums 0, should match");
 
     num1 |= 0x80000000;
     bytes_matching = RtlCompareMemory(num1_ptr, num2_ptr, sizeof(num1));
-    assert_rtl_compared_bytes(bytes_matching, sizeof(num1) - 1, "Only 3 bytes should match");
+    GEN_CHECK(bytes_matching, sizeof(num1) - 1, "Only 3 bytes should match");
 
     num2 |= 0x4000;
     bytes_matching = RtlCompareMemory(num1_ptr, num2_ptr, sizeof(num1));
-    assert_rtl_compared_bytes(bytes_matching, sizeof(num1) - 3, "Only 1 byte should match");
+    GEN_CHECK(bytes_matching, sizeof(num1) - 3, "Only 1 byte should match");
 
     num2 |= 0x80000000;
     num1 |= 0x4000;
     bytes_matching = RtlCompareMemory(num1_ptr, num2_ptr, sizeof(num1));
-    assert_rtl_compared_bytes(bytes_matching, sizeof(num1), "All bytes should match again");
+    GEN_CHECK(bytes_matching, sizeof(num1), "All bytes should match again");
 
     TEST_END();
 }
