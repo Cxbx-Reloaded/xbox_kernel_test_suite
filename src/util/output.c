@@ -13,7 +13,7 @@ BOOL output_video = FALSE; // NOTE: Must be set to a default of FALSE until conf
 
 static HANDLE output_filehandle = INVALID_HANDLE_VALUE;
 
-void print(char* str, ...)
+void print(const char* str, ...)
 {
     va_list args;
     enum {
@@ -62,7 +62,7 @@ void print_test_footer(
     }
 }
 
-BOOL open_output_file(char* file_path)
+BOOL open_output_file(const char* file_path)
 {
     output_filehandle = CreateFile(
         file_path,

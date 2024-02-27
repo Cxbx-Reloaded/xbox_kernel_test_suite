@@ -6,6 +6,7 @@
 #include <string.h>
 #include <windows.h>
 
+extern "C" {
 #include "util/hardware.h"
 #include "util/output.h"
 #include "util/misc.h"
@@ -13,6 +14,7 @@
 #include "util/string_extra.h"
 #include "global.h"
 #include "include/api_tests.h"
+}
 
 #ifndef GIT_VERSION
 #define GIT_VERSION "unknown"
@@ -24,7 +26,7 @@
 #define NEWLINE_DELIMITER "\r\n"
 
 // defined in util/output.h file, used privately here only
-extern BOOL output_video;
+extern "C" BOOL output_video;
 // Initialize the actual default values here if the config file is either successfully loaded before reading inputs or it failed to load.
 static void init_default_values()
 {
@@ -77,7 +79,7 @@ void load_name_file(const char* file_path)
     if ((line = strtok_r(rest, NEWLINE_DELIMITER, &rest))) {
         size_t length = strlen(line);
         if (length) {
-            name_log = calloc(length + 1, sizeof(char));
+            name_log = (char*)calloc(length + 1, sizeof(char));
             strncpy(name_log, line, length);
         }
     }
@@ -88,7 +90,7 @@ void load_name_file(const char* file_path)
 static vector tests_to_run;
 static vector tests_exclude;
 
-int load_conf_file(char *file_path)
+int load_conf_file(const char *file_path)
 {
     print("Trying to open config file: %s", file_path);
     HANDLE handle = CreateFile(
@@ -156,7 +158,7 @@ int load_conf_file(char *file_path)
         if (strcmp("submitter", current_key) == 0) {
             char *value = strtok(NULL, NEWLINE_DELIMITER);
             size_t length = strlen(value);
-            submitter = calloc(length + 1, sizeof(char));
+            submitter = (char*)calloc(length + 1, sizeof(char));
             strncpy(submitter, value, length);
         }
     }
@@ -226,12 +228,12 @@ void main(void)
     vector_init(&tests_to_run, kernel_api_tests_size);
     vector_init(&tests_exclude, 20);
     load_name_file("D:\\name.txt");
-    char* output_file_name = "D:\\kernel_tests.log";
+    char* output_file_name = (char*)"D:\\kernel_tests.log";
     // If name_log buffer is allocated, then we know it does have actual input.
     if (name_log) {
         size_t name_log_length = strlen(name_log);
         name_log_length += strlen(name_log_format) - 2; // exclude %s
-        output_file_name = calloc(name_log_length + 1, sizeof(char));
+        output_file_name = (char*)calloc(name_log_length + 1, sizeof(char));
         snprintf(output_file_name, name_log_length, name_log_format, name_log);
     }
     if (!open_output_file(output_file_name)) {
