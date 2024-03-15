@@ -5,14 +5,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
+#include <bitset>
 
+extern "C" {
 #include "util/hardware.h"
 #include "util/output.h"
 #include "util/misc.h"
-#include "util/vector.h"
 #include "util/string_extra.h"
 #include "global.h"
 #include "include/api_tests.h"
+}
 
 #ifndef GIT_VERSION
 #define GIT_VERSION "unknown"
@@ -24,7 +26,7 @@
 #define NEWLINE_DELIMITER "\r\n"
 
 // defined in util/output.h file, used privately here only
-extern BOOL output_video;
+extern "C" BOOL output_video;
 // Initialize the actual default values here if the config file is either successfully loaded before reading inputs or it failed to load.
 static void init_default_values()
 {
@@ -77,7 +79,7 @@ void load_name_file(const char* file_path)
     if ((line = strtok_r(rest, NEWLINE_DELIMITER, &rest))) {
         size_t length = strlen(line);
         if (length) {
-            name_log = calloc(length + 1, sizeof(char));
+            name_log = (char*)calloc(length + 1, sizeof(char));
             strncpy(name_log, line, length);
         }
     }
@@ -85,10 +87,10 @@ void load_name_file(const char* file_path)
     free(buffer);
 }
 
-static vector tests_to_run;
-static vector tests_exclude;
+static std::bitset<kernel_api_tests_size> tests_to_run;
+static std::bitset<kernel_api_tests_size> tests_to_exclude;
 
-int load_conf_file(char *file_path)
+int load_conf_file(const char *file_path)
 {
     print("Trying to open config file: %s", file_path);
     HANDLE handle = CreateFile(
@@ -140,14 +142,20 @@ int load_conf_file(char *file_path)
             char *current_test;
             char *tests = strtok(NULL, NEWLINE_DELIMITER);
             while ((current_test = strtok_r(tests, ",", &tests))) {
-                vector_append(&tests_to_run, strtol(current_test, NULL, 16));
+                unsigned long value = strtoul(current_test, NULL, 16);
+                if (value < kernel_api_tests_size) {
+                    tests_to_run.set(value);
+                }
             }
         }
         if (strcmp("tests-exclude", current_key) == 0) {
             char *current_test;
             char *tests = strtok(NULL, NEWLINE_DELIMITER);
             while ((current_test = strtok_r(tests, ",", &tests))) {
-                vector_append(&tests_exclude, strtol(current_test, NULL, 16));
+                unsigned long value = strtoul(current_test, NULL, 16);
+                if (value < kernel_api_tests_size) {
+                    tests_to_exclude.set(value);
+                }
             }
         }
         if (strcmp("disable-video", current_key) == 0) {
@@ -156,7 +164,7 @@ int load_conf_file(char *file_path)
         if (strcmp("submitter", current_key) == 0) {
             char *value = strtok(NULL, NEWLINE_DELIMITER);
             size_t length = strlen(value);
-            submitter = calloc(length + 1, sizeof(char));
+            submitter = (char*)calloc(length + 1, sizeof(char));
             strncpy(submitter, value, length);
         }
     }
@@ -165,57 +173,32 @@ int load_conf_file(char *file_path)
     return 0;
 }
 
-static void run_test(int test_n) {
-    for (int i = 0; i < tests_exclude.size; i++) {
-        // If a match is found in the exclusion list, then we skip the test.
-        if (test_n == vector_get(&tests_exclude, i)) {
-            test_n = -1;
-            break;
-        }
-    }
-    // Skip the test if test_n is a negative number.
-    if (test_n >= 0) {
-        kernel_api_tests[test_n].func(test_n, kernel_api_tests[test_n].name);
-    }
-}
-
 static void run_tests()
 {
     print("Random seed used is %u", seed);
-    if (tests_to_run.size == 0) {
-        print("No specific tests were requested. Running all tests (Single Pass).");
-        if (tests_exclude.size) {
-            int exclude_count = 0;
-            for (int i = 0; i < tests_exclude.size; i++) {
-                if (kernel_api_tests_size > vector_get(&tests_exclude, i)) {
-                    exclude_count++;
-                }
-            }
-            print("%d test(s) will be excluded.", exclude_count);
-        }
-        print("-------------------------------------------------------------");
-        for (int k = 0; k < kernel_api_tests_size; k++) {
-            run_test(k);
+    if (tests_to_run.none()) {
+        print("No specific tests were requested. Running all tests.");
+        // Enable all tests.
+        tests_to_run.flip();
+        if (tests_to_exclude.any()) {
+            // Exclude any tests requested.
+            tests_to_run &= ~tests_to_exclude;
+            print("%zu test(s) will be excluded.", tests_to_exclude.count());
         }
     }
     else {
         print("A config file was loaded. Only running requested tests.");
-        if (tests_exclude.size) {
-            int exclude_count = 0;
-            for (int k = 0; k < tests_to_run.size; k++) {
-                int test_n = vector_get(&tests_to_run, k);
-                for (int i = 0; i < tests_exclude.size; i++) {
-                    if (test_n == vector_get(&tests_exclude, i)) {
-                        exclude_count++;
-                        break;
-                    }
-                }
-            }
-            print("%d test(s) will be excluded.", exclude_count);
+        if (tests_to_exclude.any()) {
+            const auto tests_to_run_excluded = tests_to_run & tests_to_exclude;
+            // Exclude any tests requested.
+            tests_to_run &= ~tests_to_run_excluded;
+            print("%zu test(s) will be excluded.", tests_to_run_excluded.count());
         }
-        print("-----------------------------------------------------");
-        for (int k = 0; k < tests_to_run.size; k++) {
-            run_test(vector_get(&tests_to_run, k));
+    }
+    print("-------------------------------------------------------------");
+    for (int i = 0; i < kernel_api_tests_size; i++) {
+        if (tests_to_run.test(i)) {
+            kernel_api_tests[i].func(i, kernel_api_tests[i].name);
         }
     }
     print("------------------------ End of Tests -----------------------");
@@ -223,15 +206,13 @@ static void run_tests()
 
 void main(void)
 {
-    vector_init(&tests_to_run, kernel_api_tests_size);
-    vector_init(&tests_exclude, 20);
     load_name_file("D:\\name.txt");
-    char* output_file_name = "D:\\kernel_tests.log";
+    char* output_file_name = (char*)"D:\\kernel_tests.log";
     // If name_log buffer is allocated, then we know it does have actual input.
     if (name_log) {
         size_t name_log_length = strlen(name_log);
         name_log_length += strlen(name_log_format) - 2; // exclude %s
-        output_file_name = calloc(name_log_length + 1, sizeof(char));
+        output_file_name = (char*)calloc(name_log_length + 1, sizeof(char));
         snprintf(output_file_name, name_log_length, name_log_format, name_log);
     }
     if (!open_output_file(output_file_name)) {
@@ -280,8 +261,6 @@ void main(void)
     print("PIC version: %s (%s)", pic_version, getConsoleType(pic_version));
     run_tests();
 
-    vector_free(&tests_to_run);
-    vector_free(&tests_exclude);
     close_output_file();
 
     if (output_video) {
