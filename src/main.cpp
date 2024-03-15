@@ -88,7 +88,7 @@ void load_name_file(const char* file_path)
 }
 
 static std::bitset<kernel_api_tests_size> tests_to_run;
-static std::bitset<kernel_api_tests_size> tests_exclude;
+static std::bitset<kernel_api_tests_size> tests_to_exclude;
 
 int load_conf_file(const char *file_path)
 {
@@ -154,7 +154,7 @@ int load_conf_file(const char *file_path)
             while ((current_test = strtok_r(tests, ",", &tests))) {
                 unsigned long value = strtoul(current_test, NULL, 16);
                 if (value < kernel_api_tests_size) {
-                    tests_exclude.set(value);
+                    tests_to_exclude.set(value);
                 }
             }
         }
@@ -180,19 +180,19 @@ static void run_tests()
         print("No specific tests were requested. Running all tests.");
         // Enable all tests.
         tests_to_run.flip();
-        if (tests_exclude.any()) {
+        if (tests_to_exclude.any()) {
             // Exclude any tests requested.
-            tests_to_run &= ~tests_exclude;
-            print("%zu test(s) will be excluded.", tests_exclude.count());
+            tests_to_run &= ~tests_to_exclude;
+            print("%zu test(s) will be excluded.", tests_to_exclude.count());
         }
     }
     else {
         print("A config file was loaded. Only running requested tests.");
-        if (tests_exclude.any()) {
-            const auto found_tests_exclude = tests_to_run & tests_exclude;
+        if (tests_to_exclude.any()) {
+            const auto tests_to_run_excluded = tests_to_run & tests_to_exclude;
             // Exclude any tests requested.
-            tests_to_run &= ~found_tests_exclude;
-            print("%zu test(s) will be excluded.", found_tests_exclude.count());
+            tests_to_run &= ~tests_to_run_excluded;
+            print("%zu test(s) will be excluded.", tests_to_run_excluded.count());
         }
     }
     print("-------------------------------------------------------------");
