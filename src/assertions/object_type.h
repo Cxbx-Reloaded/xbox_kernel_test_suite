@@ -50,8 +50,9 @@ static BOOL assert_object_header_type_ex(POBJECT_TYPE object_type,
     GEN_CHECK_EX(type_object != NULL, TRUE, "type_object", func_line);
     if (NT_SUCCESS(status)) {
         POBJECT_HEADER event_object_header = OBJECT_TO_OBJECT_HEADER(type_object);
-        // NOTE: DefaultObject's relative offset or address (above 0x80000000) are private.
-        //       Since they are private, we can only verify if the address is valid by call
+        // NOTE: DefaultObject's relative offset or address (either within kernel executable
+        //       or allocated by ObCreateObject) is not exposed through kernel APIs.
+        //       We can only verify if the absolute address is valid with a call to the
         //       MmIsAddressValid function.
         BOOLEAN is_address_valid;
         if ((LONG_PTR)object_type->DefaultObject >= 0) {
