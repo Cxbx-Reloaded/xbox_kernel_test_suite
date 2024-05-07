@@ -17,8 +17,8 @@ Here is a setup guide: https://github.com/XboxDev/nxdk/wiki/Getting-Started
 
 The following list of options can be used inside the config.txt file:
 - `seed` = `<hexadecimal (support up to FFFFFFFF)>`
-- `tests` = `<hexadecimal (support up to 17A)>[,...]`
-- `tests-exclude` = `<hexadecimal (support up to 17A)>[,...]`
+- `tests` = `<hexadecimal (support up to 17A) or case insensitive API name>[,...]`
+- `tests-exclude` = `<hexadecimal (support up to 17A) or case insensitive API name>[,...]`
 - `disable-video` = `<boolean>`[^1]
 
 [^1]: boolean value can be 1 or 0
@@ -28,7 +28,7 @@ The following list of options can be used inside the config.txt file:
 > ```
 > seed=5
 > 
-> tests=1,25,3,F
+> tests=1,25,3,F,NtReadFile
 > ```
 
 ## NAME FILE:

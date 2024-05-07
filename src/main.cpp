@@ -90,6 +90,26 @@ void load_name_file(const char* file_path)
 static std::bitset<kernel_api_tests_size> tests_to_run;
 static std::bitset<kernel_api_tests_size> tests_to_exclude;
 
+constexpr size_t XBOXKRNL_API_NAME_STR_MIN_LENGTH = 6; // XcHMAC and RtlRip APIs are the shortest kernel names.
+unsigned long convert_test_api_input(char* test_str) {
+    // Trim space(s) before attempting to compare strings.
+    while(test_str[0] == ' ') {
+        test_str++;
+    }
+    if (strlen(test_str) >= XBOXKRNL_API_NAME_STR_MIN_LENGTH) {
+        for (unsigned long i = 0; i < kernel_api_tests_size; i++) {
+            // If the API name is a match, then return the index value.
+            if (_stricmp(test_str, kernel_api_tests[i].name) == 0) {
+                return i;
+            }
+        }
+        // If no match is found, then return a max value to skip add to the list.
+        return ULONG_MAX;
+    }
+    // Otherwise, we assumed the input is a hexadecimal string.
+    return strtoul(test_str, NULL, 16);
+}
+
 int load_conf_file(const char *file_path)
 {
     print("Trying to open config file: %s", file_path);
@@ -142,7 +162,7 @@ int load_conf_file(const char *file_path)
             char *current_test;
             char *tests = strtok(NULL, NEWLINE_DELIMITER);
             while ((current_test = strtok_r(tests, ",", &tests))) {
-                unsigned long value = strtoul(current_test, NULL, 16);
+                unsigned long value = convert_test_api_input(current_test);
                 if (value < kernel_api_tests_size) {
                     tests_to_run.set(value);
                 }
@@ -152,7 +172,7 @@ int load_conf_file(const char *file_path)
             char *current_test;
             char *tests = strtok(NULL, NEWLINE_DELIMITER);
             while ((current_test = strtok_r(tests, ",", &tests))) {
-                unsigned long value = strtoul(current_test, NULL, 16);
+                unsigned long value = convert_test_api_input(current_test);
                 if (value < kernel_api_tests_size) {
                     tests_to_exclude.set(value);
                 }
