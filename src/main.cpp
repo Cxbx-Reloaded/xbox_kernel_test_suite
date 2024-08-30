@@ -107,7 +107,7 @@ unsigned long convert_test_api_input(char* test_str) {
         return ULONG_MAX;
     }
     // Otherwise, we assumed the input is a hexadecimal string.
-    return strtoul(test_str, NULL, 16);
+    return strtoul(test_str, NULL, 10);
 }
 
 int load_conf_file(const char *file_path)
@@ -156,7 +156,7 @@ int load_conf_file(const char *file_path)
     while ((line = strtok_r(rest, NEWLINE_DELIMITER, &rest))) {
         char *current_key = strtok(line, "=");
         if (strcmp("seed", current_key) == 0) {
-            seed = strtoul(strtok(NULL, NEWLINE_DELIMITER), NULL, 16);
+            seed = strtoul(strtok(NULL, NEWLINE_DELIMITER), NULL, 10);
         }
         if (strcmp("tests", current_key) == 0) {
             char *current_test;
@@ -179,7 +179,7 @@ int load_conf_file(const char *file_path)
             }
         }
         if (strcmp("disable-video", current_key) == 0) {
-            output_video = !strtoul(strtok(NULL, NEWLINE_DELIMITER), NULL, 16);
+            output_video = !strtoul(strtok(NULL, NEWLINE_DELIMITER), NULL, 10);
         }
         if (strcmp("submitter", current_key) == 0) {
             char *value = strtok(NULL, NEWLINE_DELIMITER);
