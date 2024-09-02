@@ -1,0 +1,10 @@
+{
+    "C_Cpp.autoAddFileAssociations": false,
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/src"
+    ],
+    "files.exclude": {
+        "**/*.d": true,
+        "**/*.obj": true
+    }
+}
