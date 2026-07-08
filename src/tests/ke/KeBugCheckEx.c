@@ -1,8 +1,15 @@
 #include <xboxkrnl/xboxkrnl.h>
 
 #include "util/output.h"
+#include "assertions/defines.h"
 
 TEST_FUNC(KeBugCheckEx)
 {
-    /* FIXME: This is a stub! implement this function! */
+    TEST_BEGIN();
+
+    // KeBugCheckEx would crash the system - DO NOT CALL
+
+    TEST_SKIP("would BSOD");
+
+    TEST_END();
 }

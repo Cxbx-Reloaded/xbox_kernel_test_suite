@@ -34,7 +34,56 @@ TEST_FUNC(RtlDowncaseUnicodeChar)
 
 TEST_FUNC(RtlDowncaseUnicodeString)
 {
-    /* FIXME: This is a stub! implement this function! */
+    TEST_BEGIN();
+
+    UNICODE_STRING src_str, dest_str;
+    WCHAR dest_buf[32];
+    NTSTATUS status;
+
+    // Test in-place downcase (AllocateDestinationString = FALSE)
+    dest_str.Buffer = dest_buf;
+    dest_str.MaximumLength = sizeof(dest_buf);
+    dest_str.Length = 0;
+
+    RtlInitUnicodeString(&src_str, L"XBOX");
+    status = RtlDowncaseUnicodeString(&dest_str, &src_str, FALSE);
+    GEN_CHECK(status, STATUS_SUCCESS, "downcase status");
+    GEN_CHECK(dest_str.Length, 8, "downcase Length");
+    if (dest_str.Buffer) {
+        GEN_CHECK(dest_str.Buffer[0], L'x', "Buffer[0]");
+        GEN_CHECK(dest_str.Buffer[1], L'b', "Buffer[1]");
+        GEN_CHECK(dest_str.Buffer[2], L'o', "Buffer[2]");
+        GEN_CHECK(dest_str.Buffer[3], L'x', "Buffer[3]");
+    }
+
+    // Test with AllocateDestinationString = TRUE
+    UNICODE_STRING alloc_dest = { 0 };
+    RtlInitUnicodeString(&src_str, L"HELLO");
+    status = RtlDowncaseUnicodeString(&alloc_dest, &src_str, TRUE);
+    GEN_CHECK(status, STATUS_SUCCESS, "alloc downcase status");
+    if (NT_SUCCESS(status)) {
+        GEN_CHECK(alloc_dest.Length, 10, "alloc Length");
+        if (alloc_dest.Buffer) {
+            GEN_CHECK(alloc_dest.Buffer[0], L'h', "alloc Buffer[0]");
+            GEN_CHECK(alloc_dest.Buffer[4], L'o', "alloc Buffer[4]");
+        }
+        RtlFreeUnicodeString(&alloc_dest);
+    }
+
+    // Mixed case - only uppercase should change
+    RtlInitUnicodeString(&src_str, L"XbOx1");
+    dest_str.Length = 0;
+    status = RtlDowncaseUnicodeString(&dest_str, &src_str, FALSE);
+    GEN_CHECK(status, STATUS_SUCCESS, "mixed status");
+    if (dest_str.Buffer) {
+        GEN_CHECK(dest_str.Buffer[0], L'x', "mixed[0]");
+        GEN_CHECK(dest_str.Buffer[1], L'b', "mixed[1]");
+        GEN_CHECK(dest_str.Buffer[2], L'o', "mixed[2]");
+        GEN_CHECK(dest_str.Buffer[3], L'x', "mixed[3]");
+        GEN_CHECK(dest_str.Buffer[4], L'1', "mixed[4]");
+    }
+
+    TEST_END();
 }
 
 TEST_FUNC(RtlLowerChar)

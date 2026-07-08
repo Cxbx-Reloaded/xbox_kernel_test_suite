@@ -7,14 +7,20 @@ TEST_FUNC(AvGetSavedDataAddress)
 {
     TEST_BEGIN();
 
-    // FIXME this test is broken - We shouldn't pass NULL to AvSetSavedDataAddress. This is just an hack to avoid a system crash.
+    // Save original value
+    PVOID original = AvGetSavedDataAddress();
 
-    PVOID address_old = AvGetSavedDataAddress();
+    // Set to a known address and verify get returns it
+    DWORD dummy_data = 0xABCDEF01;
+    AvSetSavedDataAddress(&dummy_data);
+    GEN_CHECK(AvGetSavedDataAddress(), (PVOID)&dummy_data, "get matches set");
 
-    AvSetSavedDataAddress(NULL);
-    GEN_CHECK(AvGetSavedDataAddress() == NULL, TRUE, "SavedDataAddress");
+    // Verify consistency (calling get multiple times returns same value)
+    GEN_CHECK(AvGetSavedDataAddress(), AvGetSavedDataAddress(), "consistent");
 
-    AvSetSavedDataAddress(address_old);
+    // Restore original
+    AvSetSavedDataAddress(original);
+    GEN_CHECK(AvGetSavedDataAddress(), original, "restored");
 
     TEST_END();
 }

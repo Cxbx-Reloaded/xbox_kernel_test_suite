@@ -398,10 +398,10 @@ static kernel_api_test kernel_api_tests[] =
     GEN_API_TEST(HalIsResetOrShutdownPending),               // 0x0166 (358)
     GEN_API_TEST(IoMarkIrpMustComplete),                     // 0x0167 (359)
     GEN_API_TEST(HalInitiateShutdown),                       // 0x0168 (360)
-    GEN_API_TEST(_snprintf),                                 // 0x0169 (361)
-    GEN_API_TEST(_sprintf),                                  // 0x016A (362)
-    GEN_API_TEST(_vsnprintf),                                // 0x016B (363)
-    GEN_API_TEST(_vsprintf),                                 // 0x016C (364)
+    GEN_API_TEST(RtlSnprintf),                               // 0x0169 (361)
+    GEN_API_TEST(RtlSprintf),                                // 0x016A (362)
+    GEN_API_TEST(RtlVsnprintf),                              // 0x016B (363)
+    GEN_API_TEST(RtlVsprintf),                               // 0x016C (364)
     GEN_API_TEST(HalEnableSecureTrayEject),                  // 0x016D (365)
     GEN_API_TEST(HalWriteSMCScratchRegister),                // 0x016E (366)
     GEN_API_TEST(UnknownAPI367),                             // 0x016F (367)
@@ -409,8 +409,8 @@ static kernel_api_test kernel_api_tests[] =
     GEN_API_TEST(UnknownAPI369),                             // 0x0171 (369)
     GEN_API_TEST(XProfpControl),                             // 0x0172 (370) PROFILING
     GEN_API_TEST(XProfpGetData),                             // 0x0173 (371) PROFILING
-    GEN_API_TEST(IrtClientInitFast),                         // 0x0174 (372) PROFILING
-    GEN_API_TEST(IrtSweep),                                  // 0x0175 (373) PROFILING
+    GEN_API_TEST(IrtClientInitFast),                         // 0x0174 (372) PROFILING - purpose uncertain
+    GEN_API_TEST(IrtSweep),                                  // 0x0175 (373) PROFILING - purpose uncertain
     GEN_API_TEST(MmDbgAllocateMemory),                       // 0x0177 (374) DEVKIT
     GEN_API_TEST(MmDbgFreeMemory),                           // 0x0178 (375) DEVKIT - Returns number of pages released.
     GEN_API_TEST(MmDbgQueryAvailablePages),                  // 0x0179 (376) DEVKIT

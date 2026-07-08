@@ -52,9 +52,13 @@ void print_test_header(
 void print_test_footer(
     int api_num,
     const char* api_name,
-    BOOL tests_passed)
+    BOOL tests_passed,
+    BOOL tests_skipped)
 {
-    if(tests_passed) {
+    if(tests_skipped) {
+        print("%03u - %s: SKIPPED", api_num, api_name);
+    }
+    else if(tests_passed) {
         print("%03u - %s: All tests PASSED", api_num, api_name);
     }
     else {

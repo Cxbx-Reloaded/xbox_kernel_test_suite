@@ -118,22 +118,146 @@ TEST_FUNC(RtlCharToInteger)
 
 TEST_FUNC(RtlIntegerToChar)
 {
-    /* FIXME: This is a stub! implement this function! */
+    TEST_BEGIN();
+
+    typedef struct _int_to_char_test {
+        ULONG value;
+        ULONG base;
+        ULONG buf_len;
+        const char* expected;
+        NTSTATUS expected_status;
+    } int_to_char_test;
+
+    int_to_char_test tests[] = {
+        { .value = 0, .base = 10, .buf_len = 16, .expected = "0", .expected_status = STATUS_SUCCESS },
+        { .value = 255, .base = 16, .buf_len = 16, .expected = "FF", .expected_status = STATUS_SUCCESS },
+        { .value = 255, .base = 10, .buf_len = 16, .expected = "255", .expected_status = STATUS_SUCCESS },
+        { .value = 10, .base = 2, .buf_len = 16, .expected = "1010", .expected_status = STATUS_SUCCESS },
+        { .value = 8, .base = 8, .buf_len = 16, .expected = "10", .expected_status = STATUS_SUCCESS },
+        { .value = 12345, .base = 10, .buf_len = 16, .expected = "12345", .expected_status = STATUS_SUCCESS },
+        // Buffer too small
+        { .value = 12345, .base = 10, .buf_len = 2, .expected = "", .expected_status = STATUS_BUFFER_OVERFLOW },
+    };
+
+    for (unsigned i = 0; i < ARRAY_SIZE(tests); i++) {
+        CHAR buf[16] = { 0 };
+        NTSTATUS status = RtlIntegerToChar(tests[i].value, tests[i].base, tests[i].buf_len, buf);
+        assert_NTSTATUS(status, tests[i].expected_status, "RtlIntegerToChar");
+        if (NT_SUCCESS(status)) {
+            BOOL match = (strcmp(buf, tests[i].expected) == 0);
+            if (!match) {
+                print("  ERROR(line %d): Expected '%s', Got '%s'", __LINE__, tests[i].expected, buf);
+                TEST_FAILED();
+            }
+        }
+    }
+
+    TEST_END();
 }
 
 TEST_FUNC(RtlIntegerToUnicodeString)
 {
-    /* FIXME: This is a stub! implement this function! */
+    TEST_BEGIN();
+
+    UNICODE_STRING str;
+    WCHAR buf[32];
+    str.Buffer = buf;
+    str.MaximumLength = sizeof(buf);
+    str.Length = 0;
+    NTSTATUS status;
+
+    // Base 10
+    status = RtlIntegerToUnicodeString(12345, 10, &str);
+    GEN_CHECK(status, STATUS_SUCCESS, "base10 status");
+    GEN_CHECK(str.Length, 10, "base10 Length"); // 5 chars * 2 bytes
+
+    // Base 16
+    str.Length = 0;
+    status = RtlIntegerToUnicodeString(0xFF, 16, &str);
+    GEN_CHECK(status, STATUS_SUCCESS, "base16 status");
+    GEN_CHECK(str.Length, 4, "base16 Length"); // "FF" = 2 chars * 2 bytes
+
+    // Base 0 defaults to base 10
+    str.Length = 0;
+    status = RtlIntegerToUnicodeString(100, 0, &str);
+    GEN_CHECK(status, STATUS_SUCCESS, "base0 status");
+    GEN_CHECK(str.Length, 6, "base0 Length"); // "100" = 3 chars * 2 bytes
+
+    // Zero value
+    str.Length = 0;
+    status = RtlIntegerToUnicodeString(0, 10, &str);
+    GEN_CHECK(status, STATUS_SUCCESS, "zero status");
+    GEN_CHECK(str.Length, 2, "zero Length"); // "0" = 1 char * 2 bytes
+
+    // Buffer too small
+    WCHAR tiny_buf[2];
+    str.Buffer = tiny_buf;
+    str.MaximumLength = sizeof(tiny_buf);
+    str.Length = 0;
+    status = RtlIntegerToUnicodeString(12345, 10, &str);
+    GEN_CHECK(status, STATUS_BUFFER_OVERFLOW, "overflow status");
+
+    TEST_END();
 }
 
 TEST_FUNC(RtlMultiByteToUnicodeN)
 {
-    /* FIXME: This is a stub! implement this function! */
+    TEST_BEGIN();
+
+    CHAR src[] = "Xbox";
+    WCHAR dest[16] = { 0 };
+    ULONG bytes_written = 0;
+    NTSTATUS status;
+
+    // Normal conversion
+    status = RtlMultiByteToUnicodeN(dest, sizeof(dest), &bytes_written, src, 4);
+    GEN_CHECK(status, STATUS_SUCCESS, "normal status");
+    GEN_CHECK(bytes_written, 8, "bytes_written"); // 4 chars * 2 bytes
+    GEN_CHECK(dest[0], L'X', "dest[0]");
+    GEN_CHECK(dest[1], L'b', "dest[1]");
+    GEN_CHECK(dest[2], L'o', "dest[2]");
+    GEN_CHECK(dest[3], L'x', "dest[3]");
+
+    // Limited output buffer
+    RtlZeroMemory(dest, sizeof(dest));
+    bytes_written = 0;
+    status = RtlMultiByteToUnicodeN(dest, 4, &bytes_written, src, 4);
+    GEN_CHECK(status, STATUS_BUFFER_OVERFLOW, "limited status");
+    GEN_CHECK(bytes_written, 4, "limited bytes_written");
+    GEN_CHECK(dest[0], L'X', "limited dest[0]");
+    GEN_CHECK(dest[1], L'b', "limited dest[1]");
+
+    // Empty source
+    RtlZeroMemory(dest, sizeof(dest));
+    bytes_written = 0;
+    status = RtlMultiByteToUnicodeN(dest, sizeof(dest), &bytes_written, src, 0);
+    GEN_CHECK(status, STATUS_SUCCESS, "empty status");
+    GEN_CHECK(bytes_written, 0, "empty bytes_written");
+
+    TEST_END();
 }
 
 TEST_FUNC(RtlMultiByteToUnicodeSize)
 {
-    /* FIXME: This is a stub! implement this function! */
+    TEST_BEGIN();
+
+    ULONG unicode_size = 0;
+    NTSTATUS status;
+
+    // Each multibyte char maps to 2 bytes of unicode
+    status = RtlMultiByteToUnicodeSize(&unicode_size, "Xbox", 4);
+    GEN_CHECK(status, STATUS_SUCCESS, "status");
+    GEN_CHECK(unicode_size, 8, "size for 4 chars");
+
+    status = RtlMultiByteToUnicodeSize(&unicode_size, "", 0);
+    GEN_CHECK(status, STATUS_SUCCESS, "empty status");
+    GEN_CHECK(unicode_size, 0, "size for 0 chars");
+
+    status = RtlMultiByteToUnicodeSize(&unicode_size, "A", 1);
+    GEN_CHECK(status, STATUS_SUCCESS, "single status");
+    GEN_CHECK(unicode_size, 2, "size for 1 char");
+
+    TEST_END();
 }
 
 TEST_FUNC(RtlUnicodeStringToAnsiString)
@@ -287,15 +411,111 @@ TEST_FUNC(RtlUnicodeStringToAnsiString)
 
 TEST_FUNC(RtlUnicodeStringToInteger)
 {
-    /* FIXME: This is a stub! implement this function! */
+    TEST_BEGIN();
+
+    UNICODE_STRING str;
+    ULONG value;
+    NTSTATUS status;
+
+    // Base 10
+    RtlInitUnicodeString(&str, L"12345");
+    value = 0;
+    status = RtlUnicodeStringToInteger(&str, 10, &value);
+    GEN_CHECK(status, STATUS_SUCCESS, "base10 status");
+    GEN_CHECK(value, 12345, "base10 value");
+
+    // Base 16
+    RtlInitUnicodeString(&str, L"FF");
+    value = 0;
+    status = RtlUnicodeStringToInteger(&str, 16, &value);
+    GEN_CHECK(status, STATUS_SUCCESS, "base16 status");
+    GEN_CHECK(value, 0xFF, "base16 value");
+
+    // Base 0 with 0x prefix
+    RtlInitUnicodeString(&str, L"0x1A");
+    value = 0;
+    status = RtlUnicodeStringToInteger(&str, 0, &value);
+    GEN_CHECK(status, STATUS_SUCCESS, "0x prefix status");
+    GEN_CHECK(value, 0x1A, "0x prefix value");
+
+    // Negative number
+    RtlInitUnicodeString(&str, L"-100");
+    value = 0;
+    status = RtlUnicodeStringToInteger(&str, 10, &value);
+    GEN_CHECK(status, STATUS_SUCCESS, "negative status");
+    GEN_CHECK(value, (ULONG)-100, "negative value");
+
+    // Leading whitespace
+    RtlInitUnicodeString(&str, L"  42");
+    value = 0;
+    status = RtlUnicodeStringToInteger(&str, 10, &value);
+    GEN_CHECK(status, STATUS_SUCCESS, "whitespace status");
+    GEN_CHECK(value, 42, "whitespace value");
+
+    // Invalid base
+    RtlInitUnicodeString(&str, L"1");
+    status = RtlUnicodeStringToInteger(&str, 1, &value);
+    GEN_CHECK(status, STATUS_INVALID_PARAMETER, "invalid base status");
+
+    TEST_END();
 }
 
 TEST_FUNC(RtlUnicodeToMultiByteN)
 {
-    /* FIXME: This is a stub! implement this function! */
+    TEST_BEGIN();
+
+    WCHAR src[] = L"Xbox";
+    CHAR dest[16] = { 0 };
+    ULONG bytes_written = 0;
+    NTSTATUS status;
+
+    // Normal conversion
+    status = RtlUnicodeToMultiByteN(dest, sizeof(dest), &bytes_written, src, 8);
+    GEN_CHECK(status, STATUS_SUCCESS, "normal status");
+    GEN_CHECK(bytes_written, 4, "bytes_written");
+    GEN_CHECK(dest[0], 'X', "dest[0]");
+    GEN_CHECK(dest[1], 'b', "dest[1]");
+    GEN_CHECK(dest[2], 'o', "dest[2]");
+    GEN_CHECK(dest[3], 'x', "dest[3]");
+
+    // Limited output buffer
+    RtlZeroMemory(dest, sizeof(dest));
+    bytes_written = 0;
+    status = RtlUnicodeToMultiByteN(dest, 2, &bytes_written, src, 8);
+    GEN_CHECK(status, STATUS_BUFFER_OVERFLOW, "limited status");
+    GEN_CHECK(bytes_written, 2, "limited bytes_written");
+    GEN_CHECK(dest[0], 'X', "limited dest[0]");
+    GEN_CHECK(dest[1], 'b', "limited dest[1]");
+
+    // Empty source
+    RtlZeroMemory(dest, sizeof(dest));
+    bytes_written = 0;
+    status = RtlUnicodeToMultiByteN(dest, sizeof(dest), &bytes_written, src, 0);
+    GEN_CHECK(status, STATUS_SUCCESS, "empty status");
+    GEN_CHECK(bytes_written, 0, "empty bytes_written");
+
+    TEST_END();
 }
 
 TEST_FUNC(RtlUnicodeToMultiByteSize)
 {
-    /* FIXME: This is a stub! implement this function! */
+    TEST_BEGIN();
+
+    ULONG multi_size = 0;
+    NTSTATUS status;
+
+    // Each unicode char (2 bytes) maps to 1 multibyte char
+    status = RtlUnicodeToMultiByteSize(&multi_size, L"Xbox", 8);
+    GEN_CHECK(status, STATUS_SUCCESS, "status");
+    GEN_CHECK(multi_size, 4, "size for 4 wchars");
+
+    status = RtlUnicodeToMultiByteSize(&multi_size, L"", 0);
+    GEN_CHECK(status, STATUS_SUCCESS, "empty status");
+    GEN_CHECK(multi_size, 0, "size for 0 wchars");
+
+    status = RtlUnicodeToMultiByteSize(&multi_size, L"A", 2);
+    GEN_CHECK(status, STATUS_SUCCESS, "single status");
+    GEN_CHECK(multi_size, 1, "size for 1 wchar");
+
+    TEST_END();
 }

@@ -11,17 +11,101 @@
 
 TEST_FUNC(RtlUpcaseUnicodeChar)
 {
-    /* FIXME: This is a stub! implement this function! */
+    TEST_BEGIN();
+
+    typedef struct _upcase_test {
+        WCHAR input;
+        WCHAR expected_output;
+        WCHAR return_result;
+    } upcase_test;
+
+    upcase_test tests[] = {
+        { .input = L' ', .expected_output = L' ' },
+        { .input = L'a', .expected_output = L'A' },
+        { .input = L'z', .expected_output = L'Z' },
+        { .input = L'A', .expected_output = L'A' },
+        { .input = L'Z', .expected_output = L'Z' },
+        { .input = L'0', .expected_output = L'0' },
+        { .input = L'$', .expected_output = L'$' },
+    };
+
+    for (unsigned i = 0; i < ARRAY_SIZE(tests); i++) {
+        tests[i].return_result = RtlUpcaseUnicodeChar(tests[i].input);
+    }
+    GEN_CHECK_ARRAY_MEMBER(tests, return_result, expected_output, ARRAY_SIZE(tests), "upcase_tests");
+
+    TEST_END();
 }
 
 TEST_FUNC(RtlUpcaseUnicodeString)
 {
-    /* FIXME: This is a stub! implement this function! */
+    TEST_BEGIN();
+
+    UNICODE_STRING src_str, dest_str;
+    WCHAR dest_buf[32];
+    NTSTATUS status;
+
+    // Test in-place upcase (AllocateDestinationString = FALSE)
+    dest_str.Buffer = dest_buf;
+    dest_str.MaximumLength = sizeof(dest_buf);
+    dest_str.Length = 0;
+
+    RtlInitUnicodeString(&src_str, L"xbox");
+    status = RtlUpcaseUnicodeString(&dest_str, &src_str, FALSE);
+    GEN_CHECK(status, STATUS_SUCCESS, "upcase status");
+    GEN_CHECK(dest_str.Length, 8, "upcase Length");
+    if (dest_str.Buffer) {
+        GEN_CHECK(dest_str.Buffer[0], L'X', "Buffer[0]");
+        GEN_CHECK(dest_str.Buffer[1], L'B', "Buffer[1]");
+        GEN_CHECK(dest_str.Buffer[2], L'O', "Buffer[2]");
+        GEN_CHECK(dest_str.Buffer[3], L'X', "Buffer[3]");
+    }
+
+    // Test with AllocateDestinationString = TRUE
+    UNICODE_STRING alloc_dest = { 0 };
+    RtlInitUnicodeString(&src_str, L"hello");
+    status = RtlUpcaseUnicodeString(&alloc_dest, &src_str, TRUE);
+    GEN_CHECK(status, STATUS_SUCCESS, "alloc upcase status");
+    if (NT_SUCCESS(status)) {
+        GEN_CHECK(alloc_dest.Length, 10, "alloc Length");
+        if (alloc_dest.Buffer) {
+            GEN_CHECK(alloc_dest.Buffer[0], L'H', "alloc Buffer[0]");
+            GEN_CHECK(alloc_dest.Buffer[4], L'O', "alloc Buffer[4]");
+        }
+        RtlFreeUnicodeString(&alloc_dest);
+    }
+
+    TEST_END();
 }
 
 TEST_FUNC(RtlUpcaseUnicodeToMultiByteN)
 {
-    /* FIXME: This is a stub! implement this function! */
+    TEST_BEGIN();
+
+    WCHAR src[] = L"xbox";
+    CHAR dest[16] = { 0 };
+    ULONG bytes_written = 0;
+    NTSTATUS status;
+
+    // Convert unicode to multibyte with upcase
+    status = RtlUpcaseUnicodeToMultiByteN(dest, sizeof(dest), &bytes_written, src, 8);
+    GEN_CHECK(status, STATUS_SUCCESS, "upcase multi status");
+    GEN_CHECK(bytes_written, 4, "bytes_written");
+    GEN_CHECK(dest[0], 'X', "dest[0]");
+    GEN_CHECK(dest[1], 'B', "dest[1]");
+    GEN_CHECK(dest[2], 'O', "dest[2]");
+    GEN_CHECK(dest[3], 'X', "dest[3]");
+
+    // Test with limited buffer
+    RtlZeroMemory(dest, sizeof(dest));
+    bytes_written = 0;
+    status = RtlUpcaseUnicodeToMultiByteN(dest, 2, &bytes_written, src, 8);
+    GEN_CHECK(status, STATUS_BUFFER_OVERFLOW, "overflow status");
+    GEN_CHECK(bytes_written, 2, "limited bytes_written");
+    GEN_CHECK(dest[0], 'X', "limited dest[0]");
+    GEN_CHECK(dest[1], 'B', "limited dest[1]");
+
+    TEST_END();
 }
 
 TEST_FUNC(RtlUpperChar)

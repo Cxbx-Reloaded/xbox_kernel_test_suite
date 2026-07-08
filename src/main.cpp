@@ -226,6 +226,7 @@ static void run_tests()
 
 void main(void)
 {
+    init_hle_detection();
     load_name_file("D:\\name.txt");
     char* output_file_name = (char*)"D:\\kernel_tests.log";
     // If name_log buffer is allocated, then we know it does have actual input.

@@ -1,8 +1,15 @@
 #include <xboxkrnl/xboxkrnl.h>
 
 #include "util/output.h"
+#include "assertions/defines.h"
 
 TEST_FUNC(KeConnectInterrupt)
 {
-    /* FIXME: This is a stub! implement this function! */
+    TEST_BEGIN();
+
+    // Connecting interrupts to active IRQs is dangerous
+
+    TEST_SKIP("dangerous - could steal IRQ");
+
+    TEST_END();
 }

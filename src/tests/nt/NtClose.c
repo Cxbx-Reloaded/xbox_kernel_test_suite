@@ -30,7 +30,8 @@ TEST_FUNC(NtClose)
                           FILE_ATTRIBUTE_NORMAL,
                           0,
                           FILE_OPEN,
-                          FILE_SYNCHRONOUS_IO_NONALERT);
+                          FILE_SYNCHRONOUS_IO_NONALERT
+    );
 
     status = NtClose(handle);
     assert_NTSTATUS(status, STATUS_SUCCESS, api_name);

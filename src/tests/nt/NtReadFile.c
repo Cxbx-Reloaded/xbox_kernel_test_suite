@@ -32,7 +32,8 @@ TEST_FUNC(NtReadFile)
                           FILE_ATTRIBUTE_NORMAL,
                           0,
                           FILE_OPEN,
-                          FILE_SYNCHRONOUS_IO_NONALERT);
+                          FILE_SYNCHRONOUS_IO_NONALERT
+    );
 
     if (!NT_SUCCESS(status)) {
         NtClose(handle);

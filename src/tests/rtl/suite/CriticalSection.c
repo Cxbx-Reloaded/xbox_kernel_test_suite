@@ -120,5 +120,25 @@ TEST_FUNC(RtlLeaveCriticalSectionAndRegion)
 
 TEST_FUNC(RtlTryEnterCriticalSection)
 {
-    /* FIXME: This is a stub! implement this function! */
+    RTL_CRITICAL_SECTION crit_section;
+    TEST_BEGIN();
+
+    RtlInitializeCriticalSection(&crit_section);
+
+    // Try to enter an unowned critical section - should succeed
+    BOOL result = RtlTryEnterCriticalSection(&crit_section);
+    GEN_CHECK(result, TRUE, "try enter unowned");
+    assert_critical_section_equals(&crit_section, 0, 1, (HANDLE)KeGetCurrentThread());
+
+    // Try to enter again (recursive) - should succeed for same thread
+    result = RtlTryEnterCriticalSection(&crit_section);
+    GEN_CHECK(result, TRUE, "try enter recursive");
+    assert_critical_section_equals(&crit_section, 1, 2, (HANDLE)KeGetCurrentThread());
+
+    // Leave both entries
+    RtlLeaveCriticalSection(&crit_section);
+    RtlLeaveCriticalSection(&crit_section);
+    assert_critical_section_equals(&crit_section, -1, 0, NULL);
+
+    TEST_END();
 }

@@ -6,3 +6,5 @@ extern const char* failed_text;
 extern const char* passed_text;
 
 extern unsigned int seed;
+
+extern BOOL g_is_hle;

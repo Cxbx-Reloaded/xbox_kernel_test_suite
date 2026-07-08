@@ -1,6 +1,7 @@
 #include <xboxkrnl/xboxkrnl.h>
 
 #include "util/output.h"
+#include "util/misc.h"
 #include "defines.h"
 
 static BOOL assert_object_type_ex(POBJECT_TYPE object_type,
@@ -18,17 +19,17 @@ static BOOL assert_object_type_ex(POBJECT_TYPE object_type,
     // NOTE: Some object type has Close/Delete/Parse functions assigned.
     GEN_CHECK_EX(object_type->CloseProcedure != NULL, has_close, ".CloseProcedure", func_line);
     if (has_close) {
-        is_address_valid = MmIsAddressValid(object_type->CloseProcedure);
+        is_address_valid = is_kernel_export_valid(object_type->CloseProcedure);
         GEN_CHECK_EX(is_address_valid, TRUE, ".CloseProcedure valid", func_line);
     }
     GEN_CHECK_EX(object_type->DeleteProcedure != NULL, has_delete, ".DeleteProcedure", func_line);
     if (has_delete) {
-        is_address_valid = MmIsAddressValid(object_type->DeleteProcedure);
+        is_address_valid = is_kernel_export_valid(object_type->DeleteProcedure);
         GEN_CHECK_EX(is_address_valid, TRUE, ".DeleteProcedure valid", func_line);
     }
     GEN_CHECK_EX(object_type->ParseProcedure != NULL, has_parse, ".ParseProcedure", func_line);
     if (has_parse) {
-        is_address_valid = MmIsAddressValid(object_type->ParseProcedure);
+        is_address_valid = is_kernel_export_valid(object_type->ParseProcedure);
         GEN_CHECK_EX(is_address_valid, TRUE, ".ParseProcedure valid", func_line);
     }
     // NOTE: DefaultObject check has been moved to assert_object_header_type_ex function. Because it needs the object's address.

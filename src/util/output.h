@@ -4,15 +4,17 @@
 
 void print(const char* str, ...);
 void print_test_header(int, const char*);
-void print_test_footer(int, const char*, BOOL);
+void print_test_footer(int, const char*, BOOL, BOOL);
 
 #define TEST_FUNC(name) void test_ ## name(int api_num, const char* api_name)
 #define TEST_GET_VAR test_passed
 #define TEST_GET_API_N api_num
 #define TEST_GET_API_NAME api_name
 #define TEST_BEGIN() print_test_header(api_num, api_name); \
-    BOOL TEST_GET_VAR = 1
-#define TEST_END() print_test_footer(api_num, api_name, test_passed)
+    BOOL TEST_GET_VAR = 1; \
+    BOOL test_skipped = 0
+#define TEST_END() print_test_footer(api_num, api_name, test_passed, test_skipped)
+#define TEST_SKIP(reason) do { test_skipped = 1; print("  SKIP: %s", reason); } while(0)
 #define TEST_UNIMPLEMENTED()
 #define TEST_FAILED() TEST_GET_VAR = 0
 #define TEST_IS_FAILED (!TEST_GET_VAR)
