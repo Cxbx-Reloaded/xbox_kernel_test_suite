@@ -11,6 +11,7 @@
 
 BOOL output_video = FALSE; // NOTE: Must be set to a default of FALSE until config file is loaded and before video initialization.
 BOOL output_verbose = TRUE;
+BOOL output_timing = TRUE;
 
 static HANDLE output_filehandle = INVALID_HANDLE_VALUE;
 

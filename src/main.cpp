@@ -28,6 +28,7 @@ extern "C" {
 // defined in util/output.h file, used privately here only
 extern "C" BOOL output_video;
 extern "C" BOOL output_verbose;
+extern "C" BOOL output_timing;
 // Initialize the actual default values here if the config file is either successfully loaded before reading inputs or it failed to load.
 static void init_default_values()
 {
@@ -191,6 +192,9 @@ int load_conf_file(const char *file_path)
         if (strcmp("disable-verbose", current_key) == 0) {
             output_verbose = !strtoul(strtok(NULL, NEWLINE_DELIMITER), NULL, 10);
         }
+        if (strcmp("disable-timing", current_key) == 0) {
+            output_timing = !strtoul(strtok(NULL, NEWLINE_DELIMITER), NULL, 10);
+        }
     }
 
     free(buffer);
@@ -219,10 +223,25 @@ static void run_tests()
             print("%zu test(s) will be excluded.", tests_to_run_excluded.count());
         }
     }
+    LARGE_INTEGER frequency;
+    if (output_timing) {
+        (void)QueryPerformanceFrequency(&frequency);
+    }
+    LARGE_INTEGER tick_start, tick_end;
     print("-------------------------------------------------------------");
     for (int i = 0; i < kernel_api_tests_size; i++) {
         if (tests_to_run.test(i)) {
+            if (output_timing) {
+                (void)QueryPerformanceCounter(&tick_start);
+            }
             kernel_api_tests[i].func(i + 1, kernel_api_tests[i].name);
+            if (output_timing) {
+                (void)QueryPerformanceCounter(&tick_end);
+                LONGLONG total_ms = ((tick_end.QuadPart - tick_start.QuadPart) * 1000) / frequency.QuadPart;
+                LONGLONG total_seconds = total_ms / 1000;
+                LONGLONG remainder_ms = total_ms % 1000;
+                print("%03u - %s: Test completed in %lld.%03lld seconds", i + 1, kernel_api_tests[i].name, total_seconds, remainder_ms);
+            }
         }
     }
     print("------------------------ End of Tests -----------------------");
