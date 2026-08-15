@@ -12,10 +12,8 @@
 #define SECTION_NAME_BLANK "secblank"
 #define SECTION_NAME_TEST "sectest_"
 
-#define LOAD_TESTS1_FORMAT(suffix) "load_tests1[%u][0x%08X]." suffix
-#define LOAD_TESTS2_FORMAT(suffix) "load_tests2[%u]." suffix
-#define UNLOAD_TESTS1_FORMAT(suffix) "unload_tests1[%u][0x%08X]." suffix
-#define UNLOAD_TESTS2_FORMAT(suffix) "unload_tests2[%u]." suffix
+#define SECTION_TESTS1_STR "section_tests1"
+#define SECTION_TESTS2_STR "section_tests2"
 
 // Create sections for testing
 #pragma const_seg(SECTION_NAME_BLANK)
@@ -146,7 +144,6 @@ TEST_FUNC(XeLoadSection)
     }
 
     // Test #4: Perform progressive loop execution verification
-    char formatted_str[128];
     ULONG section_tests1[] = {
         // Single load test (already validated above)
         // Double load test
@@ -160,17 +157,12 @@ TEST_FUNC(XeLoadSection)
         for (; ii < section_tests1[i];) {
             ii++;
             NTSTATUS status = XeLoadSection(test_section);
-            snprintf(formatted_str, ARRAY_SIZE(formatted_str), LOAD_TESTS1_FORMAT("return_status"), i, ii);
-            GEN_CHECK(status, STATUS_SUCCESS, formatted_str);
-            snprintf(formatted_str, ARRAY_SIZE(formatted_str), LOAD_TESTS1_FORMAT("section_ref_count"), i, ii);
-            GEN_CHECK(test_section->SectionReferenceCount, ii, formatted_str);
-            snprintf(formatted_str, ARRAY_SIZE(formatted_str), LOAD_TESTS1_FORMAT("head_ref_count"), i, ii);
-            GEN_CHECK((*test_section->HeadReferenceCount), page_step, formatted_str);
-            snprintf(formatted_str, ARRAY_SIZE(formatted_str), LOAD_TESTS1_FORMAT("tail_ref_count"), i, ii);
-            GEN_CHECK((*test_section->TailReferenceCount), page_step, formatted_str);
+            GEN_CHECK_ARRAY_MEMBER_ARRAY_DIRECT(status, STATUS_SUCCESS, SECTION_TESTS1_STR, i, "return_status", ii);
+            GEN_CHECK_ARRAY_MEMBER_ARRAY_DIRECT(test_section->SectionReferenceCount, ii, SECTION_TESTS1_STR, i, "section_ref_count", ii);
+            GEN_CHECK_ARRAY_MEMBER_ARRAY_DIRECT((*test_section->HeadReferenceCount), page_step, SECTION_TESTS1_STR, i, "head_ref_count", ii);
+            GEN_CHECK_ARRAY_MEMBER_ARRAY_DIRECT((*test_section->TailReferenceCount), page_step, SECTION_TESTS1_STR, i, "tail_ref_count", ii);
             section_is_loaded = MmIsAddressValid((PVOID)load_section_string);
-            snprintf(formatted_str, ARRAY_SIZE(formatted_str), LOAD_TESTS1_FORMAT("section_is_loaded"), i, ii);
-            GEN_CHECK(section_is_loaded, TRUE, formatted_str);
+            GEN_CHECK_ARRAY_MEMBER_ARRAY_DIRECT(section_is_loaded, TRUE, SECTION_TESTS1_STR, i, "section_is_loaded", ii);
             if (TEST_IS_FAILED) {
                 break;
             }
@@ -202,17 +194,12 @@ TEST_FUNC(XeLoadSection)
         signed init_step = getSectionPageStep(test_section);
 
         NTSTATUS status = XeLoadSection(test_section);
-        snprintf(formatted_str, ARRAY_SIZE(formatted_str), LOAD_TESTS2_FORMAT("return_status"), i);
-        GEN_CHECK(status, STATUS_SUCCESS, formatted_str);
-        snprintf(formatted_str, ARRAY_SIZE(formatted_str), LOAD_TESTS2_FORMAT("section_ref_count"), i);
-        GEN_CHECK(test_section->SectionReferenceCount, 1, formatted_str);
-        snprintf(formatted_str, ARRAY_SIZE(formatted_str), LOAD_TESTS2_FORMAT("head_ref_count"), i);
-        GEN_CHECK((*test_section->HeadReferenceCount), (section_tests2[i].set_headCount + init_step), formatted_str);
-        snprintf(formatted_str, ARRAY_SIZE(formatted_str), LOAD_TESTS2_FORMAT("tail_ref_count"), i);
-        GEN_CHECK((*test_section->TailReferenceCount), (section_tests2[i].set_tailCount + init_step), formatted_str);
+        GEN_CHECK_ARRAY_MEMBER_DIRECT(status, STATUS_SUCCESS, SECTION_TESTS2_STR, i, "return_status");
+        GEN_CHECK_ARRAY_MEMBER_DIRECT(test_section->SectionReferenceCount, 1, SECTION_TESTS2_STR, i, "section_ref_count");
+        GEN_CHECK_ARRAY_MEMBER_DIRECT((*test_section->HeadReferenceCount), (section_tests2[i].set_headCount + init_step), SECTION_TESTS2_STR, i, "head_ref_count");
+        GEN_CHECK_ARRAY_MEMBER_DIRECT((*test_section->TailReferenceCount), (section_tests2[i].set_tailCount + init_step), SECTION_TESTS2_STR, i, "tail_ref_count");
         section_is_loaded = MmIsAddressValid((PVOID)load_section_string);
-        snprintf(formatted_str, ARRAY_SIZE(formatted_str), LOAD_TESTS2_FORMAT("section_is_loaded"), i);
-        GEN_CHECK(section_is_loaded, TRUE, formatted_str);
+        GEN_CHECK_ARRAY_MEMBER_DIRECT(section_is_loaded, TRUE, SECTION_TESTS2_STR, i, "section_is_loaded");
 
         // Safely unload the section to reset state for the next test iteration
         (*test_section->HeadReferenceCount) = init_step;
@@ -220,8 +207,7 @@ TEST_FUNC(XeLoadSection)
         (void)XeUnloadSection(test_section);
         // Ensure the target section is no longer loaded in memory
         section_is_loaded = MmIsAddressValid((PVOID)load_section_string);
-        snprintf(formatted_str, ARRAY_SIZE(formatted_str), LOAD_TESTS2_FORMAT("section_is_not_loaded"), i);
-        GEN_CHECK(!section_is_loaded, TRUE, formatted_str);
+        GEN_CHECK_ARRAY_MEMBER_DIRECT(!section_is_loaded, TRUE, SECTION_TESTS2_STR, i, "section_is_not_loaded");
         if (TEST_IS_FAILED) {
             break;
         }
@@ -301,25 +287,19 @@ TEST_FUNC(XeUnloadSection)
         for (; ii > 0;) {
             ii--;
             status = XeUnloadSection(test_section);
-            snprintf(formatted_str, ARRAY_SIZE(formatted_str), UNLOAD_TESTS1_FORMAT("return_status"), i, ii);
-            GEN_CHECK(status, STATUS_SUCCESS, formatted_str);
-            snprintf(formatted_str, ARRAY_SIZE(formatted_str), UNLOAD_TESTS1_FORMAT("section_ref_count"), i, ii);
-            GEN_CHECK(test_section->SectionReferenceCount, ii, formatted_str);
-            snprintf(formatted_str, ARRAY_SIZE(formatted_str), UNLOAD_TESTS1_FORMAT("head_ref_count"), i, ii);
-            GEN_CHECK((*test_section->HeadReferenceCount), (ii ? page_step : 0), formatted_str);
-            snprintf(formatted_str, ARRAY_SIZE(formatted_str), UNLOAD_TESTS1_FORMAT("tail_ref_count"), i, ii);
-            GEN_CHECK((*test_section->TailReferenceCount), (ii ? page_step : 0), formatted_str);
+            GEN_CHECK_ARRAY_MEMBER_ARRAY_DIRECT(status, STATUS_SUCCESS, SECTION_TESTS1_STR, i, "return_status", ii);
+            GEN_CHECK_ARRAY_MEMBER_ARRAY_DIRECT(test_section->SectionReferenceCount, ii, SECTION_TESTS1_STR, i, "section_ref_count", ii);
+            GEN_CHECK_ARRAY_MEMBER_ARRAY_DIRECT((*test_section->HeadReferenceCount), (ii ? page_step : 0), SECTION_TESTS1_STR, i, "head_ref_count", ii);
+            GEN_CHECK_ARRAY_MEMBER_ARRAY_DIRECT((*test_section->TailReferenceCount), (ii ? page_step : 0), SECTION_TESTS1_STR, i, "tail_ref_count", ii);
             section_is_loaded = MmIsAddressValid((PVOID)load_section_string);
-            snprintf(formatted_str, ARRAY_SIZE(formatted_str), UNLOAD_TESTS1_FORMAT("section_is_loaded"), i, ii);
-            GEN_CHECK(section_is_loaded, (ii != 0), formatted_str);
+            GEN_CHECK_ARRAY_MEMBER_ARRAY_DIRECT(section_is_loaded, (ii != 0), SECTION_TESTS1_STR, i, "section_is_loaded", ii);
             if (TEST_IS_FAILED) {
                 break;
             }
         }
         // Test #2b: Verify the extra unload call will return an error code
         status = XeUnloadSection(test_section);
-        snprintf(formatted_str, ARRAY_SIZE(formatted_str), UNLOAD_TESTS2_FORMAT("return_status"), i);
-        GEN_CHECK(status, STATUS_INVALID_PARAMETER, formatted_str);
+        GEN_CHECK_ARRAY_MEMBER_DIRECT(status, STATUS_INVALID_PARAMETER, SECTION_TESTS1_STR, i, "return_status");
         if (TEST_IS_FAILED) {
             TEST_END();
         }
@@ -348,17 +328,12 @@ TEST_FUNC(XeUnloadSection)
         signed init_step = getSectionPageStep(test_section);
 
         status = XeUnloadSection(test_section);
-        snprintf(formatted_str, ARRAY_SIZE(formatted_str), UNLOAD_TESTS2_FORMAT("return_status"), i);
-        GEN_CHECK(status, STATUS_SUCCESS, formatted_str);
-        snprintf(formatted_str, ARRAY_SIZE(formatted_str), UNLOAD_TESTS2_FORMAT("section_ref_count"), i);
-        GEN_CHECK(test_section->SectionReferenceCount, 0, formatted_str);
-        snprintf(formatted_str, ARRAY_SIZE(formatted_str), UNLOAD_TESTS2_FORMAT("head_ref_count"), i);
-        GEN_CHECK((*test_section->HeadReferenceCount), (section_tests2[i].set_headCount - init_step), formatted_str);
-        snprintf(formatted_str, ARRAY_SIZE(formatted_str), UNLOAD_TESTS2_FORMAT("tail_ref_count"), i);
-        GEN_CHECK((*test_section->TailReferenceCount), (section_tests2[i].set_tailCount - init_step), formatted_str);
+        GEN_CHECK_ARRAY_MEMBER_DIRECT(status, STATUS_SUCCESS, SECTION_TESTS2_STR, i, "return_status");
+        GEN_CHECK_ARRAY_MEMBER_DIRECT(test_section->SectionReferenceCount, 0, SECTION_TESTS2_STR, i, "section_ref_count");
+        GEN_CHECK_ARRAY_MEMBER_DIRECT((*test_section->HeadReferenceCount), (section_tests2[i].set_headCount - init_step), SECTION_TESTS2_STR, i, "head_ref_count");
+        GEN_CHECK_ARRAY_MEMBER_DIRECT((*test_section->TailReferenceCount), (section_tests2[i].set_tailCount - init_step), SECTION_TESTS2_STR, i, "tail_ref_count");
         section_is_loaded = MmIsAddressValid((PVOID)load_section_string);
-        snprintf(formatted_str, ARRAY_SIZE(formatted_str), UNLOAD_TESTS2_FORMAT("section_is_loaded"), i);
-        GEN_CHECK(section_is_loaded, TRUE, formatted_str);
+        GEN_CHECK_ARRAY_MEMBER_DIRECT(section_is_loaded, TRUE, SECTION_TESTS2_STR, i, "section_is_loaded");
 
         // Prime the section again to prepare for the next loop test
         (void)XeLoadSection(test_section);
