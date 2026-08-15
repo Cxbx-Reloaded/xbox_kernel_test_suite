@@ -18,7 +18,7 @@ BOOL assert_hashed_result_ex(
     XcSHAUpdate(sha1_ctx, input, len);
     XcSHAFinal(sha1_ctx, digest);
 
-    GEN_CHECK_ARRAY_EX(digest, expected_result, 20, test_name, line_number)
+    GEN_CHECK_ARRAY_EX(digest, expected_result, 20, test_name, line_number);
 
     ASSERT_FOOTER(test_name);
 }
