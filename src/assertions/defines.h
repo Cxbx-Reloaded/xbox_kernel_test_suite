@@ -164,3 +164,35 @@
     }
 #define GEN_CHECK_ARRAY_MEMBER_ARRAY(var, m_check, m_expected, size_1, size_2, var_name) \
     GEN_CHECK_ARRAY_MEMBER_ARRAY_EX(var, m_check, m_expected, size_1, size_2, var_name, __LINE__)
+
+#define GEN_CHECK_NESTED_MEMBER_DIRECT_EX(check_var, expected_var, var_name, index_1, index_2, member_name, func_line) \
+    if ((check_var) != (expected_var)) { \
+        print( \
+            ((sizeof((check_var)) > 4) ? \
+                "  ERROR(line %d): Expected nested member %s[%u][0x%08X].%s = 0x%llX, Got = 0x%llX" : \
+                "  ERROR(line %d): Expected nested member %s[%u][0x%08X].%s = 0x%X, Got = 0x%X" \
+            ), \
+            func_line, var_name, (unsigned)index_1, (unsigned)index_2, member_name, (expected_var), (check_var) \
+        ); \
+        TEST_FAILED(); \
+    } \
+    else if (TEST_VERBOSE) { \
+        print( \
+            ((sizeof((check_var)) > 4) ? \
+                "  OK(line %d): nested member %s[%u][0x%08X].%s = 0x%llX" : \
+                "  OK(line %d): nested member %s[%u][0x%08X].%s = 0x%X" \
+            ), \
+            func_line, var_name, (unsigned)index_1, (unsigned)index_2, member_name, (check_var) \
+        ); \
+    }
+#define GEN_CHECK_NESTED_MEMBER_DIRECT(check_var, expected_var, var_name, index_1, index_2, member_name) \
+    GEN_CHECK_NESTED_MEMBER_DIRECT_EX(check_var, expected_var, var_name, index_1, index_2, member_name, __LINE__)
+
+#define GEN_CHECK_NESTED_MEMBER_EX(var, m_check, m_expected, size_1, size_2, var_name, func_line) \
+    for (unsigned i = 0; i < (size_1); i++) { \
+        for (unsigned ii = 0; ii < (size_2); ii++) { \
+            GEN_CHECK_NESTED_MEMBER_DIRECT_EX((var)[i][ii].m_check, (var)[i][ii].m_expected, var_name, i, ii, #m_check, func_line); \
+        } \
+    }
+#define GEN_CHECK_NESTED_MEMBER(var, m_check, m_expected, size_1, size_2, var_name) \
+    GEN_CHECK_NESTED_MEMBER_EX(var, m_check, m_expected, size_1, size_2, var_name, __LINE__)
