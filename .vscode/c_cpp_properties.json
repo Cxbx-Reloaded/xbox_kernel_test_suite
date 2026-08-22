@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "nxdk",
+            "includePath": [
+                "${default}",
+                "${NXDK_DIR}/lib",
+                "${NXDK_DIR}/lib/pdclib/include",
+                "${NXDK_DIR}/lib/pdclib/platform/xbox/include",
+                "${NXDK_DIR}/lib/winapi",
+                "${NXDK_DIR}/lib/xboxrt/libc_extensions",
+                "${NXDK_DIR}/lib/xboxrt/vcruntime"
+            ],
+            "compilerArgs": [
+                "-fms-extensions"
+            ],
+            "compilerPath": "${NXDK_DIR}/bin/nxdk-cc",
+            "intelliSenseMode": "windows-clang-x86"
+        }
+    ],
+    "version": 4
+}

@@ -1,0 +1,17 @@
+{
+	"name": "Xbox Development",
+
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+
+	// Configure tool-specific properties.
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-vscode.cpptools-extension-pack",
+				"ms-vscode.makefile-tools"
+			]
+		}
+	}
+}
