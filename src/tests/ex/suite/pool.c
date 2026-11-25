@@ -98,6 +98,7 @@ static BOOL TestBasicSizes(const char* test_name, BOOL has_tag)
         }
 
         blk = ExQueryPoolBlockSize(p);
+        GEN_CHECK((blk != 0), TRUE, "allocated block size must not be zero");
         if (blk == 0) {
             print("  ERROR: alloc %lu, ExQueryPoolBlockSize returned 0", req);
         }
@@ -387,7 +388,7 @@ static BOOL TestHoleReuse(const char* test_name, BOOL has_tag)
         if (blocks[i] == NULL) {
             print("  ERROR: hole test: alloc %lu failed", i);
             for (j = 0; j < i; j++) {
-                ExFreePool(blocks[i]);
+                ExFreePool(blocks[j]);
             }
             ASSERT_FOOTER(test_name);
         }
@@ -525,6 +526,9 @@ static BOOL TestPoolPagesCommitted(const char* test_name)
     mm_ret = GetPoolPages(&during);
     GEN_CHECK(mm_ret == TRUE, TRUE, "MmQueryStatistics failed");
     if (mm_ret == FALSE) {
+        for (i = 0; i < allocated; i++) {
+            ExFreePool(blocks[i]);
+        }
         ASSERT_FOOTER(test_name);
     }
     
